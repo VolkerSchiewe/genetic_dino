@@ -497,14 +497,14 @@
             this.playCount++;
 
             // Handle tabbing off the page. Pause the current game.
-            document.addEventListener(Runner.events.VISIBILITY,
-                this.onVisibilityChange.bind(this));
+            // document.addEventListener(Runner.events.VISIBILITY,
+            //     this.onVisibilityChange.bind(this));
 
-            window.addEventListener(Runner.events.BLUR,
-                this.onVisibilityChange.bind(this));
+            // window.addEventListener(Runner.events.BLUR,
+            //     this.onVisibilityChange.bind(this));
 
-            window.addEventListener(Runner.events.FOCUS,
-                this.onVisibilityChange.bind(this));
+            // window.addEventListener(Runner.events.FOCUS,
+            //     this.onVisibilityChange.bind(this));
         },
 
         clearCanvas: function () {
