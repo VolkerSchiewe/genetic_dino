@@ -622,14 +622,37 @@
          * Bind relevant key / mouse / touch listeners.
          */
         startListening: function () {
+            // Keys.
+            document.addEventListener(Runner.events.KEYDOWN, this);
+            document.addEventListener(Runner.events.KEYUP, this);
 
+            if (IS_MOBILE) {
+                // Mobile only touch devices.
+                this.touchController.addEventListener(Runner.events.TOUCHSTART, this);
+                this.touchController.addEventListener(Runner.events.TOUCHEND, this);
+                this.containerEl.addEventListener(Runner.events.TOUCHSTART, this);
+            } else {
+                // Mouse.
+                document.addEventListener(Runner.events.MOUSEDOWN, this);
+                document.addEventListener(Runner.events.MOUSEUP, this);
+            }
         },
 
         /**
          * Remove all listeners.
          */
         stopListening: function () {
+            document.removeEventListener(Runner.events.KEYDOWN, this);
+            document.removeEventListener(Runner.events.KEYUP, this);
 
+            if (IS_MOBILE) {
+                this.touchController.removeEventListener(Runner.events.TOUCHSTART, this);
+                this.touchController.removeEventListener(Runner.events.TOUCHEND, this);
+                this.containerEl.removeEventListener(Runner.events.TOUCHSTART, this);
+            } else {
+                document.removeEventListener(Runner.events.MOUSEDOWN, this);
+                document.removeEventListener(Runner.events.MOUSEUP, this);
+            }
         },
 
         /**
