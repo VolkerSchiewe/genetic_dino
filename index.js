@@ -712,9 +712,11 @@
             if (this.playing && !this.crashed) {
                 if (this.tRex.jumping) {
                     // Speed drop, activated only when jump key is not pressed.
+                    console.log("Drop from jump");
                     this.tRex.setSpeedDrop();
                 } else if (!this.tRex.jumping && !this.tRex.ducking) {
                     // Duck.
+                    console.log("Duck");
                     this.tRex.setDuck(true);
                 }
             }
