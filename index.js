@@ -596,6 +596,12 @@
                 this.tRex.update(deltaTime);
                 this.scheduleNextUpdate();
             }
+          var currentData = {
+            speed: this.currentSpeed,
+            distance: this.distanceRan,
+            obstacles: this.horizon.obstacles
+          };
+          console.log(currentData)
         },
 
         /**
