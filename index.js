@@ -602,6 +602,7 @@
                 speed: this.currentSpeed,
                 distance: this.distanceRan,
                 distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width/2) - (this.tRex.xPos + this.tRex.config.WIDTH/2) : '',
+                widthOfNextObstacle: nextObstacle? nextObstacle.width : ''
             };
             console.log(currentData)
         },
