@@ -1,0 +1,23 @@
+{
+  "name": "genetic_dino",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/VolkerSchiewe/genetic_dino.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/VolkerSchiewe/genetic_dino/issues"
+  },
+  "homepage": "https://github.com/VolkerSchiewe/genetic_dino#readme",
+  "devDependencies": {
+    "webpack": "^3.8.1"
+  }
+}
