@@ -1,15 +1,18 @@
 import Controller from './game/controller'
 import {Runner} from './game/game'
-import {createDinoBrain, activateDinoBrain, crossOver, spawnBestBois} from "./genetic_algorithm";
+import {createPopulation, activateDinoBrain, evolvePopulation} from "./genetic_algorithm";
+
+const MINFITNESS = 2000;
+const JUMPTHRESHOLD = 0.51;
+const POPULATIONSIZE = 10;
 
 let generation = 0;
 let currentDino = 0;
-let populationSize = 10;
 let population = [];
 let fitness = [];
 
 function onDocumentLoad() {
-    population = createPopulation(populationSize);
+    population = createPopulation(POPULATIONSIZE);
     runGeneration();
 }
 
@@ -17,16 +20,6 @@ function runGeneration() {
     generation++;
     currentDino = 0;
     runNext();
-}
-
-function createPopulation(populationSize) {
-    let population = [];
-
-    for (let i = 0; i < populationSize; i++) {
-        population.push(createDinoBrain(2, 5, 1));
-    }
-
-    return population;
 }
 
 function runNext() {
@@ -38,7 +31,7 @@ function runNext() {
         runDino(population[currentDino], currentDino);
         currentDino++;
     } else {
-        evaluatePopulation(population, fitness);
+        naturalSelection();
     }
 }
 
@@ -49,7 +42,7 @@ function runDino(brain, number) {
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
         let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
 
-        if (output > 0.50) {
+        if (output > JUMPTHRESHOLD) {
             controller.jump();
         }
     });
@@ -68,13 +61,19 @@ function onDinoFinished(number, distance) {
     runNext();
 }
 
-function evaluatePopulation() {
-    let indexOfBestDino = indexOfMaxValue(fitness);
-    fitness[indexOfBestDino] = 0;
-    let indexOfSecondBestDino = indexOfMaxValue(fitness);
-    let childOfBestDinos = crossOver(population[indexOfBestDino], population[indexOfSecondBestDino]);
+//TODO: Implement jump/obstacle-ratio into fitness function to breed new bois! 
+function naturalSelection() {
+    let numberOfSurvivingDinos = 3;
+    let bestDinoArray = [];
+    let survivorIndex = 0;
+    let bestFitness = Math.max(...fitness);
 
-    population = spawnBestBois(childOfBestDinos, populationSize);
+    for (let i = 0; i < numberOfSurvivingDinos; i++) {
+        survivorIndex = indexOfMaxValue(fitness);
+        bestDinoArray[i] = population[survivorIndex];
+        fitness[survivorIndex] = 0;
+    }
+    population = evolvePopulation(bestDinoArray, POPULATIONSIZE, bestFitness, MINFITNESS);
     fitness = [];
     runGeneration();
 }
