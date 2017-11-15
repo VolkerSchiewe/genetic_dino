@@ -2,9 +2,9 @@ import Controller from './game/controller'
 import {Runner} from './game/game'
 import {createPopulation, activateDinoBrain, evolvePopulation} from "./genetic_algorithm";
 
-const MINFITNESS = 2000;
-const JUMPTHRESHOLD = 0.51;
-const POPULATIONSIZE = 10;
+const REQUIRED_FITNESS = 2000;
+const JUMP_THRESHOLD = 0.51;
+const POPULATION_SIZE = 12;
 
 let generation = 0;
 let currentDino = 0;
@@ -12,7 +12,7 @@ let population = [];
 let fitness = [];
 
 function onDocumentLoad() {
-    population = createPopulation(POPULATIONSIZE);
+    population = createPopulation(POPULATION_SIZE);
     runGeneration();
 }
 
@@ -42,7 +42,7 @@ function runDino(brain, number) {
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
         let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
 
-        if (output > JUMPTHRESHOLD) {
+        if (output > JUMP_THRESHOLD) {
             controller.jump();
         }
     });
@@ -64,16 +64,21 @@ function onDinoFinished(number, distance) {
 //TODO: Implement jump/obstacle-ratio into fitness function to breed new bois! 
 function naturalSelection() {
     let numberOfSurvivingDinos = 3;
-    let bestDinoArray = [];
+    let dinoAiArray = [];
     let survivorIndex = 0;
     let bestFitness = Math.max(...fitness);
 
     for (let i = 0; i < numberOfSurvivingDinos; i++) {
         survivorIndex = indexOfMaxValue(fitness);
-        bestDinoArray[i] = population[survivorIndex];
+        dinoAiArray[i] = population[survivorIndex];
         fitness[survivorIndex] = 0;
     }
-    population = evolvePopulation(bestDinoArray, POPULATIONSIZE, bestFitness, MINFITNESS);
+    population = evolvePopulation(dinoAiArray, POPULATION_SIZE);
+
+    if (generation < 3 && bestFitness < REQUIRED_FITNESS) {
+        newPopulation = createPopulation(POPULATION_SIZE);
+        console.log('meteor wiped out unfit dinos, new population was created!')
+    }
     fitness = [];
     runGeneration();
 }

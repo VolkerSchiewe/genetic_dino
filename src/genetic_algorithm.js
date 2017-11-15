@@ -1,6 +1,10 @@
 const INPUT = 2;
-const HIDDEN = 5;
+const HIDDEN = 6;
 const OUTPUT = 1;
+const DOMINANT_GENE_RATE = 0.65;
+const RECESSIVE_GENE_RATE = 0.35;
+
+
 let neurons = HIDDEN + OUTPUT;
 let connections = INPUT * HIDDEN + HIDDEN * OUTPUT;
 
@@ -30,26 +34,26 @@ function activateDinoBrain(dinoBrain, distance, width) {
 }
 
 //merging method() simulates crossover in genetic
-function crossOver(dinoBrain1, dinoBrain2) {
+function crossOver(dominantBrain, recessiveBrain) {
     // Converting the networks to JSON makes it all a whole lot easier
-    dinoBrain1 = dinoBrain1.toJSON();
-    dinoBrain2 = dinoBrain2.toJSON();
+    dominantBrain = dominantBrain.toJSON();
+    recessiveBrain = recessiveBrain.toJSON();
     let offspringBrain = new synaptic.Architect.Perceptron(INPUT, HIDDEN, OUTPUT);
     offspringBrain = offspringBrain.toJSON();
 
     for (let i = 0; i < neurons; i++) {
-        let bias1 = dinoBrain1.neurons[INPUT + i].bias; 
-        let bias2 = dinoBrain2.neurons[INPUT + i].bias; 
-        let new_bias = (bias1 + bias2) / 2; 
+        let dominant_bias = dominantBrain.neurons[INPUT + i].bias; 
+        let recessive_bias = recessiveBrain.neurons[INPUT + i].bias; 
+        let new_bias = (dominant_bias * DOMINANT_GENE_RATE + recessive_bias * RECESSIVE_GENE_RATE) / 2; 
 
         offspringBrain.neurons[INPUT + i].bias = new_bias;
     }
 
     for (let i = 0; i < connections; i++) {
-        let weight1 = dinoBrain1.connections[i].weight; 
-        let weight2 = dinoBrain2.connections[i].weight;
+        let dominant_weight = dominantBrain.connections[i].weight; 
+        let recessive_weight = recessiveBrain.connections[i].weight;
 
-        let new_weight = (weight1 + weight2) / 2; 
+        let new_weight = (dominant_weight * DOMINANT_GENE_RATE + recessive_weight * RECESSIVE_GENE_RATE) / 2; 
 
         offspringBrain.connections[i].weight = new_weight;
     }
@@ -90,20 +94,15 @@ function bredDinos(bestGenes, goodGenes, mediumGenes, freshGenes, populationSize
 }
 
 // Returns new population, using bredDinos() TODO: Research better evolution algorithms
-function evolvePopulation(dinoArray, populationSize, bestFitnessValue, minFitness) {
+function evolvePopulation(dinoAiArray, populationSize) {
     let newPopulation = [];
-    let newDino = new synaptic.Architect.Perceptron(INPUT, HIDDEN, OUTPUT);
-    let bestGenes = dinoArray[0];
-    let goodGenes = crossOver(dinoArray[0], dinoArray[1]);
-    let mediumGenes = crossOver(dinoArray[0], dinoArray[2]);
-    let freshGenes = crossOver(dinoArray[0], newDino);
+    let newDinoBrain = new synaptic.Architect.Perceptron(INPUT, HIDDEN, OUTPUT);
+    let bestGenes = dinoAiArray[0];
+    let goodGenes = crossOver(dinoAiArray[0], dinoAiArray[1]);
+    let mediumGenes = crossOver(dinoAiArray[0], dinoAiArray[2]);
+    let freshGenes = crossOver(dinoAiArray[0], newDinoBrain);
 
     newPopulation = bredDinos(bestGenes, goodGenes, mediumGenes, freshGenes, populationSize);
-    if (bestFitnessValue < minFitness) {
-        newPopulation = createPopulation(populationSize);
-        console.log('meteor wiped out unfit dinos, new population was created!')
-    }
-
     return newPopulation;
 }
 
