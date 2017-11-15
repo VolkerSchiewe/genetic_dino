@@ -43,7 +43,7 @@ function runNext() {
 }
 
 function runDino(brain, number) {
-    let runner = new Runner('.interstitial-wrapper');
+    let runner = new Runner('.interstitial-wrapper', {});
     let controller = new Controller(runner);
 
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
@@ -56,7 +56,7 @@ function runDino(brain, number) {
 
     runner.addGameEndListener((distance) => {
         console.log(`Game ended for dino: ${number} with distance: ${distance}`);
-        controller.stop()
+        controller.stop();
         onDinoFinished(number, distance);
     });
 
