@@ -72,12 +72,53 @@ function crossOver(network1, network2) {
     return synaptic.Network.fromJSON(offspring);
 }
 
+// method to mutate all genes from one bestBoi
+function mutateMyBoi(bestBoi) {
+    bestBoi = bestBoi.toJSON();
+    let neurons = HIDDEN + OUTPUT;
+    let connections = INPUT * HIDDEN + HIDDEN * OUTPUT;
+    // use mutate() to mutate value in bias
+    for (var i = 0; i < neurons; i++){
+        bestBoi.neurons[INPUT + i].bias = mutate(bestBoi.neurons[INPUT + 1].bias);
+    }
+    // use mutate() to mutate value in weight
+    for (var i = 0; i < connections; i++){
+        bestBoi.connections[i].weights = mutate(bestBoi.connections[i].weights);
+    }
+    return synaptic.Network.fromJSON(bestBoi);
+}
+
+// method to create new popultation from bestBoi's genes
+function spawnBestBois(bestBoi, populationSize) {
+    let population = [];
+
+    for (let i = 0; i < populationSize; i++) {
+        let mutatedBestBoi = mutateMyBoi(bestBoi);
+        population.push(mutatedBestBoi);
+    }
+
+    return population;
+}
+
 function normalize(value) {
     // do some normalization here so the synaptic perceptron can output some reasonable values with perceptron
     return (value);
 }
 
+// function to mutate a gene: can be a weight or a bias, stole from flappy bird ai
+function mutate(gene) {
+    let mutateRate = 0.2;
+    if (Math.random() < mutateRate) {
+        var mutateFactor = 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
+        gene *= mutateFactor;
+    }
+    console.log("1 gene from boi mutated")
+    return gene;
+}
+
 export {
     createDinoBrain,
-    activateDinoBrain
+    activateDinoBrain,
+    crossOver,
+    spawnBestBois
 }
