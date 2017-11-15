@@ -1,4 +1,3 @@
-
 const INPUT = 2;
 const HIDDEN = 5;
 const OUTPUT = 1;
@@ -74,15 +73,16 @@ function crossOver(network1, network2) {
 
 // method to mutate all genes from one bestBoi
 function mutateMyBoi(bestBoi) {
+    let i;
     bestBoi = bestBoi.toJSON();
     let neurons = HIDDEN + OUTPUT;
     let connections = INPUT * HIDDEN + HIDDEN * OUTPUT;
     // use mutate() to mutate value in bias
-    for (var i = 0; i < neurons; i++){
+    for (i = 0; i < neurons; i++) {
         bestBoi.neurons[INPUT + i].bias = mutate(bestBoi.neurons[INPUT + 1].bias);
     }
     // use mutate() to mutate value in weight
-    for (var i = 0; i < connections; i++){
+    for (i = 0; i < connections; i++) {
         bestBoi.connections[i].weights = mutate(bestBoi.connections[i].weights);
     }
     return synaptic.Network.fromJSON(bestBoi);
@@ -109,7 +109,7 @@ function normalize(value) {
 function mutate(gene) {
     let mutateRate = 0.2;
     if (Math.random() < mutateRate) {
-        var mutateFactor = 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
+        let mutateFactor = 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
         gene *= mutateFactor;
     }
     console.log("1 gene from boi mutated")

@@ -2,14 +2,15 @@ import Controller from './game/controller'
 import {Runner} from './game/game'
 import {createDinoBrain, activateDinoBrain, crossOver, spawnBestBois} from "./genetic_algorithm";
 
-let index = 0;
+let generation = 0;
+let currentDino = 0;
+let populationSize = 5;
 let population = [];
 let fitness = [];
-let populationSize = 5
 
 function onDocumentLoad() {
     population = createPopulation(populationSize);
-    runNext();
+    runGeneration();
 }
 
 function createPopulation(populationSize) {
@@ -22,13 +23,33 @@ function createPopulation(populationSize) {
     return population;
 }
 
+function runGeneration() {
+    generation++;
+    currentDino = 0;
+    runNext();
+}
+
+function runNext() {
+    console.log(`${currentDino}  ${population.length}`);
+    updateUi();
+
+    if (currentDino < population.length) {
+        console.log(`Run dino: ${currentDino}`);
+        runDino(population[currentDino], currentDino);
+        currentDino++;
+    } else {
+        // Evaluate generation after all Dinos finished.
+        evaluatePopulation(population, fitness);
+    }
+}
+
 function runDino(brain, number) {
     let runner = new Runner('.interstitial-wrapper');
     let controller = new Controller(runner);
 
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
         let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
-        console.log(`speed: ${speed}, distance: ${distance}, distanceToObstacle: ${distanceToObstacle}, obstacleWidth ${obstacleWidth}`);
+        // console.log(`speed: ${speed}, distance: ${distance}, distanceToObstacle: ${distanceToObstacle}, obstacleWidth ${obstacleWidth}`);
         if (output > 0.50) {
             controller.jump();
         }
@@ -50,32 +71,17 @@ function onDinoFinished(number, distance) {
     runNext();
 }
 
-
-function runNext() {
-    console.log(`${index}  ${population.length}`);
-
-    if (index < population.length) {
-        console.log(`Run dino: ${index}`);
-        runDino(population[index], index);
-        index++;
-    } else {
-        console.log(`Fitness ${fitness}`);
-        index = 0;
-        evaluatePopulation(population, fitness);
-    }
-}
-
 function evaluatePopulation(population, fitness) {
 
     // returns the index of max value in fitness
     let indexOfBestBoi = fitness.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
     // poor mans way to find the second best boi in fitness
-    fitness[indexOfBestBoi] = 0
+    fitness[indexOfBestBoi] = 0;
     let indexOf2ndBestBoi = fitness.reduce((iMax, x, i, arr) => x > arr[iMax] ? i : iMax, 0);
 
     // disregard bad bitches and acquire best genomes
     let bestBoiEmbryo = crossOver(population[indexOfBestBoi], population[indexOf2ndBestBoi])
-    console.log(`Fitness ${fitness}`)
+    console.log(`Fitness ${fitness}`);
 
     // TODO: Calculate new population...
     population = spawnBestBois(bestBoiEmbryo, populationSize);
@@ -84,8 +90,13 @@ function evaluatePopulation(population, fitness) {
     fitness = [];
 
     // TODO: Start new run with runNext()
-    console.log('start next iteration')
-    runNext();
+    console.log('start next iteration');
+    runGeneration();
+}
+
+function updateUi() {
+    let text = `Generation: ${generation}, Dino ${currentDino + 1}/${population.length}`;
+    document.getElementById("generation-title").innerHTML = text;
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
