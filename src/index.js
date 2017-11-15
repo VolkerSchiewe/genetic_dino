@@ -43,7 +43,7 @@ function runNext() {
 }
 
 function runDino(brain, number) {
-    let runner = new Runner('.interstitial-wrapper', {});
+    let runner = new Runner('.interstitial-wrapper');
     let controller = new Controller(runner);
 
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
