@@ -1,4 +1,3 @@
-import synaptic from 'synaptic';
 
 const INPUT = 2;
 const HIDDEN = 5;
@@ -16,7 +15,7 @@ activateDinoBrain(offSpringNetwork, 1050, 2100);
 
 function createDinoBrain(INPUT, HIDDEN, OUTPUT) {
     // Create basic fully connected perceptron according to input-, hidden- and output-layers
-    network = new synaptic.Architect.Perceptron(INPUT, HIDDEN, OUTPUT);
+    let network = new synaptic.Architect.Perceptron(INPUT, HIDDEN, OUTPUT);
     return network
 }
 
@@ -33,8 +32,7 @@ function activateDinoBrain(network, distance, width) {
     // calculate outputs by activating synaptic neural network
     let outputs = network.activate(inputs);
 
-    // jump if output is higher than 0.50
-    if (outputs[0] > 0.50) console.log(outputs[0]);
+    return outputs[0];
 }
 
 // Method to merge two networks bias and weights.
@@ -68,7 +66,7 @@ function crossOver(network1, network2) {
         let new_weight = (weight1 + weight2) / 2; // this is the function that calculates the new bias, do whatever you want here
 
         offspring.connections[i].weight = new_weight;
-        console.log(offspring.neurons)
+        // console.log(offspring.neurons)
     }
     // Now convert the offspring JSON back to a network and return it
     return synaptic.Network.fromJSON(offspring);
@@ -77,4 +75,9 @@ function crossOver(network1, network2) {
 function normalize(value) {
     // do some normalization here so the synaptic perceptron can output some reasonable values with perceptron
     return (value);
+}
+
+export {
+    createDinoBrain,
+    activateDinoBrain
 }
