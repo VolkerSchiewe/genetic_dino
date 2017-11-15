@@ -601,7 +601,12 @@ Runner.prototype = {
             distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex.xPos + this.tRex.config.WIDTH / 2) : '',
             widthOfNextObstacle: nextObstacle ? nextObstacle.width : ''
         };
-        console.log(currentData)
+        if (this.metricsListener)
+            this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle);
+    },
+
+    addMetricsListener(callback){
+        this.metricsListener = callback
     },
 
     /**
