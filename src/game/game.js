@@ -555,9 +555,9 @@ Runner.prototype = {
                     this.currentSpeed += this.config.ACCELERATION;
                 }
             } else {
+                this.gameOver();
                 if (this.gameEndListener)
                     this.gameEndListener(this.distanceRan);
-                this.gameOver();
             }
 
             var playAchievementSound = this.distanceMeter.update(deltaTime,
