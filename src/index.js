@@ -35,6 +35,7 @@ function runDino(brain, number) {
 
     runner.addGameEndListener((distance) => {
         console.log(`Game ended for dino: ${number} with distance: ${distance}`);
+        controller.stop()
         onDinoFinished(number, distance);
     });
 

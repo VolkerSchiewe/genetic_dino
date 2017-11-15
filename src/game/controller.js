@@ -7,8 +7,8 @@ export default class {
         this.gameRunner.onStartGame();
     }
 
-    restart() {
-        this.gameRunner.onRestart();
+    stop() {
+        this.gameRunner.onStop();
     }
 
     jump() {

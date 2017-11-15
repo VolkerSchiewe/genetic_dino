@@ -787,6 +787,11 @@ Runner.prototype = {
         this.play();
     },
 
+    onStop: function() {
+        this.audioContext.close()
+        this.audioContext = null;
+    },
+
     /**
      * Returns whether the event was a left click on canvas.
      * On Windows right click is registered as a click.
