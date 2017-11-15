@@ -4,7 +4,7 @@ import {createPopulation, activateDinoBrain, evolvePopulation} from "./genetic_a
 
 const REQUIRED_FITNESS = 2000;
 const JUMP_THRESHOLD = 0.51;
-const POPULATION_SIZE = 12;
+const POPULATION_SIZE = 10;
 
 let generation = 0;
 let currentDino = 0;
