@@ -44,7 +44,7 @@ function crossOver(dominantBrain, recessiveBrain) {
     for (let i = 0; i < neurons; i++) {
         let dominant_bias = dominantBrain.neurons[INPUT + i].bias; 
         let recessive_bias = recessiveBrain.neurons[INPUT + i].bias; 
-        let new_bias = (dominant_bias * DOMINANT_GENE_RATE + recessive_bias * RECESSIVE_GENE_RATE) / 2; 
+        let new_bias = (dominant_bias * DOMINANT_GENE_RATE + recessive_bias * RECESSIVE_GENE_RATE); 
 
         offspringBrain.neurons[INPUT + i].bias = new_bias;
     }
@@ -53,7 +53,7 @@ function crossOver(dominantBrain, recessiveBrain) {
         let dominant_weight = dominantBrain.connections[i].weight; 
         let recessive_weight = recessiveBrain.connections[i].weight;
 
-        let new_weight = (dominant_weight * DOMINANT_GENE_RATE + recessive_weight * RECESSIVE_GENE_RATE) / 2; 
+        let new_weight = (dominant_weight * DOMINANT_GENE_RATE + recessive_weight * RECESSIVE_GENE_RATE); 
 
         offspringBrain.connections[i].weight = new_weight;
     }
