@@ -555,6 +555,8 @@ Runner.prototype = {
                     this.currentSpeed += this.config.ACCELERATION;
                 }
             } else {
+                if (this.gameEndListener)
+                    this.gameEndListener(this.distanceRan);
                 this.gameOver();
             }
 
@@ -607,6 +609,10 @@ Runner.prototype = {
 
     addMetricsListener(callback){
         this.metricsListener = callback
+    },
+
+    addGameEndListener(callback){
+        this.gameEndListener = callback
     },
 
     /**
