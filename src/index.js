@@ -28,7 +28,7 @@ function runDino(brain, number) {
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
         let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
         console.log(`speed: ${speed}, distance: ${distance}, distanceToObstacle: ${distanceToObstacle}, obstacleWidth ${obstacleWidth}`);
-        if (output > 0.55) {
+        if (output > 0.50) {
             controller.jump();
         }
     });
