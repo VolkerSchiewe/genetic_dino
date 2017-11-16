@@ -63,7 +63,7 @@ function onDinoFinished(number, distance) {
 
 //TODO: Implement jump/obstacle-ratio into fitness function to breed new bois! 
 function naturalSelection() {
-    let numberOfSurvivingDinos = 3;
+    let numberOfSurvivingDinos = 3
     let dinoAiArray = [];
     let survivorIndex = 0;
     let bestFitness = Math.max(...fitness);
@@ -75,8 +75,9 @@ function naturalSelection() {
     }
     population = evolvePopulation(dinoAiArray, POPULATION_SIZE);
 
-    if (generation < 3 && bestFitness < REQUIRED_FITNESS) {
-        newPopulation = createPopulation(POPULATION_SIZE);
+    if (generation < 4 && bestFitness < REQUIRED_FITNESS) {
+        population = createPopulation(POPULATION_SIZE);
+        generation = 0;
         console.log('meteor wiped out unfit dinos, new population was created!')
     }
     fitness = [];
