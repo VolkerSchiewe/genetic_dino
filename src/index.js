@@ -1,13 +1,12 @@
 import Controller from './game/controller'
 import {Runner} from './game/game'
-import {createPopulation, activateDinoBrain, evolvePopulation} from "./genetic_algorithm";
+import {createPopulation, activateDinoBrain, evolvePopulation} from './genetic_algorithm';
 
 const REQUIRED_FITNESS = 2000;
 const JUMP_THRESHOLD = 0.51;
 const POPULATION_SIZE = 10;
 
 let generation = 0;
-let currentDino = 0;
 let population = [];
 let fitness = [];
 
@@ -18,7 +17,7 @@ function onDocumentLoad() {
 
 function runGeneration() {
     generation++;
-    showGeneration()
+    showGeneration();
 
     for (let currentDino = 0; currentDino < POPULATION_SIZE; currentDino++) {
         console.log(`Start dino ${currentDino}`);
@@ -92,7 +91,7 @@ function indexOfMaxValue(array) {
 
 // TODO: Extract to other file
 function showGeneration() {
-    document.getElementById("generation-title").innerHTML = `Generation: ${generation}`;
+    document.getElementById('generation-title').innerHTML = `Generation: ${generation}`;
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
