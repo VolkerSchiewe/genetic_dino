@@ -560,12 +560,7 @@ Runner.prototype = {
                     this.gameEndListener(this.distanceRan);
             }
 
-            var playAchievementSound = this.distanceMeter.update(deltaTime,
-                Math.ceil(this.distanceRan));
-
-            if (playAchievementSound) {
-                this.playSound(this.soundFx.SCORE);
-            }
+            this.distanceMeter.update(deltaTime, Math.ceil(this.distanceRan));
 
             // Night mode.
             if (this.invertTimer > this.config.INVERT_FADE_DURATION) {
@@ -703,7 +698,6 @@ Runner.prototype = {
     onStartGame: function () {
         if (!this.playing) {
             console.log("Start Game");
-            this.loadSounds();
             this.playing = true;
             this.update();
             if (window.errorPageController) {
@@ -713,14 +707,12 @@ Runner.prototype = {
             this.onRestart();
         }
 
-        //  Play sound effect and jump on starting the game for the first time.
         this.onJump();
     },
 
     onJump: function () {
         if (!this.tRex.jumping && !this.tRex.ducking) {
             console.log("Jump");
-            this.playSound(this.soundFx.BUTTON_PRESS);
             this.tRex.startJump(this.currentSpeed);
         }
     },
@@ -788,8 +780,9 @@ Runner.prototype = {
     },
 
     onStop: function() {
-        this.audioContext.close()
-        this.audioContext = null;
+        // TODO: Remove when audio related code is deleted.
+        // this.audioContext.close()
+        // this.audioContext = null;
     },
 
     /**
@@ -825,7 +818,6 @@ Runner.prototype = {
      * Game over state.
      */
     gameOver: function () {
-        this.playSound(this.soundFx.HIT);
         vibrate(200);
 
         this.stop();
@@ -884,7 +876,6 @@ Runner.prototype = {
             this.distanceMeter.reset(this.highestScore);
             this.horizon.reset();
             this.tRex.reset();
-            this.playSound(this.soundFx.BUTTON_PRESS);
             this.invert(true);
             this.update();
         }
