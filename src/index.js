@@ -51,7 +51,7 @@ function runDino(brain, number) {
 function onDinoFinished(number, distance) {
     fitness[number] = distance;
     const numberOfDinosFinished = Object.keys(fitness).length;
-    console.log(`Dino finished ${numberOfDinosFinished}`);
+    console.log(`Dinos finished ${numberOfDinosFinished}`);
 
     if (numberOfDinosFinished === POPULATION_SIZE) {
         console.log(`Generation finished`);
