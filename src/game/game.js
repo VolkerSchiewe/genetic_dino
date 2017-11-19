@@ -10,12 +10,6 @@
  * @export
  */
 export function Runner(outerContainerId, opt_config) {
-    // Singleton
-    if (Runner.instance_) {
-        return Runner.instance_;
-    }
-    Runner.instance_ = this;
-
     this.outerContainerEl = document.querySelector(outerContainerId);
     this.containerEl = null;
     this.snackbarEl = null;
@@ -243,13 +237,11 @@ Runner.prototype = {
         this.containerEl = document.createElement('div');
         this.containerEl.className = Runner.classes.SNACKBAR;
         this.containerEl.textContent = loadTimeData.getValue('disabledEasterEgg');
-        this.outerContainerEl.appendChild(this.containerEl);
 
         // Show notification when the activation key is pressed.
         document.addEventListener(Runner.events.KEYDOWN, function (e) {
             if (Runner.keycodes.JUMP[e.keyCode]) {
                 this.containerEl.classList.add(Runner.classes.SNACKBAR_SHOW);
-                document.querySelector('.icon').classList.add('icon-disabled');
             }
         }.bind(this));
     },
@@ -346,10 +338,6 @@ Runner.prototype = {
      * Game initialiser.
      */
     init: function () {
-        // Hide the static icon.
-        document.querySelector('.' + Runner.classes.ICON).style.visibility =
-            'hidden';
-
         this.adjustDimensions();
         this.setSpeed();
 
@@ -376,7 +364,14 @@ Runner.prototype = {
         // Draw t-rex
         this.tRex = new Trex(this.canvas, this.spriteDef.TREX);
 
-        this.outerContainerEl.appendChild(this.containerEl);
+        const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
+        if (childContainer.length > 0) {
+            console.log('Replacing existing game container');
+            this.outerContainerEl.replaceChild(this.containerEl, childContainer[0]);
+        } else {
+            console.log('Creating new game container');
+            this.outerContainerEl.appendChild(this.containerEl);
+        }
 
         if (IS_MOBILE) {
             this.createTouchController();
@@ -602,11 +597,11 @@ Runner.prototype = {
             this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle);
     },
 
-    addMetricsListener(callback){
+    addMetricsListener(callback) {
         this.metricsListener = callback
     },
 
-    addGameEndListener(callback){
+    addGameEndListener(callback) {
         this.gameEndListener = callback
     },
 
@@ -779,7 +774,7 @@ Runner.prototype = {
         this.play();
     },
 
-    onStop: function() {
+    onStop: function () {
         // TODO: Remove when audio related code is deleted.
         // this.audioContext.close()
         // this.audioContext = null;

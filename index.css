@@ -41,7 +41,7 @@ html, body {
   height: 150px;
   max-width: 600px;
   overflow: hidden;
-  position: absolute;
+  position: relative;
   top: 35px;
   width: 44px;
 }

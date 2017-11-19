@@ -36,7 +36,8 @@ function runNext() {
 }
 
 function runDino(brain, number) {
-    let runner = new Runner('.game-wrapper');
+    console.log(`New runner #dino-${number}`);
+    let runner = new Runner(`#dino-${number}`);
     let controller = new Controller(runner);
 
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
