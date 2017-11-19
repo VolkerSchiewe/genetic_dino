@@ -18,20 +18,11 @@ function onDocumentLoad() {
 
 function runGeneration() {
     generation++;
-    currentDino = 0;
-    runNext();
-}
+    showGeneration()
 
-function runNext() {
-    console.log(`${currentDino}  ${population.length}`);
-    updateUi();
-
-    if (currentDino < population.length) {
-        console.log(`Run dino: ${currentDino}`);
+    for (let currentDino = 0; currentDino < POPULATION_SIZE; currentDino++) {
+        console.log(`Start dino ${currentDino}`);
         runDino(population[currentDino], currentDino);
-        currentDino++;
-    } else {
-        naturalSelection();
     }
 }
 
@@ -59,12 +50,19 @@ function runDino(brain, number) {
 
 function onDinoFinished(number, distance) {
     fitness[number] = distance;
-    runNext();
+    const numberOfDinosFinished = Object.keys(fitness).length;
+    console.log(`Dino finished ${numberOfDinosFinished}`);
+
+    if (numberOfDinosFinished === POPULATION_SIZE) {
+        console.log(`Generation finished`);
+        naturalSelection();
+    }
 }
 
 //TODO: Implement jump/obstacle-ratio into fitness function to breed new bois! 
 function naturalSelection() {
-    let numberOfSurvivingDinos = 3
+    console.log(`Performing natural selection`);
+    let numberOfSurvivingDinos = 3;
     let dinoAiArray = [];
     let survivorIndex = 0;
     let bestFitness = Math.max(...fitness);
@@ -93,8 +91,8 @@ function indexOfMaxValue(array) {
 }
 
 // TODO: Extract to other file
-function updateUi() {
-    document.getElementById("generation-title").innerHTML = `Generation: ${generation}, Dino ${currentDino + 1}/${population.length}`;
+function showGeneration() {
+    document.getElementById("generation-title").innerHTML = `Generation: ${generation}`;
 }
 
 document.addEventListener('DOMContentLoaded', onDocumentLoad);
