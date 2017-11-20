@@ -68,7 +68,7 @@ function mutateDinoGenes(dinoGene) {
     let i;
     dinoGene = dinoGene.toJSON();
     for (i = 0; i < neurons; i++) {
-        dinoGene.neurons[INPUT_LAYERS + i].bias = mutate(dinoGene.neurons[INPUT_LAYERS + 1].bias);
+        dinoGene.neurons[INPUT_LAYERS + i].bias = mutate(dinoGene.neurons[INPUT_LAYERS + i].bias);
     }
     for (i = 0; i < connections; i++) {
         dinoGene.connections[i].weights = mutate(dinoGene.connections[i].weights);
