@@ -19,7 +19,7 @@ function runGeneration() {
     generation++;
     showGeneration();
 
-    for (let currentDino = 0; currentDino < POPULATION_SIZE; currentDino++) {
+    for (let currentDino = 0; currentDino < population.length; currentDino++) {
         console.log(`Start dino ${currentDino}`);
         runDino(population[currentDino], currentDino);
     }
