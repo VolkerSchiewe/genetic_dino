@@ -1,6 +1,6 @@
 import Controller from './game/controller'
 import {Runner} from './game/game'
-import {createPopulation, activateDinoBrain, evolvePopulation} from './genetic_algorithm';
+import {GeneticAlgorithm} from "./genetic_algorithm";
 
 const REQUIRED_FITNESS = 2000;
 const JUMP_THRESHOLD = 0.51;
@@ -11,7 +11,8 @@ let population = [];
 let fitness = [];
 
 function onDocumentLoad() {
-    population = createPopulation(POPULATION_SIZE);
+    let geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+    population = geneticAlgorithm.generatePopulation();
     runGeneration();
 }
 
@@ -19,7 +20,7 @@ function runGeneration() {
     generation++;
     showGeneration();
 
-    for (let currentDino = 0; currentDino < population.length; currentDino++) {
+    for (let currentDino = 0; currentDino < POPULATION_SIZE; currentDino++) {
         console.log(`Start dino ${currentDino}`);
         runDino(population[currentDino], currentDino);
     }
@@ -31,8 +32,7 @@ function runDino(brain, number) {
     let controller = new Controller(runner);
 
     runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
-
-        let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
+        let output = brain.activateDinoBrain(distanceToObstacle, obstacleWidth);
 
         if (output > JUMP_THRESHOLD) {
             controller.jump();
@@ -59,7 +59,7 @@ function onDinoFinished(number, distance) {
     }
 }
 
-//TODO: Implement jump/obstacle-ratio into fitness function to breed new bois! 
+//TODO: Implement jump/obstacle-ratio into fitness function to breed new bois!
 function naturalSelection() {
     console.log(`Performing natural selection`);
     let numberOfSurvivingDinos = 3;
@@ -72,10 +72,11 @@ function naturalSelection() {
         dinoAiArray[i] = population[survivorIndex];
         fitness[survivorIndex] = 0;
     }
-    population = evolvePopulation(dinoAiArray, POPULATION_SIZE);
+    let geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+    population = geneticAlgorithm.evolvePopulation(dinoAiArray);
 
     if (generation < 4 && bestFitness < REQUIRED_FITNESS) {
-        population = createPopulation(POPULATION_SIZE);
+        population = geneticAlgorithm.generatePopulation();
         generation = 0;
         console.log('meteor wiped out unfit dinos, new population was created!')
     }
