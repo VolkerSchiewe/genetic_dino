@@ -7,6 +7,10 @@ export default class {
         this.gameRunner.onStartGame();
     }
 
+    stop() {
+        this.gameRunner.onStop();
+    }
+
     jump() {
         this.gameRunner.onJump();
     }

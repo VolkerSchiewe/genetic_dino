@@ -27,13 +27,12 @@ html, body {
 
 /* Offline page */
 
-.offline .interstitial-wrapper {
+.offline .game-wrapper {
   color: #2b2b2b;
   font-size: 1em;
   line-height: 1.55;
   margin: 0 auto;
   max-width: 600px;
-  padding-top: 100px;
   width: 100%;
 }
 
@@ -41,7 +40,7 @@ html, body {
   height: 150px;
   max-width: 600px;
   overflow: hidden;
-  position: absolute;
+  position: relative;
   top: 35px;
   width: 44px;
 }
@@ -89,7 +88,7 @@ html, body {
   .icon-offline {
     margin: 0 0 10px;
   }
-  .interstitial-wrapper {
+  .game-wrapper {
     margin-top: 5%;
   }
   .nav-wrapper {
@@ -98,20 +97,20 @@ html, body {
 }
 
 @media (min-width: 600px) and (max-width: 736px) and (orientation: landscape) {
-  .offline .interstitial-wrapper {
+  .offline .game-wrapper {
     margin-left: 0;
     margin-right: 0;
   }
 }
 
 @media (min-width: 420px) and (max-width: 736px) and (min-height: 240px) and (max-height: 420px) and (orientation:landscape) {
-  .interstitial-wrapper {
+  .game-wrapper {
     margin-bottom: 100px;
   }
 }
 
 @media (min-height: 240px) and (orientation: landscape) {
-  .offline .interstitial-wrapper {
+  .offline .game-wrapper {
     margin-bottom: 90px;
   }
   .icon-offline {
@@ -129,7 +128,7 @@ html, body {
 }
 
 @media (max-width: 240px) {
-  .interstitial-wrapper {
+  .game-wrapper {
     overflow: inherit;
     padding: 0 8px;
   }

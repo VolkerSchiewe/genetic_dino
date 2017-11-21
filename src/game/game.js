@@ -10,12 +10,6 @@
  * @export
  */
 export function Runner(outerContainerId, opt_config) {
-    // Singleton
-    if (Runner.instance_) {
-        return Runner.instance_;
-    }
-    Runner.instance_ = this;
-
     this.outerContainerEl = document.querySelector(outerContainerId);
     this.containerEl = null;
     this.snackbarEl = null;
@@ -243,13 +237,11 @@ Runner.prototype = {
         this.containerEl = document.createElement('div');
         this.containerEl.className = Runner.classes.SNACKBAR;
         this.containerEl.textContent = loadTimeData.getValue('disabledEasterEgg');
-        this.outerContainerEl.appendChild(this.containerEl);
 
         // Show notification when the activation key is pressed.
         document.addEventListener(Runner.events.KEYDOWN, function (e) {
             if (Runner.keycodes.JUMP[e.keyCode]) {
                 this.containerEl.classList.add(Runner.classes.SNACKBAR_SHOW);
-                document.querySelector('.icon').classList.add('icon-disabled');
             }
         }.bind(this));
     },
@@ -346,10 +338,6 @@ Runner.prototype = {
      * Game initialiser.
      */
     init: function () {
-        // Hide the static icon.
-        document.querySelector('.' + Runner.classes.ICON).style.visibility =
-            'hidden';
-
         this.adjustDimensions();
         this.setSpeed();
 
@@ -376,7 +364,14 @@ Runner.prototype = {
         // Draw t-rex
         this.tRex = new Trex(this.canvas, this.spriteDef.TREX);
 
-        this.outerContainerEl.appendChild(this.containerEl);
+        const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
+        if (childContainer.length > 0) {
+            console.log('Replacing existing game container');
+            this.outerContainerEl.replaceChild(this.containerEl, childContainer[0]);
+        } else {
+            console.log('Creating new game container');
+            this.outerContainerEl.appendChild(this.containerEl);
+        }
 
         if (IS_MOBILE) {
             this.createTouchController();
@@ -556,14 +551,11 @@ Runner.prototype = {
                 }
             } else {
                 this.gameOver();
+                if (this.gameEndListener)
+                    this.gameEndListener(this.distanceRan);
             }
 
-            var playAchievementSound = this.distanceMeter.update(deltaTime,
-                Math.ceil(this.distanceRan));
-
-            if (playAchievementSound) {
-                this.playSound(this.soundFx.SCORE);
-            }
+            this.distanceMeter.update(deltaTime, Math.ceil(this.distanceRan));
 
             // Night mode.
             if (this.invertTimer > this.config.INVERT_FADE_DURATION) {
@@ -601,7 +593,16 @@ Runner.prototype = {
             distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex.xPos + this.tRex.config.WIDTH / 2) : '',
             widthOfNextObstacle: nextObstacle ? nextObstacle.width : ''
         };
-        console.log(currentData)
+        if (this.metricsListener)
+            this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle);
+    },
+
+    addMetricsListener(callback) {
+        this.metricsListener = callback
+    },
+
+    addGameEndListener(callback) {
+        this.gameEndListener = callback
     },
 
     /**
@@ -692,7 +693,6 @@ Runner.prototype = {
     onStartGame: function () {
         if (!this.playing) {
             console.log("Start Game");
-            this.loadSounds();
             this.playing = true;
             this.update();
             if (window.errorPageController) {
@@ -702,14 +702,12 @@ Runner.prototype = {
             this.onRestart();
         }
 
-        //  Play sound effect and jump on starting the game for the first time.
         this.onJump();
     },
 
     onJump: function () {
         if (!this.tRex.jumping && !this.tRex.ducking) {
             console.log("Jump");
-            this.playSound(this.soundFx.BUTTON_PRESS);
             this.tRex.startJump(this.currentSpeed);
         }
     },
@@ -776,6 +774,12 @@ Runner.prototype = {
         this.play();
     },
 
+    onStop: function () {
+        // TODO: Remove when audio related code is deleted.
+        // this.audioContext.close()
+        // this.audioContext = null;
+    },
+
     /**
      * Returns whether the event was a left click on canvas.
      * On Windows right click is registered as a click.
@@ -809,7 +813,6 @@ Runner.prototype = {
      * Game over state.
      */
     gameOver: function () {
-        this.playSound(this.soundFx.HIT);
         vibrate(200);
 
         this.stop();
@@ -868,7 +871,6 @@ Runner.prototype = {
             this.distanceMeter.reset(this.highestScore);
             this.horizon.reset();
             this.tRex.reset();
-            this.playSound(this.soundFx.BUTTON_PRESS);
             this.invert(true);
             this.update();
         }
