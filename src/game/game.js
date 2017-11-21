@@ -591,10 +591,11 @@ Runner.prototype = {
             speed: this.currentSpeed,
             distance: this.distanceRan,
             distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex.xPos + this.tRex.config.WIDTH / 2) : '',
-            widthOfNextObstacle: nextObstacle ? nextObstacle.width : ''
+            widthOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.width : '',
+            heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
         };
         if (this.metricsListener)
-            this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle);
+            this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
     },
 
     addMetricsListener(callback) {
