@@ -24,8 +24,8 @@ function runGeneration(population) {
 //TODO: Implement jump/obstacle-ratio into fitness function to breed new bois!
 function naturalSelection(population, fitness) {
     console.log(`Performing natural selection`);
-    const dinoAiArray = [];
-    const bestFitness = Math.max(...fitness);
+    let dinoAiArray = [];
+    let bestFitness = Math.max(...fitness);
     let survivorIndex = 0;
 
     for (let i = 0; i < SURVIVOR_COUNT; i++) {
@@ -33,7 +33,7 @@ function naturalSelection(population, fitness) {
         dinoAiArray[i] = population[survivorIndex];
         fitness[survivorIndex] = 0;
     }
-    const geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+    let geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
     population = geneticAlgorithm.evolvePopulation(dinoAiArray);
 
     if (generation < 4 && bestFitness < REQUIRED_FITNESS) {
