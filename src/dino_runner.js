@@ -1,7 +1,7 @@
 import Controller from './game/controller'
 import {Runner} from "./game/game";
 
-const JUMP_THRESHOLD = 0.51;
+export const JUMP_THRESHOLD = 0.51;
 
 export class DinoRunner {
     create(index, brain) {
