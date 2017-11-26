@@ -27,7 +27,6 @@ export class DinoBrain {
         return outputs[0];
     }
 
-
     static bredDinoBrains(bestGenes, goodGenes, mediumGenes, freshGenes, populationSize) {
         let population = [];
         for (let i = 0; i < populationSize; i++) {
@@ -52,6 +51,4 @@ export class DinoBrain {
         // TODO: Research most fitting normalization scheme for INPUT_LAYERS!
         return (value);
     }
-
-
 }
