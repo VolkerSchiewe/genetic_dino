@@ -30,7 +30,8 @@ function runDino(brain, number) {
     let runner = new Runner(`#dino-${number}`);
     let controller = new Controller(runner);
 
-    runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
+    runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
+
         let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
 
         if (output > JUMP_THRESHOLD) {
