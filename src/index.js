@@ -3,6 +3,7 @@ import {GenerationRunner} from "./generation_runner";
 
 const REQUIRED_FITNESS = 2000;
 const POPULATION_SIZE = 10;
+const SURVIVOR_COUNT = 3;
 let generation = 0;
 
 function onDocumentLoad() {
@@ -23,17 +24,16 @@ function runGeneration(population) {
 //TODO: Implement jump/obstacle-ratio into fitness function to breed new bois!
 function naturalSelection(population, fitness) {
     console.log(`Performing natural selection`);
-    let numberOfSurvivingDinos = 3;
-    let dinoAiArray = [];
+    const dinoAiArray = [];
+    const bestFitness = Math.max(...fitness);
     let survivorIndex = 0;
-    let bestFitness = Math.max(...fitness);
 
-    for (let i = 0; i < numberOfSurvivingDinos; i++) {
+    for (let i = 0; i < SURVIVOR_COUNT; i++) {
         survivorIndex = indexOfMaxValue(fitness);
         dinoAiArray[i] = population[survivorIndex];
         fitness[survivorIndex] = 0;
     }
-    let geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+    const geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
     population = geneticAlgorithm.evolvePopulation(dinoAiArray);
 
     if (generation < 4 && bestFitness < REQUIRED_FITNESS) {
