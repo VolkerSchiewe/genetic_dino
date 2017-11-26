@@ -1,7 +1,7 @@
 import {DinoRunner} from "./dino_runner";
 
 export class GenerationRunner {
-    runSingleGeneration(population) {
+    static runSingleGeneration(population) {
         return this.createRunnersForPopulation(population)
             .then(dinoRunners => {
                 // Run all dinos and wait until all have finished
@@ -16,16 +16,14 @@ export class GenerationRunner {
             });
     }
 
-    createRunnersForPopulation(population) {
-        return Promise.resolve(new DinoRunner())
-            .then(dinoRunner => {
-                const dinoRunners = [];
+    static createRunnersForPopulation(population) {
+        return new Promise((resolve, reject) => {
+            const dinoRunners = [];
 
-                for (let currentDino = 0; currentDino < population.length; currentDino++) {
-                    dinoRunners.push(dinoRunner.create(currentDino, population[currentDino]));
-                }
-
-                return dinoRunners;
-            })
+            for (let currentDino = 0; currentDino < population.length; currentDino++) {
+                dinoRunners.push(DinoRunner.create(currentDino, population[currentDino]));
+            }
+            resolve(dinoRunners);
+        });
     }
 }

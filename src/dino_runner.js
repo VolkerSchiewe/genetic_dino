@@ -4,7 +4,7 @@ import {Runner} from "./game/game";
 export const JUMP_THRESHOLD = 0.51;
 
 export class DinoRunner {
-    create(index, brain) {
+    static create(index, brain) {
         return new Promise(function (resolve, reject) {
             console.log(`New runner ${index}`);
             const runner = new Runner(`#dino-${index}`);

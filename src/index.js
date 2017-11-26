@@ -14,10 +14,9 @@ function onDocumentLoad() {
 }
 
 function runGeneration(population) {
-    const generationRunner = new GenerationRunner();
     generation++;
     showGeneration();
-    generationRunner.runSingleGeneration(population)
+    GenerationRunner.runSingleGeneration(population)
         .then(fitness => naturalSelection(population, fitness))
         .catch(error => console.log(error));
 }
