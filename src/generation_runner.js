@@ -6,18 +6,15 @@ export class GenerationRunner {
             .then(dinoRunners => {
                 // Run all dinos and wait until all have finished
                 return Promise.all(dinoRunners);
-            }).then(dinoResults => {
-                const fitness = [];
-
-                for (let dinoResult of dinoResults) {
-                    fitness[dinoResult.index] = dinoResult.distance;
-                }
+            }).then(fitness => {
+                console.log(`Fitness of all dinos ${fitness}`);
                 return fitness;
             });
     }
 
     static createRunnersForPopulation(population) {
         return new Promise((resolve, reject) => {
+
             const dinoRunners = [];
 
             for (let currentDino = 0; currentDino < population.length; currentDino++) {
