@@ -1,5 +1,6 @@
 import {GeneticAlgorithm} from "./genetic_algorithm";
 import {GenerationRunner} from "./generation_runner";
+import {indexOfMaxValue} from "./utils";
 
 const REQUIRED_FITNESS = 2000;
 const POPULATION_SIZE = 10;
@@ -42,13 +43,6 @@ function naturalSelection(population, fitness) {
         console.log('meteor wiped out unfit dinos, new population was created!')
     }
     runGeneration(population);
-}
-
-// TODO: Extract to utility file
-function indexOfMaxValue(array) {
-    return array.reduce(function (indexOfMax, element, index, array) {
-        return element > array[indexOfMax] ? index : indexOfMax
-    }, 0);
 }
 
 // TODO: Extract to other file
