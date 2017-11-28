@@ -10,8 +10,8 @@ export class DinoRunner {
             const runner = new Runner(`#dino-${index}`);
             const controller = new Controller(runner);
 
-            runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth) => {
-                let output = brain.activateDinoBrain(distanceToObstacle, obstacleWidth);
+            runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
+                let output = brain.activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
 
                 if (output > JUMP_THRESHOLD) {
                     controller.jump();

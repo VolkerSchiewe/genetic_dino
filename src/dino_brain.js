@@ -1,6 +1,6 @@
 import {GeneticAlgorithm} from "./genetic_algorithm";
 
-export const INPUT_LAYERS = 2;
+export const INPUT_LAYERS = 3;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 1;
 
@@ -18,10 +18,11 @@ export class DinoBrain {
         }
     }
 
-    activateDinoBrain(distance, width) {
+    activateDinoBrain(distance, width, height) {
         distance = DinoBrain.normalize(distance);
         width = DinoBrain.normalize(width);
-        let inputs = [distance, width];
+        height = DinoBrain.normalize(height);
+        let inputs = [distance, width, height];
         let outputs = this.perceptron.activate(inputs);
 
         return outputs[0];
