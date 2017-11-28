@@ -551,8 +551,9 @@ Runner.prototype = {
                 }
             } else {
                 this.gameOver();
-                if (this.gameEndListener)
-                    this.gameEndListener(this.distanceRan);
+                if (this.gameEndListener) {
+                    this.gameEndListener(this.distanceRan, this.tRex.jumpCount);
+                }
             }
 
             this.distanceMeter.update(deltaTime, Math.ceil(this.distanceRan));
@@ -1881,7 +1882,6 @@ Trex.prototype = {
         this.update(0, Trex.status.RUNNING);
         this.midair = false;
         this.speedDrop = false;
-        this.jumpCount = 0;
     }
 };
 
