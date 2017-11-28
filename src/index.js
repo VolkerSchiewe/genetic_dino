@@ -1,93 +1,47 @@
-import Controller from './game/controller'
-import {Runner} from './game/game'
-import {createPopulation, activateDinoBrain, evolvePopulation} from './genetic_algorithm';
+import {GeneticAlgorithm} from "./genetic_algorithm";
+import {GenerationRunner} from "./generation_runner";
+import {indexOfMaxValue} from "./utils";
 
 const REQUIRED_FITNESS = 2000;
-const JUMP_THRESHOLD = 0.51;
 const POPULATION_SIZE = 10;
-
+const SURVIVOR_COUNT = 3;
 let generation = 0;
-let population = [];
-let fitness = [];
 
 function onDocumentLoad() {
-    population = createPopulation(POPULATION_SIZE);
-    runGeneration();
+    const geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+    const population = geneticAlgorithm.generatePopulation();
+    runGeneration(population);
 }
 
-function runGeneration() {
+function runGeneration(population) {
     generation++;
     showGeneration();
-
-    for (let currentDino = 0; currentDino < population.length; currentDino++) {
-        console.log(`Start dino ${currentDino}`);
-        runDino(population[currentDino], currentDino);
-    }
+    GenerationRunner.runSingleGeneration(population)
+        .then(fitness => naturalSelection(population, fitness))
+        .catch(error => console.log(error));
 }
 
-function runDino(brain, number) {
-    console.log(`New runner #dino-${number}`);
-    let runner = new Runner(`#dino-${number}`);
-    let controller = new Controller(runner);
-
-    runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
-
-        let output = activateDinoBrain(brain, distanceToObstacle, obstacleWidth);
-
-        if (output > JUMP_THRESHOLD) {
-            controller.jump();
-        }
-    });
-
-    runner.addGameEndListener((distance) => {
-        console.log(`Game ended for dino: ${number} with distance: ${distance}`);
-        controller.stop();
-        onDinoFinished(number, distance);
-    });
-
-    controller.start();
-}
-
-function onDinoFinished(number, distance) {
-    fitness[number] = distance;
-    const numberOfDinosFinished = Object.keys(fitness).length;
-    console.log(`Dinos finished ${numberOfDinosFinished}`);
-
-    if (numberOfDinosFinished === POPULATION_SIZE) {
-        console.log(`Generation finished`);
-        naturalSelection();
-    }
-}
-
-//TODO: Implement jump/obstacle-ratio into fitness function to breed new bois! 
-function naturalSelection() {
+//TODO: Implement jump/obstacle-ratio into fitness function to breed new bois!
+function naturalSelection(population, fitness) {
     console.log(`Performing natural selection`);
-    let numberOfSurvivingDinos = 3;
     let dinoAiArray = [];
-    let survivorIndex = 0;
     let bestFitness = Math.max(...fitness);
+    let survivorIndex = 0;
 
-    for (let i = 0; i < numberOfSurvivingDinos; i++) {
+    for (let i = 0; i < SURVIVOR_COUNT; i++) {
         survivorIndex = indexOfMaxValue(fitness);
         dinoAiArray[i] = population[survivorIndex];
         fitness[survivorIndex] = 0;
     }
-    population = evolvePopulation(dinoAiArray, POPULATION_SIZE);
+    let geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+    population = geneticAlgorithm.evolvePopulation(dinoAiArray);
 
     if (generation < 4 && bestFitness < REQUIRED_FITNESS) {
-        population = createPopulation(POPULATION_SIZE);
+        population = geneticAlgorithm.generatePopulation();
         generation = 0;
         console.log('meteor wiped out unfit dinos, new population was created!')
     }
-    fitness = [];
-    runGeneration();
-}
-
-// TODO: Extract to utility file
-function indexOfMaxValue(array) {
-    return array.reduce(function (indexOfMax, element, index, array) {
-        return element > array[indexOfMax] ? index : indexOfMax
-    }, 0);
+    runGeneration(population);
 }
 
 // TODO: Extract to other file
