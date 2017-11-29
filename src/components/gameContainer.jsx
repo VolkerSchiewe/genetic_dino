@@ -1,8 +1,9 @@
-import {Component} from 'react'
+import React from 'react'
 import DinoGame from "./dinoGame.jsx";
 import {POPULATION_SIZE} from "./app.jsx";
+import Metrics from "./metrics.jsx";
 
-export default class GameContainer extends Component {
+export default class GameContainer extends React.Component {
 
     render() {
         let list = [];
@@ -14,7 +15,15 @@ export default class GameContainer extends Component {
             <div>
                 {list.map((index)=>{
                     return (
-                        <DinoGame key={index} dinoOutput={this.props.dinoOutputs[index]} id={index}/>
+                        <div className="row" key={index}>
+                            <div className="col">
+                                <DinoGame id={index}/>
+                            </div>
+                            <div className="col col-lg-2">
+
+                                <Metrics value={this.props.dinoOutputs[index]}/>
+                            </div>
+                        </div>
                     )
                 })}
             </div>

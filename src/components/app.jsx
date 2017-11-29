@@ -1,14 +1,14 @@
-import {Component} from 'react'
+import React from 'react'
 import GameContainer from "./gameContainer.jsx";
 import {GeneticAlgorithm} from "../genetic_algorithm";
 import {GenerationRunner} from "../generation_runner";
 import {indexOfMaxValue} from "../utils";
 
-const REQUIRED_FITNESS = 2000;
+const REQUIRED_FITNESS = 5000;
 export const POPULATION_SIZE = 10;
 const SURVIVOR_COUNT = 3;
 
-export default class App extends Component {
+export default class App extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -38,7 +38,6 @@ export default class App extends Component {
     }
 
     naturalSelection(population, fitness) {
-        console.log(`Performing natural selection`);
         let dinoAiArray = [];
         let bestFitness = Math.max(...fitness);
         let survivorIndex = 0;
@@ -61,7 +60,6 @@ export default class App extends Component {
             this.setState({
                 generation: 0
             });
-            console.log('meteor wiped out unfit dinos, new population was created!')
         }
         this.runGeneration(population);
     }

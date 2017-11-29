@@ -7,7 +7,6 @@ export class GenerationRunner {
                 // Run all dinos and wait until all have finished
                 return Promise.all(dinoRunners);
             }).then(fitness => {
-                console.log(`Fitness of all dinos ${fitness}`);
                 return fitness;
             });
     }
