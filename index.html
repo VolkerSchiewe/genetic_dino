@@ -1,30 +1,36 @@
 <!doctype html>
-<html>
-
+<html lang="en">
 <head>
+    <title>Genetic Dino</title>
+    <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0,maximum-scale=1.0, user-scalable=no">
     <title>chrome easter egg: t-rex runner</title>
-    <link rel="stylesheet" href="index.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/synaptic/1.1.4/synaptic.js"></script>
-    <script src="dist/bundle.js"></script>
-</head>
 
-<body class="offline">
-<h1 id="generation-title"></h1>
-<div id="dino-0" class="game-wrapper"></div>
-<div id="dino-1" class="game-wrapper"></div>
-<div id="dino-2" class="game-wrapper"></div>
-<div id="dino-3" class="game-wrapper"></div>
-<div id="dino-4" class="game-wrapper"></div>
-<div id="dino-5" class="game-wrapper"></div>
-<div id="dino-6" class="game-wrapper"></div>
-<div id="dino-7" class="game-wrapper"></div>
-<div id="dino-8" class="game-wrapper"></div>
-<div id="dino-9" class="game-wrapper"></div>
+    <link rel="stylesheet" href="index.css">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css"
+          integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+</head>
+<body>
+<div id="app"></div>
 <div id="offline-resources">
     <img id="offline-resources-1x" src="assets/default_100_percent/100-offline-sprite.png">
     <img id="offline-resources-2x" src="assets/default_200_percent/200-offline-sprite.png">
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/synaptic/1.1.4/synaptic.js"></script>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="dist/bundle.js"></script>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"
+        integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js"
+        integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ"
+        crossorigin="anonymous"></script>
 </body>
 </html>

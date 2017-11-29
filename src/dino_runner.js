@@ -6,8 +6,8 @@ export const JUMP_THRESHOLD = 0.51;
 export class DinoRunner {
     static create(index, brain) {
         return new Promise(function (resolve, reject) {
-            console.log(`New runner ${index}`);
-            const runner = new Runner(`#dino-${index}`);
+            let elementId = '#dino-' + index;
+            const runner = new Runner(elementId);
             const controller = new Controller(runner);
 
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
