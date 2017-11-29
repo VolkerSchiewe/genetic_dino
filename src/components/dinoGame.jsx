@@ -8,7 +8,7 @@ export default class DinoGame extends React.Component {
     }
 
     render() {
-        let dino = this.props.dino;
+        let value = this.props.dinoOutput;
         let id = this.props.id;
 
         return (
@@ -18,7 +18,7 @@ export default class DinoGame extends React.Component {
                 </div>
                 <div className="col col-lg-2">
 
-                    <Metrics dino={dino}/>
+                    <Metrics value={value}/>
                 </div>
             </div>
         );

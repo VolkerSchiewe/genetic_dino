@@ -8,7 +8,7 @@ export default class Metrics extends Component {
 
     render() {
         return (
-           <div>TODO: implement Metrics</div>
+           <div>{this.props.value}</div>
         );
     }
 }

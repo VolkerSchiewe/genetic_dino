@@ -14,6 +14,7 @@ export default class App extends Component {
         this.state = {
             generation: 0,
             maxScore: 0,
+            dinoOutputs: [],
         };
     }
 
@@ -21,7 +22,16 @@ export default class App extends Component {
         this.setState({
             generation: this.state.generation + 1,
         });
-        GenerationRunner.runSingleGeneration(population)
+        GenerationRunner.runSingleGeneration(population, (index, output) => {
+            let dinoOutputs = this.state.dinoOutputs;
+            if (dinoOutputs.length === index)
+                dinoOutputs.push(output);
+            else
+                dinoOutputs[index] = output;
+            this.setState({
+                dinoOutputs: dinoOutputs,
+            })
+        })
             .then(fitness => this.naturalSelection(population, fitness))
             .catch(error => console.log(error));
 
@@ -63,14 +73,13 @@ export default class App extends Component {
     }
 
     render() {
-        let generation = this.state.generation;
-        let highscore = this.state.maxScore;
+        const {generation, maxScore, dinoOutputs} = this.state;
 
         return (
             <div className="container" style={{marginTop: '50px'}}>
                 <h1>Generation {generation}</h1>
-                Highscore: {highscore}
-                <GameContainer/>
+                Highscore: {maxScore}
+                <GameContainer dinoOutputs={dinoOutputs}/>
             </div>
         );
     }

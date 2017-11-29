@@ -12,9 +12,9 @@ export default class GameContainer extends Component {
 
         return (
             <div>
-                {list.map((object, index)=>{
+                {list.map((index)=>{
                     return (
-                        <DinoGame key={index} dino={index} id={index}/>
+                        <DinoGame key={index} dinoOutput={this.props.dinoOutputs[index]} id={index}/>
                     )
                 })}
             </div>
