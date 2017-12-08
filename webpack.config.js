@@ -1,25 +1,29 @@
 var path = require('path');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/index.jsx',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
     },
+    devServer: {
+        inline: true,
+        port: 8080
+    },
+    externals: {
+        'react': 'React'
+    },
     module: {
         loaders: [
             {
-                test: /\.js$/,
+                test: /\.jsx?$/,
+                exclude: /node_modules/,
                 loader: 'babel-loader',
-                exclude: /(node_modules)/,
                 query: {
-                    presets: ['es2015']
+                    presets: ['env', 'react']
                 }
             }
         ]
-    },
-    stats: {
-        colors: true
-    },
-    devtool: 'source-map'
+
+    }
 };
