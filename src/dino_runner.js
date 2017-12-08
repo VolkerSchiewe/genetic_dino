@@ -18,7 +18,7 @@ export class DinoRunner {
                 }
             });
 
-            runner.addGameEndListener((distance) => {
+            runner.addGameEndListener((distance, jumpCount) => {
                 console.log(`Game ended for dino: ${index} with distance: ${distance}`);
                 controller.stop();
                 resolve(distance);
