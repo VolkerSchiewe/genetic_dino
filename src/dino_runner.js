@@ -1,7 +1,7 @@
 import Controller from './game/controller'
 import {Runner} from "./game/game";
 
-export const JUMP_THRESHOLD = 0.51;
+export const ACTION_THRESHOLD = 0.11;
 
 export class DinoRunner {
     static create(index, brain, outputCallback) {
@@ -13,8 +13,11 @@ export class DinoRunner {
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
                 let output = brain.activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
                 outputCallback(index, output);
-                if (output > JUMP_THRESHOLD) {
+                if (output[0] > ACTION_THRESHOLD) {
                     controller.jump();
+                }
+                if (output[1] > ACTION_THRESHOLD && distance > 1) {
+                    controller.duck();
                 }
             });
 
