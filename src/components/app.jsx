@@ -3,9 +3,10 @@ import GameContainer from "./gameContainer.jsx";
 import {GeneticAlgorithm} from "../genetic_algorithm";
 import {GenerationRunner} from "../generation_runner";
 import {indexOfMaxValue} from "../utils";
+import Grid from 'material-ui/Grid';
 
 const REQUIRED_FITNESS = 3000;
-export const POPULATION_SIZE = 10;
+export const POPULATION_SIZE = 5;
 const SURVIVOR_COUNT = 3;
 
 export default class App extends React.Component {
@@ -72,10 +73,18 @@ export default class App extends React.Component {
         const {generation, maxScore, dinoOutputs} = this.state;
 
         return (
-            <div className="container" style={{marginTop: '50px'}}>
-                <h1>Generation {generation}</h1>
-                Highscore: {maxScore}
-                <GameContainer dinoOutputs={dinoOutputs}/>
+            <div style={{marginTop: '50px'}}>
+                <Grid container justify="center">
+                    <Grid item xs={12} sm={8}>
+                        <Grid item xs={12}>
+                            <h1>Generation {generation}</h1>
+                            Highscore: {maxScore}
+                        </Grid>
+                        <Grid item xs={12}>
+                            <GameContainer dinoOutputs={dinoOutputs}/>
+                        </Grid>
+                    </Grid>
+                </Grid>
             </div>
         );
     }

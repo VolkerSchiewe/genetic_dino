@@ -27,9 +27,11 @@
     "webpack": "^3.8.1"
   },
   "dependencies": {
-    "react": "^16.1.1",
-    "react-dom": "^16.1.1",
-    "synaptic": "^1.1.4",
-    "webpack-dev-server": "^2.9.5"
+    "chart.js": "^2.7.1",
+    "material-ui": "^1.0.0-beta.23",
+    "react": "^16.2.0",
+    "react-chartjs-2": "^2.6.4",
+    "react-dom": "^16.2.0",
+    "synaptic": "^1.1.4"
   }
 }
