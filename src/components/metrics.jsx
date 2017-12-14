@@ -30,9 +30,9 @@ export default class Metrics extends React.Component {
                             yAxes: [{
                                 stacked: true,
                                 ticks: {
-                                    min: 0.4,
-                                    max: 0.6,
-                                    stepSize: 0.1,
+                                    min: 0.45,
+                                    max: 0.55,
+                                    stepSize: 0.05,
                                 }
 
                             }]
