@@ -16,9 +16,10 @@ export default class App extends React.Component {
             maxScore: 0,
             dinoOutputs: [],
         };
+        this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
     }
 
-    runGeneration(population, geneticAlgorithm) {
+    runGeneration(population) {
         this.setState({
             generation: this.state.generation + 1,
         });
@@ -32,12 +33,12 @@ export default class App extends React.Component {
                 dinoOutputs: dinoOutputs,
             })
         })
-            .then(fitness => this.naturalSelection(population, fitness, geneticAlgorithm))
+            .then(fitness => this.naturalSelection(population, fitness))
             .catch(error => console.log(error));
 
     }
 
-    naturalSelection(population, fitness, geneticAlgorithm) {
+    naturalSelection(population, fitness) {
         let dinoAiArray = [];
         let bestFitness = Math.max(...fitness);
         let survivorIndex = 0;
@@ -52,20 +53,19 @@ export default class App extends React.Component {
             dinoAiArray[i] = population[survivorIndex];
             fitness[survivorIndex] = 0;
         }
-        let new_population = geneticAlgorithm.evolvePopulation(dinoAiArray);
+        let new_population = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
         if (this.state.generation < 4 && bestFitness < REQUIRED_FITNESS) {
-            new_population = geneticAlgorithm.generatePopulation();
+            new_population = this.geneticAlgorithm.generatePopulation();
             this.setState({
                 generation: 0
             });
         }
-        this.runGeneration(new_population, geneticAlgorithm);
+        this.runGeneration(new_population);
     }
 
     componentDidMount() {
-        const geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
-        const population = geneticAlgorithm.generatePopulation();
-        this.runGeneration(population, geneticAlgorithm);
+        const population = this.geneticAlgorithm.generatePopulation();
+        this.runGeneration(population);
     }
 
     render() {

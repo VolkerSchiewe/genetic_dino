@@ -20,7 +20,6 @@ export class DinoBrain {
         else {
             // TODO: implement option to create LSTM network when controller.duck() is integrated
             throw Error('LSTM is not implemented yet.');
-            this.lstm = new synaptic.Architect.LSTM(INPUT_LAYERS, HIDDEN_LAYERS, OUTPUT_LAYERS);
         }
     }
 
