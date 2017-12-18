@@ -1182,6 +1182,11 @@ GameOverPanel.prototype = {
  * @return {Array<CollisionBox>}
  */
 function checkForCollision(obstacle, tRex, opt_canvasCtx) {
+    // Hidden dinos cannot collide.
+    if (tRex.isHidden) {
+        return false;
+    }
+
     var obstacleBoxXPos = Runner.defaultDimensions.WIDTH + obstacle.xPos;
 
     // Adjustments are made to the bounding box as there is a 1 pixel white
