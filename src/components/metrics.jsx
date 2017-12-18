@@ -1,6 +1,5 @@
 import React from 'react'
 import {Bar} from "react-chartjs-2";
-import Grid from 'material-ui/Grid';
 
 export default class Metrics extends React.Component {
 
@@ -9,41 +8,42 @@ export default class Metrics extends React.Component {
     }
 
     render() {
+        let value = this.props.value;
+
         return (
-            <Grid container >
-                {this.props.value !== undefined && this.props.value.map((value, index) => {
-                    let label = index === 0 ? 'Jump' : 'Duck';
-                    return (
-                        <Grid item xs={6} key={index}>
-                            <Bar data={{
-                                labels: [label],
-                                datasets: [
-                                    {
-                                        data: [value]
-                                    }
-                                ]
-                            }} options={{
-                                legend: {
-                                    display: false
-                                },
-                                tooltips: {
-                                    enabled: false
-                                },
-                                scales: {
-                                    yAxes: [{
-                                        stacked: true,
-                                        ticks: {
-                                            min: -0.3,
-                                            max: 0.3,
-                                            stepSize: 0.5,
-                                        }
-                                    }]
-                                }
-                            }}/>
-                        </Grid>
-                    )
-                })}
-            </Grid>
+            <div style={{margin: '20px'}}>
+                {value &&
+                <Bar data={{
+                    labels: ['Jump', 'Duck'],
+                    datasets: [
+                        {
+                            data: value,
+                            backgroundColor: [
+                                '#F44336',
+                                '#03A9F4',
+                            ],
+                        }
+                    ]
+                }} options={{
+                    legend: {
+                        display: false
+                    },
+                    tooltips: {
+                        enabled: false
+                    },
+                    scales: {
+                        yAxes: [{
+                            stacked: true,
+                            ticks: {
+                                min: -0.3,
+                                max: 0.3,
+                                stepSize: 0.5,
+                            }
+                        }]
+                    }
+                }}/>
+                }
+            </div>
         );
     }
 }

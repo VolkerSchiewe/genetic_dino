@@ -17,10 +17,10 @@ export default class GameContainer extends React.Component {
                     let output  = this.props.dinoOutputs[index];
                     return (
                         <Grid container key={index}>
-                            <Grid item xs={8}>
+                            <Grid item xs={9}>
                                 <DinoGame id={index}/>
                             </Grid>
-                            <Grid item xs={4}>
+                            <Grid item xs={3}>
                                 <Metrics value={output}/>
                             </Grid>
                         </Grid>
