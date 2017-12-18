@@ -44,14 +44,14 @@ export class GeneticAlgorithm {
     }
 
     // TODO: implement method to manipulate LSTM cells
-    static mutateDinoGenes(dinoGene) {
+    mutateDinoGenes(dinoGene) {
         let i;
         let dinoPerceptron = dinoGene.perceptron.toJSON();
         for (i = 0; i < NEURONS; i++) {
-            dinoPerceptron.neurons[INPUT_LAYERS + i].bias = GeneticAlgorithm.mutateGene(dinoPerceptron.neurons[INPUT_LAYERS + 1].bias);
+            dinoPerceptron.neurons[INPUT_LAYERS + i].bias = this.mutateGene(dinoPerceptron.neurons[INPUT_LAYERS + 1].bias);
         }
         for (i = 0; i < CONNECTIONS; i++) {
-            dinoPerceptron.connections[i].weights = GeneticAlgorithm.mutateGene(dinoPerceptron.connections[i].weights);
+            dinoPerceptron.connections[i].weights = this.mutateGene(dinoPerceptron.connections[i].weights);
         }
         dinoGene.perceptron = synaptic.Network.fromJSON(dinoPerceptron);
         return dinoGene
@@ -60,17 +60,42 @@ export class GeneticAlgorithm {
     // Returns new population, using bredDinoBrains
     // TODO: Research better evolution algorithms
     evolvePopulation(dinoAiArray) {
+        let population = []
         let newDinoBrain = new DinoBrain(false);
-        let bestGenes = dinoAiArray[0];
+        let bestGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[0]);
+        let second = this.crossOverDinoBrains(dinoAiArray[1], dinoAiArray[1]);
+        let third = this.crossOverDinoBrains(dinoAiArray[2], dinoAiArray[2]);
         let goodGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[1]);
         let mediumGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[2]);
         let freshGenes = this.crossOverDinoBrains(dinoAiArray[0], newDinoBrain);
+        population = this.bredDinoBrains(bestGenes, second, third, goodGenes, mediumGenes, freshGenes)
+        return population;
+    }
 
-        return DinoBrain.bredDinoBrains(bestGenes, goodGenes, mediumGenes, freshGenes, this.populationSize);
+    bredDinoBrains(bestGenes, second, third, goodGenes, mediumGenes, freshGenes) {
+        let new_population = [];
+        for (let i = 0; i < this.populationSize; i++) {
+            if (i === 0) {
+                new_population.push(bestGenes);
+            } else if (i === 1) {
+                new_population.push(second);
+            } else if (i === 2) {
+                new_population[i] = third;
+            } else if (i % 3 === 0) {
+                new_population.push(this.mutateDinoGenes(goodGenes));
+            } else if (i % 4 === 0) {
+                new_population.push(this.mutateDinoGenes(mediumGenes));
+            } else if (i % 5 === 0) {
+                new_population.push(this.mutateDinoGenes(bestGenes));
+            } else {
+                new_population.push(this.mutateDinoGenes(freshGenes));
+            }
+        }
+        return new_population;
     }
 
     // TODO: Research about most efficient mutation rate and factor
-    static mutateGene(gene) {
+    mutateGene(gene) {
         let mutateRate = 0.2;
         if (Math.random() < mutateRate) {
             gene *= 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));

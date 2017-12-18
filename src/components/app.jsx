@@ -4,7 +4,7 @@ import {GeneticAlgorithm} from "../genetic_algorithm";
 import {GenerationRunner} from "../generation_runner";
 import {indexOfMaxValue} from "../utils";
 
-const REQUIRED_FITNESS = 5000;
+const REQUIRED_FITNESS = 3000;
 export const POPULATION_SIZE = 10;
 const SURVIVOR_COUNT = 3;
 
@@ -16,6 +16,7 @@ export default class App extends React.Component {
             maxScore: 0,
             dinoOutputs: [],
         };
+        this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
     }
 
     runGeneration(population) {
@@ -52,21 +53,18 @@ export default class App extends React.Component {
             dinoAiArray[i] = population[survivorIndex];
             fitness[survivorIndex] = 0;
         }
-        let geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
-        population = geneticAlgorithm.evolvePopulation(dinoAiArray);
-
+        let new_population = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
         if (this.state.generation < 4 && bestFitness < REQUIRED_FITNESS) {
-            population = geneticAlgorithm.generatePopulation();
+            new_population = this.geneticAlgorithm.generatePopulation();
             this.setState({
                 generation: 0
             });
         }
-        this.runGeneration(population);
+        this.runGeneration(new_population);
     }
 
     componentDidMount() {
-        const geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
-        const population = geneticAlgorithm.generatePopulation();
+        const population = this.geneticAlgorithm.generatePopulation();
         this.runGeneration(population);
     }
 
