@@ -1,7 +1,7 @@
 import React from 'react'
 import DinoGame from "./dinoGame.jsx";
 import {POPULATION_SIZE} from "./app.jsx";
-import Metrics from "./metrics.jsx";
+import OutputMetrics from "./outputMetrics.jsx";
 import Grid from 'material-ui/Grid';
 
 export default class GameContainer extends React.Component {
@@ -21,7 +21,7 @@ export default class GameContainer extends React.Component {
                                 <DinoGame id={index}/>
                             </Grid>
                             <Grid item xs={3}>
-                                <Metrics value={output}/>
+                                <OutputMetrics value={output}/>
                             </Grid>
                         </Grid>
                     )

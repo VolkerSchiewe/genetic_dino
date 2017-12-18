@@ -1,7 +1,7 @@
 import React from 'react'
 import {Bar} from "react-chartjs-2";
 
-export default class Metrics extends React.Component {
+export default class OutputMetrics extends React.Component {
 
     constructor(props) {
         super(props);
@@ -41,7 +41,8 @@ export default class Metrics extends React.Component {
                             }
                         }]
                     }
-                }}/>
+                }}
+                />
                 }
             </div>
         );

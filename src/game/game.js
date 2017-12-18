@@ -383,10 +383,8 @@ Runner.prototype = {
 
         const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
         if (childContainer.length > 0) {
-            console.log('Replacing existing game container');
             this.outerContainerEl.replaceChild(this.containerEl, childContainer[0]);
         } else {
-            console.log('Creating new game container');
             this.outerContainerEl.appendChild(this.containerEl);
         }
 
@@ -742,7 +740,6 @@ Runner.prototype = {
 
     onStartGame: function () {
         if (!this.playing) {
-            console.log("Start Game");
             this.playing = true;
             this.update();
             if (window.errorPageController) {
