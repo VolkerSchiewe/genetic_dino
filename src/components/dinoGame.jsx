@@ -11,7 +11,7 @@ export default class DinoGame extends React.Component {
     render() {
         let id = this.props.id;
         return (
-            <div id={'dino-' + id} className="game-wrapper"/>
+            <div id={'game'} className="game-wrapper"/>
 
         );
     }
