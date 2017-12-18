@@ -6,7 +6,7 @@ import {indexOfMaxValue} from "../utils";
 import Grid from 'material-ui/Grid';
 
 const REQUIRED_FITNESS = 3000;
-export const POPULATION_SIZE = 10;
+export const POPULATION_SIZE = 5;
 const SURVIVOR_COUNT = 3;
 
 export default class App extends React.Component {

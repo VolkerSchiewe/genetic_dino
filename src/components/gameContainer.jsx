@@ -14,13 +14,14 @@ export default class GameContainer extends React.Component {
         return (
             <div>
                 {list.map((index)=>{
+                    let output  = this.props.dinoOutputs[index];
                     return (
                         <Grid container key={index}>
-                            <Grid item xs={10}>
+                            <Grid item xs={8}>
                                 <DinoGame id={index}/>
                             </Grid>
-                            <Grid item xs={2}>
-                                <Metrics value={this.props.dinoOutputs[index]}/>
+                            <Grid item xs={4}>
+                                <Metrics value={output}/>
                             </Grid>
                         </Grid>
                     )
