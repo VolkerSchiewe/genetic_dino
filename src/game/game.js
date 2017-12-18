@@ -609,18 +609,16 @@ Runner.prototype = {
         this.scheduleNextUpdate();
         var nextObstacle = this.horizon.obstacles ? this.horizon.obstacles[0] : {};
 
-        if (this.tRex.length > 0) {
-            var currentData = {
-                speed: this.currentSpeed,
-                distance: this.distanceRan,
-                distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex[0].xPos + this.tRex[0].config.WIDTH / 2) : '',
-                widthOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.width : '',
-                heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
-            };
+        var currentData = {
+            speed: this.currentSpeed,
+            distance: this.distanceRan,
+            distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex[0].xPos + this.tRex[0].config.WIDTH / 2) : '',
+            widthOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.width : '',
+            heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
+        };
 
-            for (let i = 0; i < this.metricsListeners.length; i++) {
-                this.metricsListeners[i](currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
-            }
+        for (let i = 0; i < this.metricsListeners.length; i++) {
+            this.metricsListeners[i](currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
         }
     },
 
