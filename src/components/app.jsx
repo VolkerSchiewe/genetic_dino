@@ -4,7 +4,9 @@ import {GeneticAlgorithm} from "../genetic_algorithm";
 import {GenerationRunner} from "../generation_runner";
 import {indexOfMaxValue} from "../utils";
 import Grid from 'material-ui/Grid';
+import Slider from 'rc-slider';
 import GenerationMetrics from "./generationMetrics.jsx";
+import 'rc-slider/assets/index.css';
 
 const REQUIRED_FITNESS = 75;
 export const POPULATION_SIZE = 5;
@@ -18,8 +20,19 @@ export default class App extends React.Component {
             maxScore: 0,
             dinoOutputs: [],
             scoreHistory: [],
+            mutationRate: 0.2
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+        this.onSliderChange = this.onSliderChange.bind(this)
+    }
+
+    onSliderChange(value) {
+        value = value/100;
+        this.setState({
+            mutationRate: value
+        });
+        if (this.geneticAlgorithm)
+            this.geneticAlgorithm.setMutationRate(value);
     }
 
     runGeneration(population) {
@@ -46,7 +59,7 @@ export default class App extends React.Component {
         let bestFitness = Math.max(...fitness);
         let survivorIndex = 0;
         let scoreHistory = this.state.scoreHistory;
-        for (let i = 0; i < fitness.length; i++){
+        for (let i = 0; i < fitness.length; i++) {
             let dinoFitness = scoreHistory[i];
             if (dinoFitness)
                 dinoFitness.push(fitness[i]);
@@ -82,7 +95,7 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {generation, maxScore, dinoOutputs, scoreHistory} = this.state;
+        const {generation, maxScore, dinoOutputs, scoreHistory, mutationRate} = this.state;
 
         return (
             <div style={{marginTop: '50px'}}>
@@ -91,6 +104,13 @@ export default class App extends React.Component {
                         <Grid item xs={5}>
                             <h1>Generation {generation}</h1>
                             Highscore: {maxScore}
+
+                            <div style={{marginTop: 10}}>
+                                <label> Mutation Rate: {mutationRate}
+                                    <Slider onChange={this.onSliderChange} defaultValue={20}/>
+                                </label>
+                            </div>
+
                         </Grid>
                         <Grid item xs={6}>
                             <GenerationMetrics scoreHistory={scoreHistory}/>

@@ -5,7 +5,12 @@ const RECESSIVE_GENE_RATE = 0.35;
 
 export class GeneticAlgorithm {
     constructor(populationSize) {
-        this.populationSize = populationSize
+        this.populationSize = populationSize;
+        this.mutationRate = 0.2;
+    }
+
+    setMutationRate(mutationRate){
+        this.mutationRate = mutationRate;
     }
 
     generatePopulation() {
@@ -96,8 +101,7 @@ export class GeneticAlgorithm {
 
     // TODO: Research about most efficient mutation rate and factor
     mutateGene(gene) {
-        let mutateRate = 0.2;
-        if (Math.random() < mutateRate) {
+        if (Math.random() < this.mutationRate) {
             gene *= 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
         }
         return gene;

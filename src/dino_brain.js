@@ -1,5 +1,3 @@
-import {GeneticAlgorithm} from "./genetic_algorithm";
-
 export const INPUT_LAYERS = 3;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 2;
