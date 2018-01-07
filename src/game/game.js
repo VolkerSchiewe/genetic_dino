@@ -46,7 +46,8 @@ export function Runner(outerContainerId, numberOfTrex, opt_config) {
     this.inverted = false;
     this.invertTimer = 0;
     this.resizeTimerId_ = null;
-
+    this.shouldPlayIntro = false;
+    this.isPlayingIntro = false;
     this.playCount = 0;
 
     // Sound FX.
@@ -462,7 +463,8 @@ Runner.prototype = {
      */
     playIntro: function () {
         if (!this.activated && !this.crashed) {
-            this.playingIntro = true;
+            this.shouldPlayIntro = false;
+            this.isPlayingIntro = true;
 
             // CSS animation definition.
             var keyframes = '@-webkit-keyframes intro { ' +
@@ -492,7 +494,7 @@ Runner.prototype = {
      */
     startGame: function () {
         this.runningTime = 0;
-        this.playingIntro = false;
+        this.isPlayingIntro = false;
         this.containerEl.style.webkitAnimation = '';
         this.playCount++;
 
@@ -535,12 +537,13 @@ Runner.prototype = {
             var hasObstacles = this.runningTime > this.config.CLEAR_TIME;
 
             // First jump of first dino triggers the intro.
-            if (this.tRex[0].jumpCount == 1 && !this.playingIntro) {
+            if (this.shouldPlayIntro && !this.isPlayingIntro) {
+                console.log(`PlayIntro!`);
                 this.playIntro();
             }
 
             // The horizon doesn't move until the intro is over.
-            if (this.playingIntro) {
+            if (this.isPlayingIntro) {
                 this.horizon.update(0, this.currentSpeed, hasObstacles);
             } else {
                 deltaTime = !this.activated ? 0 : deltaTime;
@@ -731,6 +734,7 @@ Runner.prototype = {
         for (let i = 0; i < this.tRex.length; i++) {
             this.onJump(i);
         }
+        this.shouldPlayIntro = true;
     },
 
     onJump: function (index) {
@@ -1585,7 +1589,7 @@ function Trex(canvas, spritePos) {
     this.config = Trex.config;
     // Current status.
     this.status = Trex.status.WAITING;
-    this.playingIntro = false;
+    this.isPlayingIntro = false;
     this.jumping = false;
     this.ducking = false;
     this.jumpVelocity = 0;
@@ -1732,7 +1736,7 @@ Trex.prototype = {
         }
 
         // Game intro animation, T-rex moves in from the left.
-        if (this.playingIntro && this.xPos < this.config.START_X_POS) {
+        if (this.isPlayingIntro && this.xPos < this.config.START_X_POS) {
             this.xPos += Math.round((this.config.START_X_POS /
                 this.config.INTRO_DURATION) * deltaTime);
         }
