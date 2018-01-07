@@ -460,10 +460,9 @@ Runner.prototype = {
      * Play the game intro.
      * Canvas container width expands out to the full width.
      */
-    playIntro: function (index) {
+    playIntro: function () {
         if (!this.activated && !this.crashed) {
             this.playingIntro = true;
-            this.tRex[index].playingIntro = true;
 
             // CSS animation definition.
             var keyframes = '@-webkit-keyframes intro { ' +
@@ -472,8 +471,7 @@ Runner.prototype = {
                 '}';
             document.styleSheets[0].insertRule(keyframes, 0);
 
-            this.containerEl.addEventListener(Runner.events.ANIM_END,
-                this.startGame.bind(this));
+            this.containerEl.addEventListener(Runner.events.ANIM_END, this.startGame.bind(this));
 
             this.containerEl.style.webkitAnimation = 'intro .4s ease-out 1 both';
             this.containerEl.style.width = this.dimensions.WIDTH + 'px';
@@ -492,10 +490,9 @@ Runner.prototype = {
     /**
      * Update the game status to started.
      */
-    startGame: function (index) {
+    startGame: function () {
         this.runningTime = 0;
         this.playingIntro = false;
-        this.tRex[index].playingIntro = false;
         this.containerEl.style.webkitAnimation = '';
         this.playCount++;
 
@@ -537,11 +534,9 @@ Runner.prototype = {
             this.runningTime += deltaTime;
             var hasObstacles = this.runningTime > this.config.CLEAR_TIME;
 
-            // First jump triggers the intro.
-            for (let i = 0; i < this.tRex.length; i++) {
-                if (this.tRex[i].jumpCount == 1 && !this.playingIntro) {
-                    this.playIntro(i);
-                }
+            // First jump of first dino triggers the intro.
+            if (this.tRex[0].jumpCount == 1 && !this.playingIntro) {
+                this.playIntro();
             }
 
             // The horizon doesn't move until the intro is over.
@@ -1590,7 +1585,7 @@ function Trex(canvas, spritePos) {
     this.config = Trex.config;
     // Current status.
     this.status = Trex.status.WAITING;
-
+    this.playingIntro = false;
     this.jumping = false;
     this.ducking = false;
     this.jumpVelocity = 0;
