@@ -622,7 +622,7 @@ Runner.prototype = {
 
     notifyGameEnded(index) {
         for (let i = 0; i < this.gameEndListeners.length; i++) {
-            this.gameEndListeners[i](index, this.distanceRan, this.tRex.jumpCount);
+            this.gameEndListeners[i](index, this.distanceRan, this.tRex[i].jumpCount);
         }
     },
 
