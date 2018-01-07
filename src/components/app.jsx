@@ -88,11 +88,11 @@ export default class App extends React.Component {
             <div style={{marginTop: '50px'}}>
                 <Grid container justify="center">
                     <Grid container xs={12} sm={8}>
-                        <Grid item xs={6}>
+                        <Grid item xs={5}>
                             <h1>Generation {generation}</h1>
                             Highscore: {maxScore}
                         </Grid>
-                        <Grid item xs={5}>
+                        <Grid item xs={6}>
                             <GenerationMetrics scoreHistory={scoreHistory}/>
                         </Grid>
                         <Grid item xs={12}>

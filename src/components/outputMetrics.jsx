@@ -25,6 +25,10 @@ export default class OutputMetrics extends React.Component {
                         }
                     ]
                 }} options={{
+                    title: {
+                        display: true,
+                        text: 'Output',
+                    },
                     legend: {
                         display: false
                     },
