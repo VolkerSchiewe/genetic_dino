@@ -22,7 +22,7 @@ export class DinoRunner {
 
             runner.addGameEndListener((i, distance, jumpCount) => {
                 if (i === index) {
-                    console.log(`Game ended for dino: ${i} with distance: ${distance}`);
+                    console.log(`Game ended for dino: ${i} with distance: ${distance} jumps: ${jumpCount}`);
 
                     controller.stop();
                     resolve(distance);
