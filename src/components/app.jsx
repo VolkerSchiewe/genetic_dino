@@ -9,8 +9,10 @@ import GenerationMetrics from "./generationMetrics.jsx";
 import 'rc-slider/assets/index.css';
 
 const REQUIRED_FITNESS = 75;
-export const POPULATION_SIZE = 5;
+export const POPULATION_SIZE = 4;
 const SURVIVOR_COUNT = 3;
+export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
+
 
 export default class App extends React.Component {
     constructor(props) {

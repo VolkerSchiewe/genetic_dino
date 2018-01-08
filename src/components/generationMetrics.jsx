@@ -1,7 +1,7 @@
 import React from 'react'
 import {Line} from "react-chartjs-2";
+import {colors} from "./app.jsx";
 
-const colors = ['#F44336', '#9C27B0', '#673AB7', '#00BCD4', '#8BC34A', '#FFC107', '#795548', '#CDDC39', '#009688', '#3F51B5',];
 
 export default class GenerationMetrics extends React.Component {
     constructor(props) {

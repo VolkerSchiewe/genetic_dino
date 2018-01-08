@@ -630,7 +630,8 @@ Runner.prototype = {
 
     notifyGameEnded(index) {
         if (this.gameEndListeners[index] != null) {
-            this.gameEndListeners[index](index, this.distanceRan, this.tRex[index].jumpCount);
+            var distance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan));
+            this.gameEndListeners[index](index, distance, this.tRex[index].jumpCount);
         }
 
         this.removeMetricsListener(index);
@@ -652,26 +653,6 @@ Runner.prototype = {
     removeGameEndListener(index) {
         this.gameEndListeners[index] = null;
     },
-
-    // /**
-    //  * Event handler.
-    //  */
-    // handleEvent: function (e) {
-    //     return (function (evtType, events) {
-    //         switch (evtType) {
-    //             case events.KEYDOWN:
-    //             case events.TOUCHSTART:
-    //             case events.MOUSEDOWN:
-    //                 this.onKeyDown(e);
-    //                 break;
-    //             case events.KEYUP:
-    //             case events.TOUCHEND:
-    //             case events.MOUSEUP:
-    //                 this.onKeyUp(e);
-    //                 break;
-    //         }
-    //     }.bind(this))(e.type, Runner.events);
-    // },
 
     /**
      * Bind relevant key / mouse / touch listeners.
