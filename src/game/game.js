@@ -619,17 +619,15 @@ Runner.prototype = {
     },
 
     notifyGameEnded(index) {
-        for (let i = 0; i < this.gameEndListeners.length; i++) {
-            this.gameEndListeners[i](index, this.distanceRan, this.tRex[i].jumpCount);
-        }
+        this.gameEndListeners[index](index, this.distanceRan, this.tRex[index].jumpCount);
     },
 
     addMetricsListener(callback) {
         this.metricsListeners.push(callback);
     },
 
-    addGameEndListener(callback) {
-        this.gameEndListeners.push(callback);
+    addGameEndListener(index, callback) {
+        this.gameEndListeners[index] = callback;
     },
 
     // /**

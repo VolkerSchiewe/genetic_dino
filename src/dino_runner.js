@@ -20,13 +20,11 @@ export class DinoRunner {
                 }
             });
 
-            runner.addGameEndListener((i, distance, jumpCount) => {
-                if (i === index) {
-                    console.log(`Game ended for dino: ${i} with distance: ${distance} jumps: ${jumpCount}`);
+            runner.addGameEndListener(index, (i, distance, jumpCount) => {
+                console.log(`Game ended for dino: ${i} with distance: ${distance} jumps: ${jumpCount}`);
 
-                    controller.stop();
-                    resolve(distance);
-                }
+                controller.stop();
+                resolve(distance);
             });
 
             controller.start()
