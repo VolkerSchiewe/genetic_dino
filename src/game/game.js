@@ -290,11 +290,11 @@ Runner.prototype = {
                 this.dinoSprites[i] = document.getElementById('offline-resources-2x-' + i);
             }
         } else {
-            Runner.imageSprite = document.getElementById('offline-resources-1x');
+            Runner.imageSprite = document.getElementById('offline-resources-1x-0');
             this.spriteDef = Runner.spriteDefinition.LDPI;
 
             for (let i = 0; i < 10; i++) {
-                this.dinoSprites[i] = document.getElementById('offline-resources-2x-' + i);
+                this.dinoSprites[i] = document.getElementById('offline-resources-1x-' + i);
             }
         }
 
