@@ -20,6 +20,7 @@ export function Runner(outerContainerId, numberOfTrex, opt_config) {
 
     this.canvas = null;
     this.canvasCtx = null;
+    this.dinoSprites = [];
 
     this.metricsListeners = [];
     this.gameEndListeners = [];
@@ -282,11 +283,19 @@ Runner.prototype = {
      */
     loadImages: function () {
         if (IS_HIDPI) {
-            Runner.imageSprite = document.getElementById('offline-resources-2x');
+            Runner.imageSprite = document.getElementById('offline-resources-2x-0');
             this.spriteDef = Runner.spriteDefinition.HDPI;
+
+            for (let i = 0; i < 10; i++) {
+                this.dinoSprites[i] = document.getElementById('offline-resources-2x-' + i);
+            }
         } else {
             Runner.imageSprite = document.getElementById('offline-resources-1x');
             this.spriteDef = Runner.spriteDefinition.LDPI;
+
+            for (let i = 0; i < 10; i++) {
+                this.dinoSprites[i] = document.getElementById('offline-resources-2x-' + i);
+            }
         }
 
         if (Runner.imageSprite.complete) {
@@ -368,7 +377,8 @@ Runner.prototype = {
 
         // Draw t-rex
         for (let i = 0; i < this.numberOfTrex; i++) {
-            this.tRex[i] = new Trex(this.canvas, this.spriteDef.TREX);
+            let dinoSpriteIndex = i % this.dinoSprites.length;
+            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX);
         }
 
         const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
@@ -1567,9 +1577,10 @@ Obstacle.types = [
  * @param {Object} spritePos Positioning within image sprite.
  * @constructor
  */
-function Trex(canvas, spritePos) {
+function Trex(canvas, imageSprite, spritePos) {
     this.canvas = canvas;
     this.canvasCtx = canvas.getContext('2d');
+    this.imageSprite = imageSprite;
     this.spritePos = spritePos;
     this.xPos = 0;
     this.yPos = 0;
@@ -1786,7 +1797,7 @@ Trex.prototype = {
 
         // Ducking.
         if (this.ducking && this.status != Trex.status.CRASHED) {
-            this.canvasCtx.drawImage(Runner.imageSprite, sourceX, sourceY,
+            this.canvasCtx.drawImage(this.imageSprite, sourceX, sourceY,
                 sourceWidth, sourceHeight,
                 this.xPos, this.yPos,
                 this.config.WIDTH_DUCK, this.config.HEIGHT);
@@ -1796,7 +1807,7 @@ Trex.prototype = {
                 this.xPos++;
             }
             // Standing / running
-            this.canvasCtx.drawImage(Runner.imageSprite, sourceX, sourceY,
+            this.canvasCtx.drawImage(this.imageSprite, sourceX, sourceY,
                 sourceWidth, sourceHeight,
                 this.xPos, this.yPos,
                 this.config.WIDTH, this.config.HEIGHT);
