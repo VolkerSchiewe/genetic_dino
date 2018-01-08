@@ -624,20 +624,35 @@ Runner.prototype = {
         };
 
         for (let i = 0; i < this.metricsListeners.length; i++) {
-            this.metricsListeners[i](currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
+            if (this.metricsListeners[i] != null) {
+                this.metricsListeners[i](currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
+            }
         }
     },
 
     notifyGameEnded(index) {
-        this.gameEndListeners[index](index, this.distanceRan, this.tRex[index].jumpCount);
+        if (this.gameEndListeners[index] != null) {
+            this.gameEndListeners[index](index, this.distanceRan, this.tRex[index].jumpCount);
+        }
+
+        this.removeMetricsListener(index);
+        this.removeGameEndListener(index);
     },
 
-    addMetricsListener(callback) {
-        this.metricsListeners.push(callback);
+    addMetricsListener(index, callback) {
+        this.metricsListeners[index] = callback;
+    },
+
+    removeMetricsListener(index) {
+        this.metricsListeners[index] = null;
     },
 
     addGameEndListener(index, callback) {
         this.gameEndListeners[index] = callback;
+    },
+
+    removeGameEndListener(index) {
+        this.gameEndListeners[index] = null;
     },
 
     // /**
