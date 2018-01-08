@@ -557,8 +557,6 @@ Runner.prototype = {
 
                 if (collision) {
                     this.notifyGameEnded(i);
-                    // TODO: Hide tRex
-                    this.tRex[i].hide();
                     this.tRex[i].hide();
                 }
             }
