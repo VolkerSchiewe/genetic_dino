@@ -9,9 +9,10 @@ export class DinoRunner {
             const controller = new Controller(runner, index);
             console.log(`Created Runner for dino ${index}`);
 
-            runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
+            runner.addMetricsListener(index, (speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
                 let output = brain.activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
                 outputCallback(index, output);
+
                 if (output[0] > ACTION_THRESHOLD) {
                     controller.jump();
                 }
