@@ -12,7 +12,7 @@ export default class OutputMetrics extends React.Component {
         const {value, id} = this.props;
         let color = colors[id];
         return (
-            <div style={{margin: '10px'}}>
+            <div style={{margin: '10px', minHeight:150}}>
                 {value &&
                 <Bar data={{
                     labels: ['Jump', 'Duck'],
@@ -28,7 +28,7 @@ export default class OutputMetrics extends React.Component {
                 }} options={{
                     title: {
                         display: true,
-                        text: 'Output ' + id,
+                        text: 'Output ' + (id + 1),
                     },
                     legend: {
                         display: false
