@@ -564,7 +564,8 @@ Runner.prototype = {
                 var collision = hasObstacles && checkForCollision(this.horizon.obstacles[0], this.tRex[i]);
 
                 if (collision) {
-                    this.notifyGameEnded(i);
+                    this.numberOfCrashedTrex++;
+                    this.notifyDinoCrashed(i);
                     this.tRex[i].hide();
                 }
             }
@@ -621,37 +622,45 @@ Runner.prototype = {
             heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
         };
 
-        for (let i = 0; i < this.metricsListeners.length; i++) {
-            if (this.metricsListeners[i] != null) {
-                this.metricsListeners[i](currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
-            }
+        if (this.metricsListeners != null) {
+            this.metricsListeners(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
         }
     },
 
-    notifyGameEnded(index) {
-        if (this.gameEndListeners[index] != null) {
+    notifyDinoCrashed(index) {
+        if (this.dinoCrashedListener != null) {
             var distance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan));
-            this.gameEndListeners[index](index, distance, this.tRex[index].jumpCount);
+            this.dinoCrashedListener(index, distance, this.tRex[index].jumpCount);
         }
 
-        this.removeMetricsListener(index);
-        this.removeGameEndListener(index);
+        if (this.numberOfCrashedTrex >= this.numberOfTrex) {
+            this.gameEndListener();
+            this.stop();
+        }
     },
 
-    addMetricsListener(index, callback) {
-        this.metricsListeners[index] = callback;
+    addMetricsListener(callback) {
+        this.metricsListeners = callback;
     },
 
-    removeMetricsListener(index) {
-        this.metricsListeners[index] = null;
+    removeMetricsListener() {
+        this.metricsListeners = null;
     },
 
-    addGameEndListener(index, callback) {
-        this.gameEndListeners[index] = callback;
+    addDinoCrashedListener(callback) {
+        this.dinoCrashedListener = callback;
     },
 
-    removeGameEndListener(index) {
-        this.gameEndListeners[index] = null;
+    removeDinoCrashedListener() {
+        this.dinoCrashedListener = null;
+    },
+
+    addGameEndListener(callback) {
+        this.gameEndListener = callback;
+    },
+
+    removeGameEndListener(callback) {
+        this.gameEndListener = null;
     },
 
     /**

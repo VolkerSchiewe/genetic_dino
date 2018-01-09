@@ -1,28 +1,44 @@
-import {DinoRunner} from "./dino_runner";
 import {Runner} from "./game/game";
+
+export const ACTION_THRESHOLD = 0.11;
 
 export class GenerationRunner {
     static runSingleGeneration(population, outputCallback) {
-        return this.createRunnersForPopulation(population, outputCallback)
-            .then(dinoRunners => {
-                // Run all dinos and wait until all have finished
-                return Promise.all(dinoRunners);
-            }).then(fitness => {
-                return fitness;
-            });
-    }
-
-    static createRunnersForPopulation(population, outputCallback) {
         return new Promise((resolve, reject) => {
             let elementId = '#game';
-            const runner = new Runner(elementId, population.length);
+            let runner = new Runner(elementId, population.length);
+            let distances = [];
 
-            const dinoRunners = [];
+            runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
+                for (let i = 0; i < population.length; i++) {
+                    let output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
+                    outputCallback(i, output);
 
-            for (let currentDino = 0; currentDino < population.length; currentDino++) {
-                dinoRunners.push(DinoRunner.create(runner, currentDino, population[currentDino], outputCallback));
-            }
-            resolve(dinoRunners);
+                    if (output[0] > ACTION_THRESHOLD) {
+                        runner.onJump(i);
+                    }
+                    if (output[1] > ACTION_THRESHOLD && distance > 1) {
+                        runner.onDuck(i);
+                    }
+                }
+            });
+
+            runner.addDinoCrashedListener((i, distance, jumpCount) => {
+                console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
+                distances[i] = distance;
+            });
+
+            runner.addGameEndListener(() => {
+                console.log(`All dinos in generation finished!`);
+                runner.removeMetricsListener();
+                runner.removeDinoCrashedListener();
+                runner.removeGameEndListener();
+                outputCallback = null;
+
+                resolve(distances);
+            });
+
+            runner.onStartGame();
         });
     }
 }
