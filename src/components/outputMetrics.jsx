@@ -26,6 +26,9 @@ export default class OutputMetrics extends React.Component {
                         }
                     ]
                 }} options={{
+                    animation:{
+                        duration: 100,
+                    },
                     title: {
                         display: true,
                         text: 'Output ' + (id + 1),
