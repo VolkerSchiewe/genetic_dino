@@ -14,7 +14,7 @@ module.exports = {
         'react': 'React'
     },
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.jsx?$/,
                 exclude: /node_modules/,
@@ -22,6 +22,10 @@ module.exports = {
                 query: {
                     presets: ['env', 'react']
                 }
+            },
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
             }
         ]
 

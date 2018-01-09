@@ -383,10 +383,8 @@ Runner.prototype = {
 
         const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
         if (childContainer.length > 0) {
-            console.log('Replacing existing game container');
             this.outerContainerEl.replaceChild(this.containerEl, childContainer[0]);
         } else {
-            console.log('Creating new game container');
             this.outerContainerEl.appendChild(this.containerEl);
         }
 
@@ -632,7 +630,8 @@ Runner.prototype = {
 
     notifyGameEnded(index) {
         if (this.gameEndListeners[index] != null) {
-            this.gameEndListeners[index](index, this.distanceRan, this.tRex[index].jumpCount);
+            var distance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan));
+            this.gameEndListeners[index](index, distance, this.tRex[index].jumpCount);
         }
 
         this.removeMetricsListener(index);
@@ -654,26 +653,6 @@ Runner.prototype = {
     removeGameEndListener(index) {
         this.gameEndListeners[index] = null;
     },
-
-    // /**
-    //  * Event handler.
-    //  */
-    // handleEvent: function (e) {
-    //     return (function (evtType, events) {
-    //         switch (evtType) {
-    //             case events.KEYDOWN:
-    //             case events.TOUCHSTART:
-    //             case events.MOUSEDOWN:
-    //                 this.onKeyDown(e);
-    //                 break;
-    //             case events.KEYUP:
-    //             case events.TOUCHEND:
-    //             case events.MOUSEUP:
-    //                 this.onKeyUp(e);
-    //                 break;
-    //         }
-    //     }.bind(this))(e.type, Runner.events);
-    // },
 
     /**
      * Bind relevant key / mouse / touch listeners.
@@ -742,7 +721,6 @@ Runner.prototype = {
 
     onStartGame: function () {
         if (!this.playing) {
-            console.log("Start Game");
             this.playing = true;
             this.update();
             if (window.errorPageController) {
