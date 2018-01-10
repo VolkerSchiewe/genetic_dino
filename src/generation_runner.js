@@ -14,11 +14,10 @@ export class GenerationRunner {
                     let output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
                     // outputCallback(i, output);
 
-                    if (output[0] > ACTION_THRESHOLD) {
-                        runner.onJump(i);
-                    }
-                    if (output[1] > ACTION_THRESHOLD && distance > 1) {
+                    if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
+                    } else if (GenerationRunner.isJump(output)) {
+                        runner.onJump(i);
                     }
                 }
             });
@@ -41,5 +40,13 @@ export class GenerationRunner {
 
             runner.onStartGame();
         });
+    }
+
+    static isDuck(output) {
+        return output[1] > ACTION_THRESHOLD;
+    }
+
+    static isJump(output) {
+        return output[0] > ACTION_THRESHOLD;
     }
 }
