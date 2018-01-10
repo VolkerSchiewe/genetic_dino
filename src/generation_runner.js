@@ -12,7 +12,7 @@ export class GenerationRunner {
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
                 for (let i = 0; i < population.length; i++) {
                     let output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
-                    outputCallback(i, output);
+                    // outputCallback(i, output);
 
                     if (output[0] > ACTION_THRESHOLD) {
                         runner.onJump(i);
