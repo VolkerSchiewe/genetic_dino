@@ -604,27 +604,27 @@ Runner.prototype = {
                     }
                 }
             }
-        }
 
-        for (let i = 0; i < this.tRex.length; i++) {
-            if (this.playing || (!this.activated && this.tRex[i].blinkCount < Runner.config.MAX_BLINK_COUNT)) {
-                this.tRex[i].update(deltaTime);
+            for (let i = 0; i < this.tRex.length; i++) {
+                if (this.playing || (!this.activated && this.tRex[i].blinkCount < Runner.config.MAX_BLINK_COUNT)) {
+                    this.tRex[i].update(deltaTime);
+                }
             }
-        }
 
-        this.scheduleNextUpdate();
-        var nextObstacle = this.horizon.obstacles ? this.horizon.obstacles[0] : {};
+            this.scheduleNextUpdate();
+            var nextObstacle = this.horizon.obstacles ? this.horizon.obstacles[0] : {};
 
-        var currentData = {
-            speed: this.currentSpeed,
-            distance: this.distanceRan,
-            distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex[0].xPos + this.tRex[0].config.WIDTH / 2) : '',
-            widthOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.width : '',
-            heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
-        };
+            var currentData = {
+                speed: this.currentSpeed,
+                distance: this.distanceRan,
+                distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex[0].xPos + this.tRex[0].config.WIDTH / 2) : '',
+                widthOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.width : '',
+                heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
+            };
 
-        if (this.metricsListener != null) {
-            this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
+            if (this.metricsListener != null) {
+                this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
+            }
         }
     },
 

@@ -33,6 +33,7 @@ export class GenerationRunner {
                 runner.removeMetricsListener();
                 runner.removeDinoCrashedListener();
                 runner.removeGameEndListener();
+                runner.stop();
                 outputCallback = null;
 
                 resolve(distances);
