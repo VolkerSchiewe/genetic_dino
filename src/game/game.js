@@ -22,8 +22,9 @@ export function Runner(outerContainerId, numberOfTrex, opt_config) {
     this.canvasCtx = null;
     this.dinoSprites = [];
 
-    this.metricsListeners = [];
-    this.gameEndListeners = [];
+    this.metricsListener = null;
+    this.gameEndListener = null;
+    this.dinoCrashedListener = null;
     this.tRex = [];
     this.numberOfTrex = numberOfTrex;
     this.numberOfCrashedTrex = 0;
@@ -622,8 +623,8 @@ Runner.prototype = {
             heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
         };
 
-        if (this.metricsListeners != null) {
-            this.metricsListeners(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
+        if (this.metricsListener != null) {
+            this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
         }
     },
 
@@ -640,11 +641,11 @@ Runner.prototype = {
     },
 
     addMetricsListener(callback) {
-        this.metricsListeners = callback;
+        this.metricsListener = callback;
     },
 
     removeMetricsListener() {
-        this.metricsListeners = null;
+        this.metricsListener = null;
     },
 
     addDinoCrashedListener(callback) {
