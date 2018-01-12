@@ -31,9 +31,9 @@ export default class App extends React.Component {
         this.buttonClick = this.buttonClick.bind(this);
     }
 
-    buttonClick(event) {
-        let currentState = this.state.showMetrics;
-        this.setState({showMetrics: !currentState});
+    buttonClick() {
+        let currentState = !this.state.showMetrics;
+        this.setState({showMetrics: currentState});
     }
 
     onSliderChange(value) {
@@ -101,32 +101,33 @@ export default class App extends React.Component {
 
     render() {
         const {generation, maxScore, dinos, scoreHistory, mutationRate, showMetrics} = this.state;
-
         return (
             <div style={{marginTop: '50px'}}>
                 <Grid container justify="center">
-                    <Grid container xs={12} sm={8}>
-                        <Grid item xs={5}>
-                            <h1>Generation {generation}</h1>
-                            Highscore: {maxScore}
+                    <Grid item xs={12} sm={8}>
+                        <Grid container>
+                            <Grid item xs={5}>
+                                <h1>Generation {generation}</h1>
+                                Highscore: {maxScore}
 
-                            <div style={{marginTop: 10}}>
-                                <label> Mutation Rate: {mutationRate}
-                                    <Slider onChange={this.onSliderChange} defaultValue={20}/>
-                                </label>
-                            </div>
-                            <div>
-                                <Button raised onClick={this.buttonClick}>
-                                    Show Outputs
-                                </Button>
-                            </div>
+                                <div style={{marginTop: 10}}>
+                                    <label> Mutation Rate: {mutationRate}
+                                        <Slider onChange={this.onSliderChange} defaultValue={20}/>
+                                    </label>
+                                </div>
+                                <div>
+                                    <Button raised onClick={this.buttonClick}>
+                                        Show Outputs
+                                    </Button>
+                                </div>
 
-                        </Grid>
-                        <Grid item xs={6}>
-                            <GenerationMetrics scoreHistory={scoreHistory}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <GameContainer dinoOutputs={dinos} showMetrics={showMetrics}/>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <GenerationMetrics scoreHistory={scoreHistory}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <GameContainer dinoOutputs={dinos} showMetrics={showMetrics}/>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
