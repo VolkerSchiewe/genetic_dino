@@ -7,9 +7,10 @@ import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
 import GenerationMetrics from "./generationMetrics.jsx";
 import 'rc-slider/assets/index.css';
+import Button from 'material-ui/Button';
 
 const REQUIRED_FITNESS = 75;
-export const POPULATION_SIZE = 5;
+export const POPULATION_SIZE = 10;
 const SURVIVOR_COUNT = 3;
 export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
 
@@ -20,16 +21,23 @@ export default class App extends React.Component {
         this.state = {
             generation: 0,
             maxScore: 0,
-            dinoOutputs: [],
+            dinos: [],
             scoreHistory: [],
-            mutationRate: 0.2
+            mutationRate: 0.2,
+            showMetrics: false
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
-        this.onSliderChange = this.onSliderChange.bind(this)
+        this.onSliderChange = this.onSliderChange.bind(this);
+        this.buttonClick = this.buttonClick.bind(this);
+    }
+
+    buttonClick(event) {
+        let currentState = this.state.showMetrics;
+        this.setState({showMetrics: !currentState});
     }
 
     onSliderChange(value) {
-        value = value/100;
+        value = value / 100;
         this.setState({
             mutationRate: value
         });
@@ -41,14 +49,9 @@ export default class App extends React.Component {
         this.setState({
             generation: this.state.generation + 1,
         });
-        GenerationRunner.runSingleGeneration(population, (index, output) => {
-            let dinoOutputs = this.state.dinoOutputs;
-            if (dinoOutputs.length === index)
-                dinoOutputs.push(output);
-            else
-                dinoOutputs[index] = output;
+        GenerationRunner.runSingleGeneration(population, () => {
             this.setState({
-                dinoOutputs: dinoOutputs,
+                dinos: population,
             })
         })
             .then(fitness => this.naturalSelection(population, fitness))
@@ -97,7 +100,7 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {generation, maxScore, dinoOutputs, scoreHistory, mutationRate} = this.state;
+        const {generation, maxScore, dinos, scoreHistory, mutationRate, showMetrics} = this.state;
 
         return (
             <div style={{marginTop: '50px'}}>
@@ -112,13 +115,18 @@ export default class App extends React.Component {
                                     <Slider onChange={this.onSliderChange} defaultValue={20}/>
                                 </label>
                             </div>
+                            <div>
+                                <Button raised onClick={this.buttonClick}>
+                                    Show Outputs
+                                </Button>
+                            </div>
 
                         </Grid>
                         <Grid item xs={6}>
                             <GenerationMetrics scoreHistory={scoreHistory}/>
                         </Grid>
                         <Grid item xs={12}>
-                            <GameContainer dinoOutputs={dinoOutputs}/>
+                            <GameContainer dinoOutputs={dinos} showMetrics={showMetrics}/>
                         </Grid>
                     </Grid>
                 </Grid>

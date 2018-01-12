@@ -27,7 +27,7 @@ export default class OutputMetrics extends React.Component {
                     ]
                 }} options={{
                     animation:{
-                        duration: 100,
+                        duration: 0,
                     },
                     title: {
                         display: true,

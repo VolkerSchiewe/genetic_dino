@@ -14,6 +14,9 @@ export class DinoBrain {
                 hiddenLayer.set({squash: synaptic.Neuron.squash.TANH})
             });
             this.perceptron.layers.output.set({squash: synaptic.Neuron.squash.TANH});
+
+            this.is_alive = true;
+            this.output = [0, 0]
         }
         else {
             // TODO: implement option to create LSTM network when controller.duck() is integrated
@@ -22,13 +25,13 @@ export class DinoBrain {
     }
 
     activateDinoBrain(distance, width, height) {
+        if (!this.is_alive)
+            return;
         distance = DinoBrain.normalize(distance);
         width = DinoBrain.normalize(width);
         height = DinoBrain.normalize(height);
         let inputs = [distance, width, height];
-        let outputs = this.perceptron.activate(inputs);
-
-        return outputs;
+        this.output = this.perceptron.activate(inputs);
     }
 
     static normalize(value) {

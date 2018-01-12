@@ -11,20 +11,21 @@ export class GenerationRunner {
 
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
                 for (let i = 0; i < population.length; i++) {
-                    let output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
-                    // outputCallback(i, output);
+                    population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
 
-                    if (GenerationRunner.isDuck(output)) {
+                    if (GenerationRunner.isDuck(population[i].output)) {
                         runner.onDuck(i);
-                    } else if (GenerationRunner.isJump(output)) {
+                    } else if (GenerationRunner.isJump(population[i].output)) {
                         runner.onJump(i);
                     }
                 }
+                outputCallback();
             });
 
             runner.addDinoCrashedListener((i, distance, jumpCount) => {
                 console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
                 distances[i] = distance;
+                population[i].is_alive = false;
             });
 
             runner.addGameEndListener(() => {
