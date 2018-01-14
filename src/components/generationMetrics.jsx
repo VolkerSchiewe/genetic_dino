@@ -38,6 +38,14 @@ export default class GenerationMetrics extends React.Component {
                     labels: labels,
                     datasets: datasets
                 }} options={{
+                    title: {
+                        display: true,
+                        text: 'Generations',
+                    },
+                    legend:{
+                        display: true,
+                        position:'right',
+                    },
                     scales: {
                         yAxes: [{
                             ticks: {

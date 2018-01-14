@@ -7,6 +7,7 @@ import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
 import GenerationMetrics from "./generationMetrics.jsx";
 import 'rc-slider/assets/index.css';
+import Button from 'material-ui/Button';
 
 const REQUIRED_FITNESS = 75;
 export const POPULATION_SIZE = 10;
@@ -20,16 +21,23 @@ export default class App extends React.Component {
         this.state = {
             generation: 0,
             maxScore: 0,
-            dinoOutputs: [],
+            dinos: [],
             scoreHistory: [],
-            mutationRate: 0.2
+            mutationRate: 0.2,
+            showMetrics: false
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
-        this.onSliderChange = this.onSliderChange.bind(this)
+        this.onSliderChange = this.onSliderChange.bind(this);
+        this.buttonClick = this.buttonClick.bind(this);
+    }
+
+    buttonClick() {
+        let currentState = !this.state.showMetrics;
+        this.setState({showMetrics: currentState});
     }
 
     onSliderChange(value) {
-        value = value/100;
+        value = value / 100;
         this.setState({
             mutationRate: value
         });
@@ -41,14 +49,9 @@ export default class App extends React.Component {
         this.setState({
             generation: this.state.generation + 1,
         });
-        GenerationRunner.runSingleGeneration(population, (index, output) => {
-            let dinoOutputs = this.state.dinoOutputs;
-            if (dinoOutputs.length === index)
-                dinoOutputs.push(output);
-            else
-                dinoOutputs[index] = output;
+        GenerationRunner.runSingleGeneration(population, () => {
             this.setState({
-                dinoOutputs: dinoOutputs,
+                dinos: population,
             })
         })
             .then(fitness => this.naturalSelection(population, fitness))
@@ -97,28 +100,34 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {generation, maxScore, dinoOutputs, scoreHistory, mutationRate} = this.state;
-
+        const {generation, maxScore, dinos, scoreHistory, mutationRate, showMetrics} = this.state;
         return (
             <div style={{marginTop: '50px'}}>
                 <Grid container justify="center">
-                    <Grid container xs={12} sm={8}>
-                        <Grid item xs={5}>
-                            <h1>Generation {generation}</h1>
-                            Highscore: {maxScore}
+                    <Grid item xs={12} sm={8}>
+                        <Grid container>
+                            <Grid item xs={5}>
+                                <h1>Generation {generation}</h1>
+                                Highscore: {maxScore}
 
-                            <div style={{marginTop: 10}}>
-                                <label> Mutation Rate: {mutationRate}
-                                    <Slider onChange={this.onSliderChange} defaultValue={20}/>
-                                </label>
-                            </div>
+                                <div style={{marginTop: 10}}>
+                                    <label> Mutation Rate: {mutationRate}
+                                        <Slider onChange={this.onSliderChange} defaultValue={20}/>
+                                    </label>
+                                </div>
+                                <div>
+                                    <Button raised onClick={this.buttonClick}>
+                                        Show Outputs
+                                    </Button>
+                                </div>
 
-                        </Grid>
-                        <Grid item xs={6}>
-                            <GenerationMetrics scoreHistory={scoreHistory}/>
-                        </Grid>
-                        <Grid item xs={12}>
-                            <GameContainer dinoOutputs={dinoOutputs}/>
+                            </Grid>
+                            <Grid item xs={6}>
+                                <GenerationMetrics scoreHistory={scoreHistory}/>
+                            </Grid>
+                            <Grid item xs={12}>
+                                <GameContainer dinoOutputs={dinos} showMetrics={showMetrics}/>
+                            </Grid>
                         </Grid>
                     </Grid>
                 </Grid>
