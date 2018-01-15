@@ -24,7 +24,8 @@ export default class App extends React.Component {
             dinos: [],
             scoreHistory: [],
             mutationRate: 0.2,
-            showMetrics: false
+            showMetrics: false,
+            textValue: "show outputs"
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
         this.onSliderChange = this.onSliderChange.bind(this);
@@ -34,6 +35,9 @@ export default class App extends React.Component {
     buttonClick() {
         let currentState = !this.state.showMetrics;
         this.setState({showMetrics: currentState});
+        if (this.state.textValue != "show outputs"){
+            this.setState({textValue: "show outputs"});
+        } else this.setState({textValue: "hide outputs"});
     }
 
     onSliderChange(value) {
@@ -143,7 +147,7 @@ export default class App extends React.Component {
                                 </div>
                                 <div>
                                     <Button raised onClick={this.buttonClick}>
-                                        Show Outputs
+                                        {this.state.textValue}
                                     </Button>
                                 </div>
 
