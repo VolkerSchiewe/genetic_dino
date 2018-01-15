@@ -2,7 +2,7 @@ import React from 'react'
 import GameContainer from "./gameContainer.jsx";
 import {GeneticAlgorithm} from "../genetic_algorithm";
 import {GenerationRunner} from "../generation_runner";
-import {indexOfMaxValue} from "../utils";
+import {indexOfMaxValue, range} from "../utils.js";
 import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
 import GenerationMetrics from "./generationMetrics.jsx";
@@ -11,6 +11,7 @@ import Button from 'material-ui/Button';
 
 const REQUIRED_FITNESS = 75;
 export const POPULATION_SIZE = 10;
+export const MAPS_COUNT = 2;
 const SURVIVOR_COUNT = 3;
 export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
 
@@ -21,11 +22,10 @@ export default class App extends React.Component {
         this.state = {
             generation: 0,
             maxScore: 0,
-            dinos: [],
+            population: [],
             scoreHistory: [],
             mutationRate: 0.2,
             showMetrics: false,
-            textValue: "show outputs"
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
         this.onSliderChange = this.onSliderChange.bind(this);
@@ -35,9 +35,6 @@ export default class App extends React.Component {
     buttonClick() {
         let currentState = !this.state.showMetrics;
         this.setState({showMetrics: currentState});
-        if (this.state.textValue != "show outputs"){
-            this.setState({textValue: "show outputs"});
-        } else this.setState({textValue: "hide outputs"});
     }
 
     onSliderChange(value) {
@@ -52,20 +49,21 @@ export default class App extends React.Component {
     runGeneration(population) {
         this.setState({
             generation: this.state.generation + 1,
+            population: population,
         });
-
-        Promise.all([GenerationRunner.runSingleGeneration('#game', population, () => {
-            // this.setState({
-            //     dinos: population,
-            // })
-        }), GenerationRunner.runSingleGeneration('#game-2', population, () => {
-            // this.setState({
-            //     dinos: population,
-            // })
-        })])
+        Promise.all(range(MAPS_COUNT).map((index) => {
+                return GenerationRunner.runSingleGeneration('#game-' + (index + 1), population, (i) => {
+                    if (population[i].isAlive >= 0)
+                        population[i].isAlive -= 1;
+                    this.setState({
+                        population: population,
+                    })
+                })
+            }
+        ))
             .then(fitnessOfAllMaps => {
                 console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
-                var fitness = this.mergeFitnessOfGames(fitnessOfAllMaps);
+                let fitness = this.mergeFitnessOfGames(fitnessOfAllMaps);
                 console.log(`Merged fitness: ${fitness}`);
                 return this.naturalSelection(population, fitness);
             })
@@ -74,14 +72,14 @@ export default class App extends React.Component {
     }
 
     mergeFitnessOfGames(fitnessOfMultipleMaps) {
-        var numberOfGames = fitnessOfMultipleMaps.length;
-        var numberOfDinosInGeneration = fitnessOfMultipleMaps[0].length;
-        var fitness = [];
+        let numberOfGames = fitnessOfMultipleMaps.length;
+        let numberOfDinosInGeneration = fitnessOfMultipleMaps[0].length;
+        let fitness = [];
 
-        for (var i = 0; i < numberOfDinosInGeneration; i++) {
+        for (let i = 0; i < numberOfDinosInGeneration; i++) {
             fitness[i] = 0;
 
-            for (var k = 0; k < numberOfGames; k++) {
+            for (let k = 0; k < numberOfGames; k++) {
                 fitness[i] += fitnessOfMultipleMaps[k][i];
             }
             fitness[i] = fitness[i] / numberOfGames;
@@ -130,7 +128,8 @@ export default class App extends React.Component {
     }
 
     render() {
-        const {generation, maxScore, dinos, scoreHistory, mutationRate, showMetrics} = this.state;
+        const {generation, maxScore, population, scoreHistory, mutationRate, showMetrics} = this.state;
+        const btnText = showMetrics ? 'hide outputs' : 'show outputs';
         return (
             <div style={{marginTop: '50px'}}>
                 <Grid container justify="center">
@@ -147,7 +146,7 @@ export default class App extends React.Component {
                                 </div>
                                 <div>
                                     <Button raised onClick={this.buttonClick}>
-                                        {this.state.textValue}
+                                        {btnText}
                                     </Button>
                                 </div>
 
@@ -156,9 +155,7 @@ export default class App extends React.Component {
                                 <GenerationMetrics scoreHistory={scoreHistory}/>
                             </Grid>
                             <Grid item xs={12}>
-                                <GameContainer id={'game'} dinoOutputs={dinos} showMetrics={showMetrics}/>
-
-                                <GameContainer id={'game-2'} dinoOutputs={dinos} showMetrics={showMetrics}/>
+                                <GameContainer population={population} showMetrics={showMetrics}/>
                             </Grid>
                         </Grid>
                     </Grid>

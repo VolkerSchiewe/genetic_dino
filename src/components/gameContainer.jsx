@@ -3,38 +3,37 @@ import OutputMetrics from "./outputMetrics.jsx";
 import Grid from 'material-ui/Grid';
 import {Circle} from './circle.jsx'
 import {colors} from "./app.jsx";
+import {range} from "../utils.js";
+import {MAPS_COUNT} from "./app.jsx";
 
 export default class GameContainer extends React.Component {
 
     render() {
-        const {id, showMetrics, dinoOutputs} = this.props;
+        const {showMetrics, population} = this.props;
 
-        let list = [];
-        for (let i = 0; i < dinoOutputs.length; i++) {
-            list.push(i);
-        }
+        let list = range(population.length);
+
+
         let floatStyle = {
             float: 'left',
             marginRight: 20,
         };
         return (
-
             <div>
                 <Grid container>
-                    <Grid item xs={12}>
-                        <div id={id} className="game-wrapper"/>
-                    </Grid>
+                    {range(MAPS_COUNT).map((i)=>(
+                        <Grid key={i} item xs={12}>
+                            <div id={'game-' + (i + 1)} className="game-wrapper"/>
+                        </Grid>
+                    ))}
 
                     <Grid item xs={12}>
                         {list.map((index) => {
-                                let is_alive = dinoOutputs[index].is_alive;
+                                let isAliveText = 'Dinos alive: ' + population[index].isAlive;
                                 return (
                                     <div key={index}>
                                         <Circle color={colors[index]}/>
-                                        {is_alive ?
-                                            (<div style={floatStyle}>Alive</div>) :
-                                            (<div style={floatStyle}>Dead</div>)
-                                        }
+                                        <div style={floatStyle}>{isAliveText}</div>
                                     </div>
                                 )
                             }
@@ -43,7 +42,7 @@ export default class GameContainer extends React.Component {
                     <Grid item xs={12}>
                         <Grid container>
                             {list.map((index) => {
-                                let output = dinoOutputs[index].output;
+                                let output = population[index].output;
                                 return (
                                     <Grid item xs={2} key={index} style={{margin: '10px', minHeight: 150}}>
                                         {showMetrics &&

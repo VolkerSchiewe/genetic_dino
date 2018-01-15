@@ -1,3 +1,5 @@
+import {MAPS_COUNT} from "./components/app.jsx";
+
 export const INPUT_LAYERS = 3;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 2;
@@ -14,6 +16,7 @@ export class DinoBrain {
                 hiddenLayer.set({squash: synaptic.Neuron.squash.TANH})
             });
             this.perceptron.layers.output.set({squash: synaptic.Neuron.squash.TANH});
+            this.isAlive = MAPS_COUNT;
         }
         else {
             // TODO: implement option to create LSTM network when controller.duck() is integrated
