@@ -10,11 +10,11 @@ export class GenerationRunner {
 
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
                 for (let i = 0; i < population.length; i++) {
-                    population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
+                    var output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
 
-                    if (GenerationRunner.isDuck(population[i].output)) {
+                    if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
-                    } else if (GenerationRunner.isJump(population[i].output)) {
+                    } else if (GenerationRunner.isJump(output)) {
                         runner.onJump(i);
                     }
                 }

@@ -51,13 +51,13 @@ export default class App extends React.Component {
         });
 
         Promise.all([GenerationRunner.runSingleGeneration('#game', population, () => {
-            this.setState({
-                dinos: population,
-            })
+            // this.setState({
+            //     dinos: population,
+            // })
         }), GenerationRunner.runSingleGeneration('#game-2', population, () => {
-            this.setState({
-                dinos: population,
-            })
+            // this.setState({
+            //     dinos: population,
+            // })
         })])
             .then(fitnessOfAllMaps => {
                 console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
