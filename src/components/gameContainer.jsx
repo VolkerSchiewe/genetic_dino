@@ -7,7 +7,7 @@ import {colors} from "./app.jsx";
 export default class GameContainer extends React.Component {
 
     render() {
-        const {showMetrics, dinoOutputs} = this.props;
+        const {id, showMetrics, dinoOutputs} = this.props;
 
         let list = [];
         for (let i = 0; i < dinoOutputs.length; i++) {
@@ -22,7 +22,7 @@ export default class GameContainer extends React.Component {
             <div>
                 <Grid container>
                     <Grid item xs={12}>
-                        <div id={'game'} className="game-wrapper"/>
+                        <div id={id} className="game-wrapper"/>
                     </Grid>
 
                     <Grid item xs={12}>

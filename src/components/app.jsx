@@ -49,14 +49,38 @@ export default class App extends React.Component {
         this.setState({
             generation: this.state.generation + 1,
         });
-        GenerationRunner.runSingleGeneration(population, () => {
+
+        Promise.all([GenerationRunner.runSingleGeneration('#game', population, () => {
             this.setState({
                 dinos: population,
             })
-        })
-            .then(fitness => this.naturalSelection(population, fitness))
+        }), GenerationRunner.runSingleGeneration('#game-2', population, () => {
+            this.setState({
+                dinos: population,
+            })
+        })])
+            .then(fitnessOfAllMaps => {
+                var fitness = this.mergeFitnessOfGames(fitnessOfAllMaps);
+                return this.naturalSelection(population, fitness);
+            })
             .catch(error => console.log(error));
 
+    }
+
+    mergeFitnessOfGames(fitnessOfMultipleMaps) {
+        var numberOfGames = fitnessOfMultipleMaps.length;
+        var numberOfDinosInGeneration = fitnessOfMultipleMaps[0].length;
+        var fitness = [];
+
+        for (var i = 0; i < numberOfDinosInGeneration; i++) {
+            fitness[i] = 0;
+
+            for (var k = 0; k < numberOfGames; k++) {
+                fitness[i] += fitnessOfMultipleMaps[k][i];
+            }
+            fitness[i] = fitness[i] / numberOfGames;
+        }
+        return fitness;
     }
 
     naturalSelection(population, fitness) {
@@ -126,7 +150,9 @@ export default class App extends React.Component {
                                 <GenerationMetrics scoreHistory={scoreHistory}/>
                             </Grid>
                             <Grid item xs={12}>
-                                <GameContainer dinoOutputs={dinos} showMetrics={showMetrics}/>
+                                <GameContainer id={'game'} dinoOutputs={dinos} showMetrics={showMetrics}/>
+
+                                <GameContainer id={'game-2'} dinoOutputs={dinos} showMetrics={showMetrics}/>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -3,10 +3,9 @@ import {Runner} from "./game/game";
 export const ACTION_THRESHOLD = 0.11;
 
 export class GenerationRunner {
-    static runSingleGeneration(population, outputCallback) {
+    static runSingleGeneration(id, population, outputCallback) {
         return new Promise((resolve, reject) => {
-            let elementId = '#game';
-            let runner = new Runner(elementId, population.length);
+            let runner = new Runner(id, population.length);
             let distances = [];
 
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
