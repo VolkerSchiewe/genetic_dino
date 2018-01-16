@@ -53,8 +53,9 @@ export default class App extends React.Component {
         });
         Promise.all(range(MAPS_COUNT).map((index) => {
                 return GenerationRunner.runSingleGeneration('#game-' + (index + 1), population, (i) => {
-                    if (population[i].isAlive >= 0)
+                    if (population[i].isAlive > 0) {
                         population[i].isAlive -= 1;
+                    }
                     this.setState({
                         population: population,
                     })
