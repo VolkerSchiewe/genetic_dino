@@ -8,15 +8,17 @@ export class GenerationRunner {
             let runner = new Runner(id, population.length);
             let distances = [];
 
-            runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
+            runner.addMetricsListener((distanceToObstacle, obstacleWidth, obstacleHeight, dinoHeight, nextObstacle) => {
                 for (let i = 0; i < population.length; i++) {
-                    var output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
+                  //  if(population[i].is_alive){
+                    var output = population[i].activateDinoBrain(distanceToObstacle[i], obstacleWidth[i], obstacleHeight[i], dinoHeight[i], nextObstacle[i]);
 
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
                     } else if (GenerationRunner.isJump(output)) {
                         runner.onJump(i);
                     }
+               // }
                 }
                 outputCallback();
             });
