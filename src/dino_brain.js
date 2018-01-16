@@ -1,6 +1,6 @@
 import {MAPS_COUNT} from "./components/app.jsx";
 
-export const INPUT_LAYERS = 3;
+export const INPUT_LAYERS = 5;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 2;
 
@@ -26,14 +26,19 @@ export class DinoBrain {
 
     static normalize(value) {
         // TODO: Research most fitting normalization scheme for INPUT_LAYERS!
+        if (value == 'CACTUS_SMALL') return (1);
+        if (value == 'CACTUS_LARGE') return (2);
+        if (value == 'PTERODACTYL') return (3);
         return (value);
     }
 
-    activateDinoBrain(distance, width, height) {
-        distance = DinoBrain.normalize(distance);
-        width = DinoBrain.normalize(width);
-        height = DinoBrain.normalize(height);
-        let inputs = [distance, width, height];
+    activateDinoBrain(distance, width, height, dinoY, obstacleType) {
+        distance = distance;
+        width = width;
+        height = height;
+        dinoY = dinoY;
+        obstacleType = DinoBrain.normalize(obstacleType);
+        let inputs = [distance, width, height, dinoY, obstacleType];
         return this.perceptron.activate(inputs);
     }
 }
