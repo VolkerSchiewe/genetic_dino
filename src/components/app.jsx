@@ -10,8 +10,8 @@ import 'rc-slider/assets/index.css';
 import Button from 'material-ui/Button';
 
 const REQUIRED_FITNESS = 75;
-export const POPULATION_SIZE = 10;
-export const MAPS_COUNT = 2;
+export const POPULATION_SIZE = 3;
+export const MAPS_COUNT = 10;
 const SURVIVOR_COUNT = 3;
 export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
 
@@ -26,8 +26,19 @@ export default class App extends React.Component {
             scoreHistory: [],
             mutationRate: 0.2,
             showMetrics: false,
+            bestPopulation: [],
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+        this.outputs = [];
+        for (let i = 0; i < MAPS_COUNT; i++) {
+            this.outputs.push([]);
+        }
+
+        for (let i = 0; i < MAPS_COUNT; i++) {
+            for (let j = this.outputs[i].length; j < POPULATION_SIZE; j++) {
+                this.outputs[i].push(0);
+            }
+        }
         this.onSliderChange = this.onSliderChange.bind(this);
         this.buttonClick = this.buttonClick.bind(this);
     }
@@ -51,8 +62,13 @@ export default class App extends React.Component {
             generation: this.state.generation + 1,
             population: population,
         });
-        Promise.all(range(MAPS_COUNT).map((index) => {
-                return GenerationRunner.runSingleGeneration('#game-' + (index + 1), population, (i) => {
+        Promise.all(range(MAPS_COUNT).map((mapIndex) => {
+                return GenerationRunner.runSingleGeneration('#game-' + (mapIndex + 1), population, (i, output) => {
+                    if (this.state.showMetrics) {
+                        this.outputs[mapIndex][i] = output;
+                        this.forceUpdate()
+                    }
+                }, (i) => {
                     if (population[i].isAlive > 0) {
                         population[i].isAlive -= 1;
                     }
@@ -90,7 +106,7 @@ export default class App extends React.Component {
 
     naturalSelection(population, fitness) {
         let dinoAiArray = [];
-        let bestFitness = Math.max(...fitness);
+        let bestFitnessOfGeneration = Math.max(...fitness);
         let survivorIndex = 0;
         let scoreHistory = this.state.scoreHistory;
         for (let i = 0; i < fitness.length; i++) {
@@ -101,11 +117,14 @@ export default class App extends React.Component {
                 dinoFitness = [fitness[i]];
             scoreHistory[i] = dinoFitness
         }
-        if (bestFitness > this.state.maxScore) {
+        if (bestFitnessOfGeneration > this.state.maxScore) {
             this.setState({
-                maxScore: bestFitness,
+                maxScore: bestFitnessOfGeneration,
                 scoreHistory: scoreHistory,
+                bestPopulation: population
             });
+        } else {
+            population = this.state.bestPopulation;
         }
 
         for (let i = 0; i < SURVIVOR_COUNT; i++) {
@@ -114,7 +133,7 @@ export default class App extends React.Component {
             fitness[survivorIndex] = 0;
         }
         let new_population = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
-        if (this.state.generation < 4 && bestFitness < REQUIRED_FITNESS) {
+        if (this.state.generation < 4 && bestFitnessOfGeneration < REQUIRED_FITNESS) {
             new_population = this.geneticAlgorithm.generatePopulation();
             this.setState({
                 generation: 0
@@ -156,7 +175,8 @@ export default class App extends React.Component {
                                 <GenerationMetrics scoreHistory={scoreHistory}/>
                             </Grid>
                             <Grid item xs={12}>
-                                <GameContainer population={population} showMetrics={showMetrics}/>
+                                <GameContainer population={population} outputs={this.outputs}
+                                               showMetrics={showMetrics}/>
                             </Grid>
                         </Grid>
                     </Grid>

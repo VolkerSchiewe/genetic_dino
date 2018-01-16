@@ -9,10 +9,9 @@ import {MAPS_COUNT} from "./app.jsx";
 export default class GameContainer extends React.Component {
 
     render() {
-        const {showMetrics, population} = this.props;
+        const {population, outputs, showMetrics} = this.props;
 
-        let list = range(population.length);
-
+        let populationRange = range(population.length);
 
         let floatStyle = {
             float: 'left',
@@ -28,7 +27,7 @@ export default class GameContainer extends React.Component {
                     ))}
 
                     <Grid item xs={12}>
-                        {list.map((index) => {
+                        {populationRange.map((index) => {
                                 let isAliveText = 'Dinos alive: ' + population[index].isAlive;
                                 return (
                                     <div key={index}>
@@ -39,20 +38,22 @@ export default class GameContainer extends React.Component {
                             }
                         )}
                     </Grid>
-                    <Grid item xs={12}>
-                        <Grid container>
-                            {list.map((index) => {
-                                let output = population[index].output;
-                                return (
-                                    <Grid item xs={2} key={index} style={{margin: '10px', minHeight: 150}}>
-                                        {showMetrics &&
-                                        <OutputMetrics value={output} id={index}/>
-                                        }
-                                    </Grid>
-                                )
-                            })}
+                    {range(MAPS_COUNT).map((mapIndex) => (
+                        <Grid item xs={12}>
+                            <Grid container>
+                                {populationRange.map((populationIndex) => {
+                                    let output = outputs[mapIndex][populationIndex];
+                                    return (
+                                        <Grid item xs={2} key={populationIndex} style={{margin: '10px', minHeight: 150}}>
+                                            {showMetrics &&
+                                            <OutputMetrics value={output} id={populationIndex}/>
+                                            }
+                                        </Grid>
+                                    )
+                                })}
+                            </Grid>
                         </Grid>
-                    </Grid>
+                    ))}
                 </Grid>
             </div>
         );
