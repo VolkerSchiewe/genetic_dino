@@ -65,7 +65,6 @@ export class GeneticAlgorithm {
     // Returns new population, using bredDinoBrains
     // TODO: Research better evolution algorithms
     evolvePopulation(dinoAiArray) {
-        let population = []
         let newDinoBrain = new DinoBrain(false);
         let bestGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[0]);
         let second = this.crossOverDinoBrains(dinoAiArray[1], dinoAiArray[1]);
@@ -73,7 +72,7 @@ export class GeneticAlgorithm {
         let goodGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[1]);
         let mediumGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[2]);
         let freshGenes = this.crossOverDinoBrains(dinoAiArray[0], newDinoBrain);
-        population = this.bredDinoBrains(bestGenes, second, third, goodGenes, mediumGenes, freshGenes)
+        let population = this.bredDinoBrains(bestGenes, second, third, goodGenes, mediumGenes, freshGenes);
         return population;
     }
 

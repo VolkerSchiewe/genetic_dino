@@ -3,38 +3,36 @@ import {Runner} from "./game/game";
 export const ACTION_THRESHOLD = 0.11;
 
 export class GenerationRunner {
-    static runSingleGeneration(population, outputCallback) {
+    static runSingleGeneration(id, population, outputCallback, dinoDiedCallback) {
         return new Promise((resolve, reject) => {
-            let elementId = '#game';
-            let runner = new Runner(elementId, population.length);
+            let runner = new Runner(id, population.length, null);
             let distances = [];
 
             runner.addMetricsListener((speed, distance, distanceToObstacle, obstacleWidth, obstacleHeight) => {
                 for (let i = 0; i < population.length; i++) {
-                    population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
-
-                    if (GenerationRunner.isDuck(population[i].output)) {
+                    let output = population[i].activateDinoBrain(distanceToObstacle, obstacleWidth, obstacleHeight);
+                    outputCallback(i, output);
+                    if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
-                    } else if (GenerationRunner.isJump(population[i].output)) {
+                    } else if (GenerationRunner.isJump(output)) {
                         runner.onJump(i);
                     }
                 }
-                outputCallback();
             });
 
             runner.addDinoCrashedListener((i, distance, jumpCount) => {
-                console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
+                // console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
                 distances[i] = distance;
-                population[i].is_alive = false;
+                dinoDiedCallback(i)
             });
 
             runner.addGameEndListener(() => {
-                console.log(`All dinos in generation finished!`);
+                console.log(`All dinos in generation on Map ${id} finished!`);
                 runner.removeMetricsListener();
                 runner.removeDinoCrashedListener();
                 runner.removeGameEndListener();
                 runner.stop();
-                outputCallback = null;
+                dinoDiedCallback = null;
 
                 resolve(distances);
             });
