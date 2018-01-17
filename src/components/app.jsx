@@ -8,6 +8,7 @@ import Slider from 'rc-slider';
 import GenerationMetrics from "./generationMetrics.jsx";
 import 'rc-slider/assets/index.css';
 import Button from 'material-ui/Button';
+import Snackbar from "material-ui/Snackbar";
 
 const REQUIRED_FITNESS = 75;
 export const POPULATION_SIZE = 10;
@@ -27,6 +28,7 @@ export default class App extends React.Component {
             mutationRate: 0.2,
             showMetrics: false,
             bestPopulation: [],
+            snackbarOpen: false,
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
         this.outputs = [];
@@ -40,13 +42,34 @@ export default class App extends React.Component {
             }
         }
         this.onSliderChange = this.onSliderChange.bind(this);
-        this.buttonClick = this.buttonClick.bind(this);
+        this.switchShowMetrics = this.switchShowMetrics.bind(this);
+        this.exportBestPopulation = this.exportBestPopulation.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
-    buttonClick() {
+    switchShowMetrics() {
         let currentState = !this.state.showMetrics;
         this.setState({showMetrics: currentState});
     }
+
+    exportBestPopulation(){
+        let bestPopulation = this.state.bestPopulation;
+        if (bestPopulation.length === 0){
+            this.setState({snackbarOpen: true});
+            console.log('show Snackbar');
+            return
+        }
+        let filename = 'best_population.json';
+        let text = JSON.stringify(bestPopulation.map((dino)=> dino.toJson()));
+        let blob = new Blob([text], {type: "data:text/json;charset=utf-8,"});
+        saveAs(blob, filename);
+    }
+
+    handleClose(event, reason) {
+        if (reason === 'clickaway')
+            return;
+        this.setState({ snackbarOpen: false });
+    };
 
     onSliderChange(value) {
         value = value / 100;
@@ -127,6 +150,7 @@ export default class App extends React.Component {
             // population = this.state.bestPopulation;
         }
 
+        // sort population
         for (let i = 0; i < SURVIVOR_COUNT; i++) {
             survivorIndex = indexOfMaxValue(fitness);
             dinoAiArray[i] = population[survivorIndex];
@@ -165,8 +189,11 @@ export default class App extends React.Component {
                                     </label>
                                 </div>
                                 <div>
-                                    <Button raised onClick={this.buttonClick}>
+                                    <Button raised onClick={this.switchShowMetrics}>
                                         {btnText}
+                                    </Button>
+                                    <Button raised onClick={this.exportBestPopulation}>
+                                        Export best Population
                                     </Button>
                                 </div>
 
@@ -181,6 +208,19 @@ export default class App extends React.Component {
                         </Grid>
                     </Grid>
                 </Grid>
+                <Snackbar
+                    anchorOrigin={{
+                        vertical: 'bottom',
+                        horizontal: 'left',
+                    }}
+                    open={this.state.snackbarOpen}
+                    autoHideDuration={6000}
+                    onClose={this.handleClose}
+                    SnackbarContentProps={{
+                        'aria-describedby': 'message-id',
+                    }}
+                    message={<span id="message-id">Please wait until the first generation finished.</span>}
+                />
             </div>
         );
     }

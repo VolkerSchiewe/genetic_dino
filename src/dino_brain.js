@@ -36,4 +36,12 @@ export class DinoBrain {
         let inputs = [distance, width, height];
         return this.perceptron.activate(inputs);
     }
+
+    toJson() {
+        return this.perceptron.toJSON()
+    }
+
+    parseJson(json){
+        this.perceptron = JSON.parse(json)
+    }
 }
