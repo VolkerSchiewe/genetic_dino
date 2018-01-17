@@ -10,7 +10,7 @@ import 'rc-slider/assets/index.css';
 import Button from 'material-ui/Button';
 import Snackbar from "material-ui/Snackbar";
 
-const REQUIRED_FITNESS = 75;
+const REQUIRED_FITNESS = 100;
 export const POPULATION_SIZE = 10;
 export const MAPS_COUNT = 3;
 const SURVIVOR_COUNT = 3;
@@ -45,6 +45,7 @@ export default class App extends React.Component {
         this.switchShowMetrics = this.switchShowMetrics.bind(this);
         this.exportBestPopulation = this.exportBestPopulation.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.exportGenerationData = this.exportGenerationData.bind(this);
     }
 
     switchShowMetrics() {
@@ -56,13 +57,33 @@ export default class App extends React.Component {
         let bestPopulation = this.state.bestPopulation;
         if (bestPopulation.length === 0){
             this.setState({snackbarOpen: true});
-            console.log('show Snackbar');
             return
         }
         let filename = 'best_population.json';
         let text = JSON.stringify(bestPopulation.map((dino)=> dino.toJson()));
         let blob = new Blob([text], {type: "data:text/json;charset=utf-8,"});
         saveAs(blob, filename);
+    }
+
+    exportGenerationData(){
+        let data = this.state.scoreHistory;
+        if (data.length === 0){
+            this.setState({snackbarOpen: true});
+            return
+        }
+        //generate headers
+        let headers = [];
+        for (let i =0; i < data[0].length; i++){
+            headers.push((i + 1) +'. Generation')
+        }
+        //write header
+        let csvFile ='';
+        csvFile += headers.join(',') +'\n';
+        for (let row of data){
+            csvFile += row.join(',') + '\n';
+        }
+        let blob = new Blob([csvFile], {type: "data:text/csv;charset=utf-8,"});
+        saveAs(blob, 'generation_data.csv');
     }
 
     handleClose(event, reason) {
@@ -193,7 +214,10 @@ export default class App extends React.Component {
                                         {btnText}
                                     </Button>
                                     <Button raised onClick={this.exportBestPopulation}>
-                                        Export best Population
+                                        Export best Population (JSON)
+                                    </Button>
+                                    <Button raised onClick={this.exportGenerationData}>
+                                        Export generations (CSV)
                                     </Button>
                                 </div>
 
