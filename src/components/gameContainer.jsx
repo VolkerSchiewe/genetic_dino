@@ -39,7 +39,7 @@ export default class GameContainer extends React.Component {
                         )}
                     </Grid>
                     {range(MAPS_COUNT).map((mapIndex) => (
-                        <Grid item xs={12}>
+                        <Grid item xs={12} key={mapIndex}>
                             <Grid container>
                                 {populationRange.map((populationIndex) => {
                                     let output = outputs[mapIndex][populationIndex];

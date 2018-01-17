@@ -537,7 +537,7 @@ Runner.prototype = {
 
             // First jump of first dino triggers the intro.
             if (this.shouldPlayIntro && !this.isPlayingIntro) {
-                console.log(`Playing Intro`);
+                // console.log(`Playing Intro`);
                 this.playIntro();
             }
 

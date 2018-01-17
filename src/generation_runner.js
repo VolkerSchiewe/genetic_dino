@@ -21,13 +21,13 @@ export class GenerationRunner {
             });
 
             runner.addDinoCrashedListener((i, distance, jumpCount) => {
-                console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
+                // console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
                 distances[i] = distance;
                 dinoDiedCallback(i)
             });
 
             runner.addGameEndListener(() => {
-                console.log(`All dinos in generation finished!`);
+                console.log(`All dinos in generation on Map ${id} finished!`);
                 runner.removeMetricsListener();
                 runner.removeDinoCrashedListener();
                 runner.removeGameEndListener();
