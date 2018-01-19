@@ -11,7 +11,7 @@ import Button from 'material-ui/Button';
 
 const REQUIRED_FITNESS = 75;
 export const POPULATION_SIZE = 10;
-export const MAPS_COUNT = 3;
+export const MAPS_COUNT = 5;
 const SURVIVOR_COUNT = 3;
 export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
 
