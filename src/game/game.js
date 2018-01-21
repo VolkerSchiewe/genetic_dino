@@ -97,6 +97,7 @@ var IS_MOBILE = /Android/.test(window.navigator.userAgent) || IS_IOS;
 /** @const */
 var IS_TOUCH_ENABLED = 'ontouchstart' in window;
 
+var xFactor = 35; //dinos x starting position is moved to n*xFactor
 /**
  * Default game configuration.
  * @enum {number}
@@ -379,7 +380,7 @@ Runner.prototype = {
         // Draw t-rex
         for (let i = 0; i < this.numberOfTrex; i++) {
             let dinoSpriteIndex = i % this.dinoSprites.length;
-            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX);
+            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX, xFactor*i);
         }
 
         const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
@@ -552,14 +553,18 @@ Runner.prototype = {
 
             // Check for collisions.
             for (let i = 0; i < this.tRex.length; i++) {
-                var collision = hasObstacles && checkForCollision(this.horizon.obstacles[0], this.tRex[i]);
+                for (var j = 0; j < 3; j++) {       //there won't be more than 2 obstacles behind the first dino
+                    if (this.horizon.obstacles[j] != null){
+                    var collision = hasObstacles && checkForCollision(this.horizon.obstacles[j], this.tRex[i]);
 
-                if (collision) {
-                    this.numberOfCrashedTrex++;
-                    this.notifyDinoCrashed(i);
-                    this.tRex[i].hide();
+                    if (collision) {
+                        this.numberOfCrashedTrex++;
+                        this.notifyDinoCrashed(i);
+                        this.tRex[i].hide();
+                    }
                 }
             }
+        }
 
             if (this.numberOfCrashedTrex < this.numberOfTrex) {
                 this.distanceRan += this.currentSpeed * deltaTime / this.msPerFrame;
@@ -602,25 +607,50 @@ Runner.prototype = {
             }
 
             this.scheduleNextUpdate();
-            var nextObstacle = this.horizon.obstacles ? this.horizon.obstacles[0] : {};
 
-            var currentData = {
-                speed: this.currentSpeed,
-                distance: this.distanceRan,
-                distanceToObstacle: nextObstacle ? (nextObstacle.xPos - nextObstacle.width / 2) - (this.tRex[0].xPos + this.tRex[0].config.WIDTH / 2) : '',
-                widthOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.width : '',
-                heightOfNextObstacle: nextObstacle ? nextObstacle.typeConfig.height : ''
-            };
+            var dinoHeights = [];
+            var nextObstacles = [];
+
+            for (var i = 0; i < this.tRex.length; i++) {
+                var dinoHeight = this.tRex[i].yPos;
+                dinoHeights.push(dinoHeight);
+                nextObstacles.push(this.returnNextObstacleData(this.tRex[i]));
+            }
 
             if (this.metricsListener != null) {
-                this.metricsListener(currentData.speed, currentData.distance, currentData.distanceToObstacle, currentData.widthOfNextObstacle, currentData.heightOfNextObstacle);
+                this.metricsListener(this.currentSpeed, nextObstacles, dinoHeights);
             }
         }
     },
 
+    returnNextObstacleData: function (dino) {
+        var distanceToObstacle = '';
+        var widthOfNextObstacle = '';
+        var heightOfNextObstacle = '';
+        var distanceToSecondObstacle = '';
+
+        for (var i = 0; i < this.horizon.obstacles.length; i++){
+            distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width/2) - (dino.xPos + dino.config.WIDTH / 2);
+            if (distanceToObstacle > 0){
+                widthOfNextObstacle = this.horizon.obstacles[i].typeConfig.width;
+                heightOfNextObstacle = this.horizon.obstacles[i].typeConfig.height;
+                if (this.horizon.obstacles[i + 1])
+                    distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width/2) - (dino.xPos + dino.config.WIDTH / 2);
+                break;
+            }
+        }
+
+        return {
+            distanceToNextObstacle: distanceToObstacle,
+            widthOfNextObstacle: widthOfNextObstacle,
+            heightOfNextObstacle: heightOfNextObstacle,
+            distanceToSecondObstacle: distanceToSecondObstacle,
+        };
+    },
+
     notifyDinoCrashed(index) {
         if (this.dinoCrashedListener != null) {
-            var distance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan));
+            var distance = this.distanceMeter.getActualDistance(Math.ceil((this.distanceRan - xFactor * index) < 0 ? 0 : (this.distanceRan - xFactor * index)));
             this.dinoCrashedListener(index, distance, this.tRex[index].jumpCount);
         }
 
@@ -1557,12 +1587,12 @@ Obstacle.types = [
  * @param {Object} spritePos Positioning within image sprite.
  * @constructor
  */
-function Trex(canvas, imageSprite, spritePos) {
+function Trex(canvas, imageSprite, spritePos, xShift) {
     this.canvas = canvas;
     this.canvasCtx = canvas.getContext('2d');
     this.imageSprite = imageSprite;
     this.spritePos = spritePos;
-    this.xPos = 0;
+    this.xPos = 0 + xShift;
     this.yPos = 0;
     // Position when on the ground.
     this.groundYPos = 0;
