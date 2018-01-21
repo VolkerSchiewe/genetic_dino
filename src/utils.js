@@ -11,3 +11,16 @@ export function range(length) {
     }
     return list
 }
+
+export function download(filename, content, data_type) {
+    let element = document.createElement('a');
+    element.setAttribute('href', data_type + encodeURIComponent(content));
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
+}
