@@ -54,32 +54,32 @@ export default class App extends React.Component {
         this.setState({showMetrics: currentState});
     }
 
-    exportBestPopulation(){
+    exportBestPopulation() {
         let bestPopulation = this.state.bestPopulation;
-        if (bestPopulation.length === 0){
+        if (bestPopulation.length === 0) {
             this.setState({snackbarOpen: true});
             return
         }
-        let text = JSON.stringify(bestPopulation.map((dino)=> dino.toJson()));
+        let text = JSON.stringify(bestPopulation.map((dino) => dino.toJson()));
 
         download('best_population.json', text, "data:text/json;charset=utf-8,");
     }
 
-    exportGenerationData(){
+    exportGenerationData() {
         let data = this.state.scoreHistory;
-        if (data.length === 0){
+        if (data.length === 0) {
             this.setState({snackbarOpen: true});
             return
         }
         //generate headers
         let headers = [];
-        for (let i =0; i < data[0].length; i++){
-            headers.push((i + 1) +'. Generation')
+        for (let i = 0; i < data[0].length; i++) {
+            headers.push((i + 1) + '. Generation')
         }
         //write header
-        let csvFile ='';
-        csvFile += headers.join(',') +'\n';
-        for (let row of data){
+        let csvFile = '';
+        csvFile += headers.join(',') + '\n';
+        for (let row of data) {
             csvFile += row.join(',') + '\n';
         }
         download('generation_data.csv', csvFile, "data:text/csv;charset=utf-8,")
@@ -88,7 +88,7 @@ export default class App extends React.Component {
     handleClose(event, reason) {
         if (reason === 'clickaway')
             return;
-        this.setState({ snackbarOpen: false });
+        this.setState({snackbarOpen: false});
     };
 
     onSliderChange(value) {
@@ -194,6 +194,7 @@ export default class App extends React.Component {
     render() {
         const {generation, maxScore, population, scoreHistory, mutationRate, showMetrics} = this.state;
         const btnText = showMetrics ? 'hide outputs' : 'show outputs';
+        const buttonStyle = {margin: 5};
         return (
             <div style={{marginTop: '50px'}}>
                 <Grid container justify="center">
@@ -209,13 +210,15 @@ export default class App extends React.Component {
                                     </label>
                                 </div>
                                 <div>
-                                    <Button raised onClick={this.switchShowMetrics}>
+                                    <Button raised onClick={this.switchShowMetrics} color="primary" style={buttonStyle}>
                                         {btnText}
                                     </Button>
-                                    <Button raised onClick={this.exportBestPopulation}>
+                                    <Button raised onClick={this.exportBestPopulation} color="primary"
+                                            style={buttonStyle}>
                                         Export best Population (JSON)
                                     </Button>
-                                    <Button raised onClick={this.exportGenerationData}>
+                                    <Button raised onClick={this.exportGenerationData} color="primary"
+                                            style={buttonStyle}>
                                         Export generations (CSV)
                                     </Button>
                                 </div>
