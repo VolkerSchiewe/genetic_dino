@@ -610,86 +610,42 @@ Runner.prototype = {
 
             var dinoHeights = [];
             var nextObstacles = [];
-            var secondNextObstacles = [];
 
             for (var i = 0; i < this.tRex.length; i++) {
                 var dinoHeight = this.tRex[i].yPos;
                 dinoHeights.push(dinoHeight);
-                nextObstacles.push(this.returnNextObstacleData(1, this.tRex[i]));
-                secondNextObstacles.push(this.returnNextObstacleData(2, this.tRex[i]));
+                nextObstacles.push(this.returnNextObstacleData(this.tRex[i]));
             }
 
-            var currentData = {
-                speed: this.currentSpeed,
-                distance: this.distanceRan,
-                nextObstacle: nextObstacles,                    
-                secondNextObstacle: secondNextObstacles,
-                heightOfDino: dinoHeights,
-            };
-
             if (this.metricsListener != null) {
-                this.metricsListener(currentData.speed, currentData.nextObstacle, currentData.secondNextObstacle, currentData.heightOfDino);
+                this.metricsListener(this.currentSpeed, nextObstacles, dinoHeights);
             }
         }
     },
 
-    returnNextObstacleData: function (number, dino) {
-
-        var nextObstacleData = [];
-
+    returnNextObstacleData: function (dino) {
         var distanceToObstacle = '';
         var widthOfNextObstacle = '';
         var heightOfNextObstacle = '';
+        var distanceToSecondObstacle = '';
 
-        if (this.horizon.obstacles[0]){          
-            var distanceToFirstObstacle = (this.horizon.obstacles[0].xPos - this.horizon.obstacles[0].width/2) - (dino.xPos + dino.config.WIDTH / 2);
-            var widthOfFirstObstacle = this.horizon.obstacles[0].typeConfig.width;
-            var heightOfFirstObstacle = this.horizon.obstacles[0].typeConfig.height;
-            
-            if (this.horizon.obstacles[1]){
-                var distanceToSecondObstacle = (this.horizon.obstacles[1].xPos - this.horizon.obstacles[1].width/2) - (dino.xPos + dino.config.WIDTH / 2)
-                var widthOfSecondObstacle = this.horizon.obstacles[1].typeConfig.width;
-                var heightOfSecondObstacle = this.horizon.obstacles[1].typeConfig.height;
-            }
-            if (this.horizon.obstacles[2]){
-                var distanceToThirdObstacle = (this.horizon.obstacles[2].xPos - this.horizon.obstacles[2].width/2) - (dino.xPos + dino.config.WIDTH / 2)
-                var widthOfThirdObstacle = this.horizon.obstacles[2].typeConfig.width;
-                var heightOfThirdObstacle = this.horizon.obstacles[2].typeConfig.height;
-            }
-            
-            if (number == 1){
-                if (distanceToFirstObstacle > 0) {
-                    distanceToObstacle = distanceToFirstObstacle;
-                    widthOfNextObstacle = widthOfFirstObstacle;
-                    heightOfNextObstacle = heightOfFirstObstacle;
-                }
-                else if (this.horizon.obstacles[1] && distanceToSecondObstacle > 0) {
-                    distanceToObstacle = distanceToSecondObstacle;
-                    widthOfNextObstacle = widthOfSecondObstacle;
-                    heightOfNextObstacle = heightOfSecondObstacle;
-                }
-                else if (this.horizon.obstacles[2] && distanceToThirdObstacle > 0) {
-                    distanceToObstacle = distanceToThirdObstacle;
-                    widthOfNextObstacle = widthOfThirdObstacle;
-                    heightOfNextObstacle = heightOfThirdObstacle;
-                }           
-            }
-
-            if (number == 2){
-                if (this.horizon.obstacles[1] && distanceToFirstObstacle > 0) {
-                    distanceToObstacle = distanceToSecondObstacle;
-                    widthOfNextObstacle = widthOfSecondObstacle;
-                    heightOfNextObstacle = heightOfSecondObstacle;
-                }
-                else if (this.horizon.obstacles[2] && distanceToSecondObstacle > 0 && distanceToFirstObstacle < 0) {
-                    distanceToObstacle = distanceToThirdObstacle;
-                    widthOfNextObstacle = widthOfThirdObstacle;
-                    heightOfNextObstacle = heightOfThirdObstacle;
-                }           
+        for (var i = 0; i < this.horizon.obstacles.length; i++){
+            distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width/2) - (dino.xPos + dino.config.WIDTH / 2);
+            if (distanceToObstacle > 0){
+                widthOfNextObstacle = this.horizon.obstacles[i].typeConfig.width;
+                heightOfNextObstacle = this.horizon.obstacles[i].typeConfig.height;
+                if (this.horizon.obstacles[i + 1])
+                    distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width/2) - (dino.xPos + dino.config.WIDTH / 2);
+                break;
             }
         }
-        nextObstacleData.push(distanceToObstacle, widthOfNextObstacle, heightOfNextObstacle)
-        return nextObstacleData;
+
+        return {
+            distanceToNextObstacle: distanceToObstacle,
+            widthOfNextObstacle: widthOfNextObstacle,
+            heightOfNextObstacle: heightOfNextObstacle,
+            distanceToSecondObstacle: distanceToSecondObstacle,
+        };
     },
 
     notifyDinoCrashed(index) {

@@ -8,9 +8,11 @@ export class GenerationRunner {
             let runner = new Runner(id, population.length, null);
             let distances = [];
 
-            runner.addMetricsListener((speed, nextObstacle, secondNextObstacle, dinoHeight) => {
+            runner.addMetricsListener((speed, nextObstacle, dinoHeight) => {
                 for (let i = 0; i < population.length; i++) {
-                    let output = population[i].activateDinoBrain(speed, nextObstacle[i][0], nextObstacle[i][1], nextObstacle[i][2], secondNextObstacle[i][0], secondNextObstacle[i][1], secondNextObstacle[i][2], dinoHeight[i]);
+                    let output = population[i].activateDinoBrain(nextObstacle[i].distanceToNextObstacle,
+                        nextObstacle[i].widthOfNextObstacle,
+                        nextObstacle[i].heightOfNextObstacle);
 
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);

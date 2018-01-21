@@ -1,6 +1,6 @@
 import {MAPS_COUNT} from "./components/app.jsx";
 
-export const INPUT_LAYERS = 8;
+export const INPUT_LAYERS = 3;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 2;
 
@@ -29,8 +29,11 @@ export class DinoBrain {
         return (value);
     }
 
-    activateDinoBrain(speed, firstDistance, firstWidth, firstHeight, secondDistance, secondWidth, secondHeight, dinoY) {
-        let inputs = [speed, firstDistance, firstWidth, firstHeight, secondDistance, secondWidth, secondHeight, dinoY];
+    activateDinoBrain(distance, width, height) {
+        distance = DinoBrain.normalize(distance);
+        width = DinoBrain.normalize(width);
+        height = DinoBrain.normalize(height);
+        let inputs = [distance, width, height];
         return this.perceptron.activate(inputs);
     }
 }
