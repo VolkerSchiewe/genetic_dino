@@ -650,7 +650,7 @@ Runner.prototype = {
 
     notifyDinoCrashed(index) {
         if (this.dinoCrashedListener != null) {
-            var distance = this.distanceMeter.getActualDistance(Math.ceil((this.distanceRan - xFactor * index) < 0 ? 0 : (this.distanceRan - xFactor * index)));
+            var distance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan + xFactor * index));
             this.dinoCrashedListener(index, distance, this.tRex[index].jumpCount);
         }
 

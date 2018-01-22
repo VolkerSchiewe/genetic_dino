@@ -1,4 +1,5 @@
 import {MAPS_COUNT} from "./components/app.jsx";
+import {precisionRound} from "./utils.js";
 
 export const INPUT_LAYERS = 3;
 export const HIDDEN_LAYERS = 6;
@@ -12,7 +13,7 @@ export class DinoBrain {
         if (!shouldUseLSTM) {
             this.perceptron = new synaptic.Architect.Perceptron(INPUT_LAYERS, HIDDEN_LAYERS, OUTPUT_LAYERS);
             this.perceptron.layers.input.set({squash: synaptic.Neuron.squash.TANH});
-            this.perceptron.layers.hidden.forEach(function (hiddenLayer) {
+            this.perceptron.layers.hidden.forEach((hiddenLayer) => {
                 hiddenLayer.set({squash: synaptic.Neuron.squash.TANH})
             });
             this.perceptron.layers.output.set({squash: synaptic.Neuron.squash.TANH});
@@ -49,7 +50,16 @@ export class DinoBrain {
     }
 
     countDinosAlive() {
-        let count =  this.isAlive.reduce((a, b) => a + b, 0);
-        return count;
+        return this.isAlive.reduce((a, b) => a + b, 0);
+    }
+
+    // for debugging
+    getNnValues(){
+        return {
+            neurons: this.perceptron.neurons().map((object) => {
+                return precisionRound(object.neuron.bias, 2)
+            }).join(','),
+            // weights: this.perceptron.connections().map((connection) => (connection.weights))
+        }
     }
 }

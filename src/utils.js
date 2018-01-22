@@ -24,3 +24,8 @@ export function download(filename, content, data_type) {
 
     document.body.removeChild(element);
 }
+
+export function precisionRound(number, precision) {
+    let factor = Math.pow(10, precision);
+    return Math.round(number * factor) / factor;
+}

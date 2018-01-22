@@ -114,6 +114,8 @@ export default class App extends React.Component {
                 }, (i) => {
                     if (population[i].isAlive[mapIndex] > 0) {
                         population[i].isAlive[mapIndex] = 0;
+                    } else {
+                        // debugger;
                     }
                     this.setState({
                         population: population,
