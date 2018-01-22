@@ -7,9 +7,9 @@ import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
 import GenerationMetrics from "./generationMetrics.jsx";
 import 'rc-slider/assets/index.css';
-import Button from 'material-ui/Button';
 import Snackbar from "material-ui/Snackbar";
 import {download} from "../utils.js";
+import NavBar from "./NavBar.jsx";
 
 const REQUIRED_FITNESS = 100;
 export const POPULATION_SIZE = 10;
@@ -194,11 +194,14 @@ export default class App extends React.Component {
     render() {
         const {generation, maxScore, population, scoreHistory, mutationRate, showMetrics} = this.state;
         const btnText = showMetrics ? 'hide outputs' : 'show outputs';
-        const buttonStyle = {margin: 5};
         return (
-            <div style={{marginTop: '50px'}}>
+            <div>
+                <NavBar showMetrics={this.switchShowMetrics}
+                        showMetricsText={btnText}
+                        exportPopulation={this.exportBestPopulation}
+                        exportGeneration={this.exportGenerationData}/>
                 <Grid container justify="center">
-                    <Grid item xs={12} sm={8}>
+                    <Grid item xs={12} sm={10}>
                         <Grid container>
                             <Grid item xs={5}>
                                 <h1>Generation {generation}</h1>
@@ -208,19 +211,6 @@ export default class App extends React.Component {
                                     <label> Mutation Rate: {mutationRate}
                                         <Slider onChange={this.onSliderChange} defaultValue={20}/>
                                     </label>
-                                </div>
-                                <div>
-                                    <Button raised onClick={this.switchShowMetrics} color="primary" style={buttonStyle}>
-                                        {btnText}
-                                    </Button>
-                                    <Button raised onClick={this.exportBestPopulation} color="primary"
-                                            style={buttonStyle}>
-                                        Export best Population (JSON)
-                                    </Button>
-                                    <Button raised onClick={this.exportGenerationData} color="primary"
-                                            style={buttonStyle}>
-                                        Export generations (CSV)
-                                    </Button>
                                 </div>
 
                             </Grid>
