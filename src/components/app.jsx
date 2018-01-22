@@ -106,14 +106,14 @@ export default class App extends React.Component {
             population: population,
         });
         Promise.all(range(MAPS_COUNT).map((mapIndex) => {
-                return GenerationRunner.runSingleGeneration('#game-' + (mapIndex + 1), population, (i, output) => {
+                return GenerationRunner.runSingleGeneration(mapIndex + 1, population, (i, output) => {
                     if (this.state.showMetrics) {
                         this.outputs[mapIndex][i] = output;
                         this.forceUpdate()
                     }
                 }, (i) => {
-                    if (population[i].isAlive > 0) {
-                        population[i].isAlive -= 1;
+                    if (population[i].isAlive[mapIndex] > 0) {
+                        population[i].isAlive[mapIndex] = 0;
                     }
                     this.setState({
                         population: population,

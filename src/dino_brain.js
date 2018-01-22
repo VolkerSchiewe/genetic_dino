@@ -16,7 +16,10 @@ export class DinoBrain {
                 hiddenLayer.set({squash: synaptic.Neuron.squash.TANH})
             });
             this.perceptron.layers.output.set({squash: synaptic.Neuron.squash.TANH});
-            this.isAlive = MAPS_COUNT;
+            this.isAlive = new Array(MAPS_COUNT);
+            for (let i = 0; i < this.isAlive.length; i++) {
+                this.isAlive[i] = 1;
+            }
         }
         else {
             // TODO: implement option to create LSTM network when controller.duck() is integrated
@@ -41,7 +44,12 @@ export class DinoBrain {
         return this.perceptron.toJSON()
     }
 
-    parseJson(json){
+    parseJson(json) {
         this.perceptron = JSON.parse(json)
+    }
+
+    countDinosAlive() {
+        let count =  this.isAlive.reduce((a, b) => a + b, 0);
+        return count;
     }
 }

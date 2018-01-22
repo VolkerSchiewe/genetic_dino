@@ -3,9 +3,9 @@ import {Runner} from "./game/game";
 export const ACTION_THRESHOLD = 0.11;
 
 export class GenerationRunner {
-    static runSingleGeneration(id, population, outputCallback, dinoDiedCallback) {
+    static runSingleGeneration(mapId, population, outputCallback, dinoDiedCallback) {
         return new Promise((resolve, reject) => {
-            let runner = new Runner(id, population.length, null);
+            let runner = new Runner('#game-' + mapId, population.length, null);
             let distances = [];
 
             runner.addMetricsListener((speed, nextObstacle, dinoHeight) => {
@@ -29,7 +29,7 @@ export class GenerationRunner {
             });
 
             runner.addGameEndListener(() => {
-                console.log(`All dinos in generation on Map ${id} finished!`);
+                console.log(`All dinos in generation on Map ${mapId} finished!`);
                 runner.removeMetricsListener();
                 runner.removeDinoCrashedListener();
                 runner.removeGameEndListener();

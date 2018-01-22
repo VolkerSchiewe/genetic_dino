@@ -13,38 +13,35 @@ export default class GameContainer extends React.Component {
 
         let populationRange = range(population.length);
 
-        let floatStyle = {
-            float: 'left',
-            marginRight: 20,
-        };
         return (
             <div>
                 <Grid container>
-                    {range(MAPS_COUNT).map((i)=>(
-                        <Grid key={i} item xs={12}>
-                            <div id={'game-' + (i + 1)} className="game-wrapper"/>
-                        </Grid>
-                    ))}
-
-                    <Grid item xs={12}>
-                        {populationRange.map((index) => {
-                                let isAliveText = 'Dinos alive: ' + population[index].isAlive;
-                                return (
-                                    <div key={index}>
-                                        <Circle color={colors[index]}/>
-                                        <div style={floatStyle}>{isAliveText}</div>
-                                    </div>
-                                )
-                            }
-                        )}
+                    <Grid item xs={8}>
+                        {range(MAPS_COUNT).map((i) => (
+                            <div key={i} id={'game-' + (i + 1)} className="game-wrapper"/>
+                        ))}
                     </Grid>
+                    <Grid item xs={4}>
+                            {populationRange.map((index) => {
+                                    let isAliveText = 'Dinos alive: ' + population[index].countDinosAlive();
+                                    return (
+                                        <div key={index} style={{margin:5}}>
+                                            <Circle color={colors[index]}/>
+                                            <div>{isAliveText}</div>
+                                        </div>
+                                    )
+                                }
+                            )}
+                    </Grid>
+
                     {range(MAPS_COUNT).map((mapIndex) => (
                         <Grid item xs={12} key={mapIndex}>
                             <Grid container>
                                 {populationRange.map((populationIndex) => {
                                     let output = outputs[mapIndex][populationIndex];
                                     return (
-                                        <Grid item xs={2} key={populationIndex} style={{margin: '10px', minHeight: 150}}>
+                                        <Grid item xs={2} key={populationIndex}
+                                              style={{margin: '10px', minHeight: 150}}>
                                             {showMetrics &&
                                             <OutputMetrics value={output} id={populationIndex}/>
                                             }
