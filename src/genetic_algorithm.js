@@ -9,15 +9,19 @@ export class GeneticAlgorithm {
         this.mutationRate = 0.2;
     }
 
-    setMutationRate(mutationRate){
+    setMutationRate(mutationRate) {
         this.mutationRate = mutationRate;
     }
 
-    generatePopulation() {
+    generatePopulation(initialJSON = null) {
         let population = [];
 
         for (let i = 0; i < this.populationSize; i++) {
-            population.push(new DinoBrain(false));
+            if (initialJSON !== null) {
+                population.push(DinoBrain.parseJson(initialJSON[i]))
+            } else {
+                population.push(new DinoBrain());
+            }
         }
         return population;
     }
@@ -27,7 +31,7 @@ export class GeneticAlgorithm {
         // Converting the networks to JSON makes it much easier to manipulate parameters
         let dominantPerceptron = dominantBrain.perceptron.toJSON();
         let recessivePerceptron = recessiveBrain.perceptron.toJSON();
-        let offspring = new DinoBrain(false);
+        let offspring = new DinoBrain();
         let offspringPerceptron = Object.assign(dominantBrain.perceptron.toJSON());
 
         for (let i = 0; i < NEURONS; i++) {
@@ -65,7 +69,7 @@ export class GeneticAlgorithm {
     // Returns new population, using bredDinoBrains
     // TODO: Research better evolution algorithms
     evolvePopulation(dinoAiArray) {
-        let newDinoBrain = new DinoBrain(false);
+        let newDinoBrain = new DinoBrain();
         let bestGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[0]);
         let second = this.crossOverDinoBrains(dinoAiArray[1], dinoAiArray[1]);
         let third = this.crossOverDinoBrains(dinoAiArray[2], dinoAiArray[2]);
