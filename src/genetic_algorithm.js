@@ -28,7 +28,7 @@ export class GeneticAlgorithm {
         let dominantPerceptron = dominantBrain.perceptron.toJSON();
         let recessivePerceptron = recessiveBrain.perceptron.toJSON();
         let offspring = new DinoBrain(false);
-        let offspringPerceptron = offspring.perceptron.toJSON();
+        let offspringPerceptron = Object.assign(dominantBrain.perceptron.toJSON());
 
         for (let i = 0; i < NEURONS; i++) {
             let dominant_bias = dominantPerceptron.neurons[INPUT_LAYERS + i].bias;
@@ -44,7 +44,7 @@ export class GeneticAlgorithm {
             offspringPerceptron.connections[i].weight = (dominant_weight * DOMINANT_GENE_RATE + recessive_weight * RECESSIVE_GENE_RATE);
         }
         // TODO: enable to merge to LSTM networks
-        offspring.perceptron = synaptic.Network.fromJSON(offspringPerceptron);
+        offspring.perceptron = Object.assign(synaptic.Network.fromJSON(offspringPerceptron));
         return offspring;
     }
 
@@ -58,7 +58,7 @@ export class GeneticAlgorithm {
         for (i = 0; i < CONNECTIONS; i++) {
             dinoPerceptron.connections[i].weights = this.mutateGene(dinoPerceptron.connections[i].weights);
         }
-        dinoGene.perceptron = synaptic.Network.fromJSON(dinoPerceptron);
+        dinoGene.perceptron = Object.assign(synaptic.Network.fromJSON(dinoPerceptron));
         return dinoGene
     }
 

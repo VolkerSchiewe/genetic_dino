@@ -452,7 +452,7 @@ Runner.prototype = {
                 this.containerEl.style.width = this.dimensions.WIDTH + 'px';
                 this.containerEl.style.height = this.dimensions.HEIGHT + 'px';
                 this.distanceMeter.update(0, Math.ceil(this.distanceRan));
-                this.stop();
+                // this.stop();
             } else {
                 for (let i = 0; i < this.numberOfTrex; i++) {
                     this.tRex[i].draw(0, 0);
@@ -650,7 +650,7 @@ Runner.prototype = {
 
     notifyDinoCrashed(index) {
         if (this.dinoCrashedListener != null) {
-            var distance = this.distanceMeter.getActualDistance(Math.ceil((this.distanceRan - xFactor * index) < 0 ? 0 : (this.distanceRan - xFactor * index)));
+            var distance = this.distanceMeter.getActualDistance(Math.ceil(this.distanceRan + xFactor * index));
             this.dinoCrashedListener(index, distance, this.tRex[index].jumpCount);
         }
 
