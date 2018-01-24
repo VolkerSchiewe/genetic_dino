@@ -12,7 +12,8 @@ export class GenerationRunner {
                 for (let i = 0; i < population.length; i++) {
                     let output = population[i].activateDinoBrain(nextObstacle[i].distanceToNextObstacle,
                         nextObstacle[i].widthOfNextObstacle,
-                        nextObstacle[i].heightOfNextObstacle);
+                        nextObstacle[i].heightOfNextObstacle,
+                        dinoHeight[i]);
 
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);

@@ -1,7 +1,7 @@
 import {MAPS_COUNT} from "./components/app.jsx";
 import {precisionRound} from "./utils.js";
 
-export const INPUT_LAYERS = 3;
+export const INPUT_LAYERS = 4;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 2;
 
@@ -33,11 +33,11 @@ export class DinoBrain {
         return (value);
     }
 
-    activateDinoBrain(distance, width, height) {
+    activateDinoBrain(distance, width, height, dinoHeight) {
         distance = DinoBrain.normalize(distance);
         width = DinoBrain.normalize(width);
         height = DinoBrain.normalize(height);
-        let inputs = [distance, width, height];
+        let inputs = [distance, width, height, dinoHeight];
         return this.perceptron.activate(inputs);
     }
 

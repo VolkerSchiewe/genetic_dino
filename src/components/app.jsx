@@ -208,14 +208,16 @@ export default class App extends React.Component {
             dinoAiArray[i] = population[survivorIndex];
             fitness[survivorIndex] = 0;
         }
-        let new_population = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
+
+        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
+
         if (this.state.generation < 4 && bestFitnessOfGeneration < REQUIRED_FITNESS) {
-            new_population = this.geneticAlgorithm.generatePopulation();
+            newPopulation = this.geneticAlgorithm.generatePopulation();
             this.setState({
                 generation: 0
             });
         }
-        this.runGeneration(new_population);
+        this.runGeneration(newPopulation);
     }
 
     render() {
