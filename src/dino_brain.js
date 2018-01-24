@@ -9,7 +9,7 @@ export const NEURONS = HIDDEN_LAYERS + OUTPUT_LAYERS;
 export const CONNECTIONS = INPUT_LAYERS * HIDDEN_LAYERS + HIDDEN_LAYERS * OUTPUT_LAYERS;
 
 export class DinoBrain {
-    constructor(shouldUseLSTM) {
+    constructor(shouldUseLSTM=false) {
         if (!shouldUseLSTM) {
             this.perceptron = new synaptic.Architect.Perceptron(INPUT_LAYERS, HIDDEN_LAYERS, OUTPUT_LAYERS);
             this.perceptron.layers.input.set({squash: synaptic.Neuron.squash.TANH});
@@ -45,8 +45,10 @@ export class DinoBrain {
         return this.perceptron.toJSON()
     }
 
-    parseJson(json) {
-        this.perceptron = JSON.parse(json)
+    static parseJson(json) {
+        let dino = new DinoBrain();
+        dino.perceptron = synaptic.Network.fromJSON((json));
+        return dino;
     }
 
     countDinosAlive() {

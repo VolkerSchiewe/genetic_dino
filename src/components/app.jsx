@@ -10,6 +10,7 @@ import 'rc-slider/assets/index.css';
 import Snackbar from "material-ui/Snackbar";
 import {download} from "../utils.js";
 import NavBar from "./NavBar.jsx";
+import Button from "material-ui/Button";
 
 const REQUIRED_FITNESS = 100;
 export const POPULATION_SIZE = 10;
@@ -30,6 +31,7 @@ export default class App extends React.Component {
             showMetrics: false,
             bestPopulation: [],
             snackbarOpen: false,
+            isGameRunning: false,
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
         this.outputs = [];
@@ -47,6 +49,8 @@ export default class App extends React.Component {
         this.exportBestPopulation = this.exportBestPopulation.bind(this);
         this.handleClose = this.handleClose.bind(this);
         this.exportGenerationData = this.exportGenerationData.bind(this);
+        this.handleStartClick = this.handleStartClick.bind(this);
+        this.handleImportClick = this.handleImportClick.bind(this);
     }
 
     switchShowMetrics() {
@@ -99,6 +103,32 @@ export default class App extends React.Component {
         if (this.geneticAlgorithm)
             this.geneticAlgorithm.setMutationRate(value);
     }
+
+    handleStartClick() {
+        this.setState({
+            isGameRunning: true
+        });
+        const population = this.geneticAlgorithm.generatePopulation();
+        this.runGeneration(population);
+    }
+
+
+    handleImportClick(event) {
+        this.setState({
+            isGameRunning: true
+        });
+        let file = event.target.files[0];
+        let r = new FileReader();
+        r.onload = (e) => {
+            let content = e.target.result;
+            let jsonContent = JSON.parse(content);
+            const population = this.geneticAlgorithm.generatePopulation(jsonContent);
+            this.runGeneration(population);
+        };
+        r.readAsText(file);
+
+    }
+
 
     runGeneration(population) {
         this.setState({
@@ -190,13 +220,8 @@ export default class App extends React.Component {
         this.runGeneration(newPopulation);
     }
 
-    componentDidMount() {
-        const population = this.geneticAlgorithm.generatePopulation();
-        this.runGeneration(population);
-    }
-
     render() {
-        const {generation, maxScore, population, scoreHistory, mutationRate, showMetrics} = this.state;
+        const {generation, maxScore, population, scoreHistory, mutationRate, showMetrics, isGameRunning} = this.state;
         const btnText = showMetrics ? 'hide outputs' : 'show outputs';
         return (
             <div>
@@ -222,6 +247,22 @@ export default class App extends React.Component {
                                 <GenerationMetrics scoreHistory={scoreHistory}/>
                             </Grid>
                             <Grid item xs={12}>
+                                {!isGameRunning &&
+                                <div>
+                                    <Button raised color="primary" onClick={this.handleStartClick} style={{margin: 5}}>Start
+                                        Simulation</Button>
+                                    <input
+                                        style={{display: "None"}}
+                                        id="raised-button-file"
+                                        type="file"
+                                        onChange={this.handleImportClick}
+                                    />
+                                    <label htmlFor="raised-button-file">
+                                        <Button raised component="span" style={{margin: 5}}>
+                                            Import Population
+                                        </Button>
+                                    </label></div>
+                                }
                                 <GameContainer population={population} outputs={this.outputs}
                                                showMetrics={showMetrics}/>
                             </Grid>

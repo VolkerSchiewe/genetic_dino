@@ -9,15 +9,19 @@ export class GeneticAlgorithm {
         this.mutationRate = 0.2;
     }
 
-    setMutationRate(mutationRate){
+    setMutationRate(mutationRate) {
         this.mutationRate = mutationRate;
     }
 
-    generatePopulation() {
+    generatePopulation(initialJSON = null) {
         let population = [];
 
         for (let i = 0; i < this.populationSize; i++) {
-            population.push(new DinoBrain(false));
+            if (initialJSON !== null) {
+                population.push(DinoBrain.parseJson(initialJSON[i]))
+            } else {
+                population.push(new DinoBrain());
+            }
         }
         return population;
     }
