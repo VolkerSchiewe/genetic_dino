@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "heroku-postbuild": "webpack -p --config ./webpack.config.js --progress",
     "build": "webpack -p",
     "dev": "webpack -d --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
