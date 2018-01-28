@@ -12,7 +12,7 @@ import {download} from "../utils.js";
 import NavBar from "./NavBar.jsx";
 import Button from "material-ui/Button";
 
-const REQUIRED_FITNESS = 100;
+const REQUIRED_FITNESS = 70;
 export const POPULATION_SIZE = 10;
 export const MAPS_COUNT = 3;
 const SURVIVOR_COUNT = 3;

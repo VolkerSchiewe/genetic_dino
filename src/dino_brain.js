@@ -28,15 +28,28 @@ export class DinoBrain {
         }
     }
 
-    static normalize(value) {
+/*    static normalize(value) {
         // TODO: Research most fitting normalization scheme for INPUT_LAYERS!
         return (value);
+    }*/
+
+    static normalize(value, max) {
+        if (value < -max) {
+            value = -max;
+        }
+        else if (value > max) {
+            value = max;
+        }
+        return (value / max) * 100;
     }
 
+
     activateDinoBrain(distance, width, height, dinoHeight) {
-        distance = DinoBrain.normalize(distance);
-        width = DinoBrain.normalize(width);
-        height = DinoBrain.normalize(height);
+        console.log(distance)
+        distance = DinoBrain.normalize(distance, 700);
+        width = DinoBrain.normalize(width, 40);
+        height = DinoBrain.normalize(height, 90);
+        dinoHeight = DinoBrain.normalize(dinoHeight, 93)
         let inputs = [distance, width, height, dinoHeight];
         return this.perceptron.activate(inputs);
     }

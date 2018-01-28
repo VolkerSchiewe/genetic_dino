@@ -1,6 +1,6 @@
 import {Runner} from "./game/game";
 
-export const ACTION_THRESHOLD = 0.11;
+export const ACTION_THRESHOLD = 0.15;
 
 export class GenerationRunner {
     static runSingleGeneration(mapId, population, outputCallback, dinoDiedCallback) {
@@ -14,6 +14,7 @@ export class GenerationRunner {
                         nextObstacle[i].widthOfNextObstacle,
                         nextObstacle[i].heightOfNextObstacle,
                         dinoHeight[i]);
+                    console.log(output)
 
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
@@ -45,10 +46,10 @@ export class GenerationRunner {
     }
 
     static isDuck(output) {
-        return output[1] > ACTION_THRESHOLD;
+        return output[0] > ACTION_THRESHOLD;
     }
 
     static isJump(output) {
-        return output[0] > ACTION_THRESHOLD;
+        return output[1] > ACTION_THRESHOLD;
     }
 }
