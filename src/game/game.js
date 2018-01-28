@@ -612,8 +612,7 @@ Runner.prototype = {
             var nextObstacles = [];
 
             for (var i = 0; i < this.tRex.length; i++) {
-                var dinoHeight = this.tRex[i].yPos;
-                dinoHeights.push(dinoHeight);
+                dinoHeights.push(this.verticalObstacleDistance(this.tRex[i]));
                 nextObstacles.push(this.returnNextObstacleData(this.tRex[i]));
             }
 
@@ -646,6 +645,22 @@ Runner.prototype = {
             heightOfNextObstacle: heightOfNextObstacle,
             distanceToSecondObstacle: distanceToSecondObstacle,
         };
+    },
+
+    verticalObstacleDistance: function (dino) {
+        var distanceToObstacle = 0;
+        var dinoYPosition = dino.getYPos();
+
+        for (var i = 0; i < this.horizon.obstacles.length; i++) {
+            distanceToObstacle = this.horizon.obstacles[i].xPos - (dino.xPos + dino.config.WIDTH / 2);
+
+            // Check if dino is currently above obstacle
+            if (distanceToObstacle <= 0 && distanceToObstacle >= -1 * this.horizon.obstacles[i].width){
+                return dinoYPosition - this.horizon.obstacles[i].yPos;
+            }
+        }
+
+        return dinoYPosition;
     },
 
     notifyDinoCrashed(index) {
@@ -1822,6 +1837,10 @@ Trex.prototype = {
                 this.xPos, this.yPos,
                 this.config.WIDTH, this.config.HEIGHT);
         }
+    },
+
+    getYPos: function () {
+        return -1 * (this.yPos - this.groundYPos);
     },
 
     hide: function () {
