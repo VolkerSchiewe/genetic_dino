@@ -28,11 +28,6 @@ export class DinoBrain {
         }
     }
 
-/*    static normalize(value) {
-        // TODO: Research most fitting normalization scheme for INPUT_LAYERS!
-        return (value);
-    }*/
-
     static normalize(value, max) {
         if (value < -max) {
             value = -max;
