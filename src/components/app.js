@@ -1,16 +1,16 @@
-import React from 'react'
-import GameContainer from "./gameContainer.jsx";
-import {GeneticAlgorithm} from "../genetic_algorithm";
-import {GenerationRunner} from "../generation_runner";
-import {indexOfMaxValue, range} from "../utils.js";
+import React from 'react';
+import GeneticAlgorithm from '../genetic_algorithm';
+import GenerationRunner from '../generation_runner';
+import {indexOfMaxValue, range} from '../utils';
 import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
-import GenerationMetrics from "./generationMetrics.jsx";
+import GenerationMetrics from './metrics/generationMetrics';
 import 'rc-slider/assets/index.css';
-import Snackbar from "material-ui/Snackbar";
-import {download} from "../utils.js";
-import NavBar from "./NavBar.jsx";
-import Button from "material-ui/Button";
+import Snackbar from 'material-ui/Snackbar';
+import {download} from '../utils';
+import NavBar from './layout/NavBar';
+import Button from 'material-ui/Button';
+import GameContainer from './layout/gameContainer';
 
 const REQUIRED_FITNESS = 100;
 export const POPULATION_SIZE = 10;
@@ -62,23 +62,23 @@ export default class App extends React.Component {
         let bestPopulation = this.state.bestPopulation;
         if (bestPopulation.length === 0) {
             this.setState({snackbarOpen: true});
-            return
+            return;
         }
         let text = JSON.stringify(bestPopulation.map((dino) => dino.toJson()));
 
-        download('best_population.json', text, "data:text/json;charset=utf-8,");
+        download('best_population.json', text, 'data:text/json;charset=utf-8,');
     }
 
     exportGenerationData() {
         let data = this.state.scoreHistory;
         if (data.length === 0) {
             this.setState({snackbarOpen: true});
-            return
+            return;
         }
         //generate headers
         let headers = [];
         for (let i = 0; i < data[0].length; i++) {
-            headers.push((i + 1) + '. Generation')
+            headers.push((i + 1) + '. Generation');
         }
         //write header
         let csvFile = '';
@@ -86,14 +86,14 @@ export default class App extends React.Component {
         for (let row of data) {
             csvFile += row.join(',') + '\n';
         }
-        download('generation_data.csv', csvFile, "data:text/csv;charset=utf-8,")
+        download('generation_data.csv', csvFile, 'data:text/csv;charset=utf-8,');
     }
 
     handleClose(event, reason) {
         if (reason === 'clickaway')
             return;
         this.setState({snackbarOpen: false});
-    };
+    }
 
     onSliderChange(value) {
         value = value / 100;
@@ -136,22 +136,22 @@ export default class App extends React.Component {
             population: population,
         });
         Promise.all(range(MAPS_COUNT).map((mapIndex) => {
-                return GenerationRunner.runSingleGeneration(mapIndex + 1, population, (i, output) => {
-                    if (this.state.showMetrics) {
-                        this.outputs[mapIndex][i] = output;
-                        this.forceUpdate()
-                    }
-                }, (i) => {
-                    if (population[i].isAlive[mapIndex] > 0) {
-                        population[i].isAlive[mapIndex] = 0;
-                    } else {
-                        // debugger;
-                    }
-                    this.setState({
-                        population: population,
-                    })
-                })
-            }
+            return GenerationRunner.runSingleGeneration(mapIndex + 1, population, (i, output) => {
+                if (this.state.showMetrics) {
+                    this.outputs[mapIndex][i] = output;
+                    this.forceUpdate();
+                }
+            }, (i) => {
+                if (population[i].isAlive[mapIndex] > 0) {
+                    population[i].isAlive[mapIndex] = 0;
+                } else {
+                    // debugger;
+                }
+                this.setState({
+                    population: population,
+                });
+            });
+        }
         ))
             .then(fitnessOfAllMaps => {
                 console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
@@ -190,7 +190,7 @@ export default class App extends React.Component {
                 dinoFitness.push(fitness[i]);
             else
                 dinoFitness = [fitness[i]];
-            scoreHistory[i] = dinoFitness
+            scoreHistory[i] = dinoFitness;
         }
         if (bestFitnessOfGeneration > this.state.maxScore) {
             this.setState({
@@ -226,9 +226,9 @@ export default class App extends React.Component {
         return (
             <div>
                 <NavBar showMetrics={this.switchShowMetrics}
-                        showMetricsText={btnText}
-                        exportPopulation={this.exportBestPopulation}
-                        exportGeneration={this.exportGenerationData}/>
+                    showMetricsText={btnText}
+                    exportPopulation={this.exportBestPopulation}
+                    exportGeneration={this.exportGenerationData}/>
                 <Grid container justify="center">
                     <Grid item xs={12} sm={10}>
                         <Grid container>
@@ -252,7 +252,7 @@ export default class App extends React.Component {
                                     <Button raised color="primary" onClick={this.handleStartClick} style={{margin: 5}}>Start
                                         Simulation</Button>
                                     <input
-                                        style={{display: "None"}}
+                                        style={{display: 'None'}}
                                         id="raised-button-file"
                                         type="file"
                                         onChange={this.handleImportClick}
@@ -264,7 +264,7 @@ export default class App extends React.Component {
                                     </label></div>
                                 }
                                 <GameContainer population={population} outputs={this.outputs}
-                                               showMetrics={showMetrics}/>
+                                    showMetrics={showMetrics}/>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -1,8 +1,8 @@
-import {Runner} from "./game/game";
+import {Runner} from './game/game';
 
 export const ACTION_THRESHOLD = 0.11;
 
-export class GenerationRunner {
+export default class GenerationRunner {
     static runSingleGeneration(mapId, population, outputCallback, dinoDiedCallback) {
         return new Promise((resolve, reject) => {
             let runner = new Runner('#game-' + mapId, population.length, null);
@@ -14,7 +14,7 @@ export class GenerationRunner {
                         nextObstacle[i].widthOfNextObstacle,
                         nextObstacle[i].heightOfNextObstacle,
                         dinoHeight[i]);
-
+                    outputCallback(i, output);
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
                     } else if (GenerationRunner.isJump(output)) {
@@ -26,7 +26,7 @@ export class GenerationRunner {
             runner.addDinoCrashedListener((i, distance, jumpCount) => {
                 // console.log(`Dino ${i} crashed with distance: ${distance} jumps: ${jumpCount}`);
                 distances[i] = distance;
-                dinoDiedCallback(i)
+                dinoDiedCallback(i);
             });
 
             runner.addGameEndListener(() => {

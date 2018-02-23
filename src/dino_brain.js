@@ -1,5 +1,6 @@
-import {MAPS_COUNT} from "./components/app.jsx";
-import {precisionRound} from "./utils.js";
+import {MAPS_COUNT} from './components/app';
+import {precisionRound} from './utils';
+import synaptic from 'synaptic';
 
 export const INPUT_LAYERS = 4;
 export const HIDDEN_LAYERS = 6;
@@ -14,7 +15,7 @@ export class DinoBrain {
             this.perceptron = new synaptic.Architect.Perceptron(INPUT_LAYERS, HIDDEN_LAYERS, OUTPUT_LAYERS);
             this.perceptron.layers.input.set({squash: synaptic.Neuron.squash.TANH});
             this.perceptron.layers.hidden.forEach((hiddenLayer) => {
-                hiddenLayer.set({squash: synaptic.Neuron.squash.TANH})
+                hiddenLayer.set({squash: synaptic.Neuron.squash.TANH});
             });
             this.perceptron.layers.output.set({squash: synaptic.Neuron.squash.TANH});
             this.isAlive = new Array(MAPS_COUNT);
@@ -42,7 +43,7 @@ export class DinoBrain {
     }
 
     toJson() {
-        return this.perceptron.toJSON()
+        return this.perceptron.toJSON();
     }
 
     static parseJson(json) {
@@ -59,9 +60,9 @@ export class DinoBrain {
     getNnValues(){
         return {
             neurons: this.perceptron.neurons().map((object) => {
-                return precisionRound(object.neuron.bias, 2)
+                return precisionRound(object.neuron.bias, 2);
             }).join(','),
             // weights: this.perceptron.connections().map((connection) => (connection.weights))
-        }
+        };
     }
 }

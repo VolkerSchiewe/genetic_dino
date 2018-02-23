@@ -1,5 +1,5 @@
-import React from 'react'
-import AppBar from "material-ui/AppBar";
+import React from 'react';
+import AppBar from 'material-ui/AppBar';
 import Toolbar from 'material-ui/Toolbar';
 import Typography from 'material-ui/Typography';
 import Button from 'material-ui/Button';
@@ -16,26 +16,29 @@ export default class NavBar extends React.Component {
         this.handleExportPopulation = this.handleExportPopulation.bind(this);
         this.handleExportGeneration = this.handleExportGeneration.bind(this);
     }
+
     handleExportPopulation(){
         this.props.exportPopulation();
         this.handleClose();
     }
+
     handleExportGeneration(){
         this.props.exportGeneration();
         this.handleClose();
     }
+
     handleMenu(event) {
         this.setState({anchorEl: event.currentTarget});
-    };
+    }
 
     handleClose() {
         this.setState({anchorEl: null});
-    };
+    }
 
     render() {
         const {anchorEl} = this.state;
         const {showMetrics, showMetricsText} = this.props;
-         const open = Boolean(anchorEl);
+        const open = Boolean(anchorEl);
         return (
             <div>
                 <AppBar position="static">
@@ -47,9 +50,9 @@ export default class NavBar extends React.Component {
                         <Button color="contrast" onClick={showMetrics}>{showMetricsText}</Button>
                         <div>
                             <Button aria-owns={open ? 'menu-appbar' : null}
-                                    aria-haspopup="true"
-                                    onClick={this.handleMenu}
-                                    color="contrast">Export
+                                aria-haspopup="true"
+                                onClick={this.handleMenu}
+                                color="contrast">Export
                             </Button>
 
                             <Menu

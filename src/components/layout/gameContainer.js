@@ -1,10 +1,10 @@
-import React from 'react'
-import OutputMetrics from "./outputMetrics.jsx";
+import React from 'react';
+import OutputMetrics from '../metrics/outputMetrics';
 import Grid from 'material-ui/Grid';
-import {Circle} from './circle.jsx'
-import {colors} from "./app.jsx";
-import {range} from "../utils.js";
-import {MAPS_COUNT} from "./app.jsx";
+import {Circle} from '../misc/circle';
+import {colors} from '../app';
+import {range} from '../../utils';
+import {MAPS_COUNT} from '../app';
 
 export default class GameContainer extends React.Component {
 
@@ -22,16 +22,16 @@ export default class GameContainer extends React.Component {
                         ))}
                     </Grid>
                     <Grid item xs={4}>
-                            {populationRange.map((index) => {
-                                    let isAliveText = 'Dinos alive: ' + population[index].countDinosAlive();
-                                    return (
-                                        <div key={index} style={{margin:5}}>
-                                            <Circle color={colors[index]}/>
-                                            <div>{isAliveText}</div>
-                                        </div>
-                                    )
-                                }
-                            )}
+                        {populationRange.map((index) => {
+                            let isAliveText = 'Dinos alive: ' + population[index].countDinosAlive();
+                            return (
+                                <div key={index} style={{margin:5}}>
+                                    <Circle color={colors[index]}/>
+                                    <div>{isAliveText}</div>
+                                </div>
+                            );
+                        }
+                        )}
                     </Grid>
 
                     {range(MAPS_COUNT).map((mapIndex) => (
@@ -41,12 +41,12 @@ export default class GameContainer extends React.Component {
                                     let output = outputs[mapIndex][populationIndex];
                                     return (
                                         <Grid item xs={2} key={populationIndex}
-                                              style={{margin: '10px', minHeight: 150}}>
+                                            style={{margin: '10px', minHeight: 150}}>
                                             {showMetrics &&
                                             <OutputMetrics value={output} id={populationIndex}/>
                                             }
                                         </Grid>
-                                    )
+                                    );
                                 })}
                             </Grid>
                         </Grid>
