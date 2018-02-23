@@ -1,9 +1,10 @@
-import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from "./dino_brain";
+import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dino_brain';
+import synaptic from 'synaptic';
 
 const DOMINANT_GENE_RATE = 0.65;
 const RECESSIVE_GENE_RATE = 0.35;
 
-export class GeneticAlgorithm {
+export default class GeneticAlgorithm {
     constructor(populationSize) {
         this.populationSize = populationSize;
         this.mutationRate = 0.2;
@@ -18,7 +19,7 @@ export class GeneticAlgorithm {
 
         for (let i = 0; i < this.populationSize; i++) {
             if (initialJSON !== null) {
-                population.push(DinoBrain.parseJson(initialJSON[i]))
+                population.push(DinoBrain.parseJson(initialJSON[i]));
             } else {
                 population.push(new DinoBrain());
             }
@@ -63,7 +64,7 @@ export class GeneticAlgorithm {
             dinoPerceptron.connections[i].weights = this.mutateGene(dinoPerceptron.connections[i].weights);
         }
         dinoGene.perceptron = synaptic.Network.fromJSON(dinoPerceptron);
-        return dinoGene
+        return dinoGene;
     }
 
     // Returns new population, using bredDinoBrains

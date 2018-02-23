@@ -1,6 +1,6 @@
-import React from 'react'
-import {Line} from "react-chartjs-2";
-import {colors} from "./app.jsx";
+import React from 'react';
+import {Line} from 'react-chartjs-2';
+import {colors} from '../app';
 
 
 export default class GenerationMetrics extends React.Component {
@@ -11,7 +11,7 @@ export default class GenerationMetrics extends React.Component {
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.scoreHistory)
             return nextProps.scoreHistory.length !== 0;
-        return false
+        return false;
     }
 
     render() {
@@ -22,7 +22,7 @@ export default class GenerationMetrics extends React.Component {
         for (let i = 0; i < data.length; i++) {
             datasets[i] = {
                 data: data[i], label: (i + 1) + '. Dino', borderColor: colors[i], fill: false,
-            }
+            };
         }
         // generate x-axis
         if (data.length > 0) {

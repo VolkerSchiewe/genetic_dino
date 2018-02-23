@@ -1,6 +1,6 @@
 import React from 'react'
 import {Bar} from "react-chartjs-2";
-import {colors} from "./app.jsx";
+import {colors} from "../app";
 
 export default class OutputMetrics extends React.Component {
 
