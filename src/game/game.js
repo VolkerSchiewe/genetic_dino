@@ -380,7 +380,7 @@ Runner.prototype = {
         // Draw t-rex
         for (let i = 0; i < this.numberOfTrex; i++) {
             let dinoSpriteIndex = i % this.dinoSprites.length;
-            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX, xFactor*i);
+            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX, xFactor * i);
         }
 
         const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
@@ -554,17 +554,17 @@ Runner.prototype = {
             // Check for collisions.
             for (let i = 0; i < this.tRex.length; i++) {
                 for (var j = 0; j < 3; j++) {       //there won't be more than 2 obstacles behind the first dino
-                    if (this.horizon.obstacles[j] != null){
-                    var collision = hasObstacles && checkForCollision(this.horizon.obstacles[j], this.tRex[i]);
+                    if (this.horizon.obstacles[j] != null) {
+                        var collision = hasObstacles && checkForCollision(this.horizon.obstacles[j], this.tRex[i]);
 
-                    if (collision) {
-                        this.numberOfCrashedTrex++;
-                        this.notifyDinoCrashed(i);
-                        this.tRex[i].hide();
+                        if (collision) {
+                            this.numberOfCrashedTrex++;
+                            this.notifyDinoCrashed(i);
+                            this.tRex[i].hide();
+                        }
                     }
                 }
             }
-        }
 
             if (this.numberOfCrashedTrex < this.numberOfTrex) {
                 this.distanceRan += this.currentSpeed * deltaTime / this.msPerFrame;
@@ -629,13 +629,13 @@ Runner.prototype = {
         var heightOfNextObstacle = '';
         var distanceToSecondObstacle = '';
 
-        for (var i = 0; i < this.horizon.obstacles.length; i++){
-            distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width/2) - (dino.xPos + dino.config.WIDTH / 2);
-            if (distanceToObstacle > 0){
+        for (var i = 0; i < this.horizon.obstacles.length; i++) {
+            distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width / 2) - (dino.xPos + dino.config.WIDTH / 2);
+            if (distanceToObstacle > 0) {
                 widthOfNextObstacle = this.horizon.obstacles[i].typeConfig.width;
                 heightOfNextObstacle = this.horizon.obstacles[i].typeConfig.height;
                 if (this.horizon.obstacles[i + 1])
-                    distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width/2) - (dino.xPos + dino.config.WIDTH / 2);
+                    distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width / 2) - (dino.xPos + dino.config.WIDTH / 2);
                 break;
             }
         }
@@ -767,22 +767,28 @@ Runner.prototype = {
     },
 
     onJump: function (index) {
-        if (!this.tRex[index].jumping && !this.tRex.ducking) {
-            // console.log("Jump");
-            this.tRex[index].startJump(this.currentSpeed);
+        let dino = this.tRex[index];
+
+        if (!dino.isHidden) {
+            if (!dino.jumping && !dino.ducking) {
+                console.log(`Jump ${index}`);
+                dino.startJump(this.currentSpeed);
+            }
         }
     },
 
     onDuck: function (index) {
-        if (this.playing && !this.crashed) {
-            if (this.tRex[index].jumping) {
+        let dino = this.tRex[index];
+
+        if (!dino.isHidden) {
+            if (dino.jumping && !dino.speedDrop) {
                 // Speed drop, activated only when jump key is not pressed.
-                // console.log("Drop from jump");
-                this.tRex[index].setSpeedDrop();
-            } else if (!this.tRex.jumping && !this.tRex[index].ducking) {
+                console.log(`Drop from jump ${index}`);
+                dino.setSpeedDrop();
+            } else if (!dino.jumping && !dino.ducking) {
                 // Duck.
-                // console.log("Duck");
-                this.tRex[index].setDuck(true);
+                console.log(`Duck ${index}`);
+                dino.setDuck(true);
             }
         }
     },
@@ -821,8 +827,9 @@ Runner.prototype = {
     },
 
     onDuckEnd: function (index) {
-        this.tRex[index].speedDrop = false;
-        this.tRex[index].setDuck(false);
+        let dino = this.tRex[index];
+        dino.speedDrop = false;
+        dino.setDuck(false);
     },
 
     onRestart: function () {
@@ -1790,7 +1797,7 @@ Trex.prototype = {
 
         var sourceX = x;
         var sourceY = y;
-        var sourceWidth = this.ducking && this.status != Trex.status.CRASHED ?
+        var sourceWidth = this.ducking && this.status !== Trex.status.CRASHED ?
             this.config.WIDTH_DUCK : this.config.WIDTH;
         var sourceHeight = this.config.HEIGHT;
 
@@ -1806,14 +1813,14 @@ Trex.prototype = {
         sourceY += this.spritePos.y;
 
         // Ducking.
-        if (this.ducking && this.status != Trex.status.CRASHED) {
+        if (this.ducking && this.status !== Trex.status.CRASHED) {
             this.canvasCtx.drawImage(this.imageSprite, sourceX, sourceY,
                 sourceWidth, sourceHeight,
                 this.xPos, this.yPos,
                 this.config.WIDTH_DUCK, this.config.HEIGHT);
         } else {
             // Crashed whilst ducking. Trex is standing up so needs adjustment.
-            if (this.ducking && this.status == Trex.status.CRASHED) {
+            if (this.ducking && this.status === Trex.status.CRASHED) {
                 this.xPos++;
             }
             // Standing / running
@@ -1929,10 +1936,10 @@ Trex.prototype = {
      * @param {boolean} isDucking.
      */
     setDuck: function (isDucking) {
-        if (isDucking && this.status != Trex.status.DUCKING) {
+        if (isDucking && this.status !== Trex.status.DUCKING) {
             this.update(0, Trex.status.DUCKING);
             this.ducking = true;
-        } else if (this.status == Trex.status.DUCKING) {
+        } else if (this.status === Trex.status.DUCKING) {
             this.update(0, Trex.status.RUNNING);
             this.ducking = false;
         }

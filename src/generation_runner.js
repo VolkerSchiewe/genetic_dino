@@ -17,7 +17,11 @@ export default class GenerationRunner {
                     outputCallback(i, output);
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
-                    } else if (GenerationRunner.isJump(output)) {
+                    } else {
+                        runner.onDuckEnd(i);
+                    }
+
+                    if (GenerationRunner.isJump(output)) {
                         runner.onJump(i);
                     }
                 }
