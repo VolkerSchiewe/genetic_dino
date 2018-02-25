@@ -767,13 +767,12 @@ Runner.prototype = {
     },
 
     onJump: function (index) {
-        let dino = this.tRex[index];
+        let dino =this.tRex[index];
 
         if (!dino.isHidden) {
             if (!dino.jumping && !dino.ducking) {
-                //console.log(`Jump ${index}`);
-                dino.startJump(this.currentSpeed);
-            }
+             console.log(`Jump${index}`);
+                dino.startJump(this.currentSpeed);}
         }
     },
 
