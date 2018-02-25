@@ -768,22 +768,20 @@ Runner.prototype = {
 
     onJump: function (index) {
         if (!this.tRex[index].jumping && !this.tRex.ducking) {
-            // console.log("Jump");
+            console.log("Jump");
             this.tRex[index].startJump(this.currentSpeed);
         }
     },
 
     onDuck: function (index) {
-        if (this.playing && !this.crashed) {
-            if (this.tRex[index].jumping) {
-                // Speed drop, activated only when jump key is not pressed.
-                // console.log("Drop from jump");
-                this.tRex[index].setSpeedDrop();
-            } else if (!this.tRex.jumping && !this.tRex[index].ducking) {
-                // Duck.
-                // console.log("Duck");
-                this.tRex[index].setDuck(true);
-            }
+        if (this.tRex[index].jumping) {
+            // Speed drop, activated only when jump key is not pressed.
+            console.log("Drop from jump");
+            this.tRex[index].setSpeedDrop();
+        } else if (!this.tRex.jumping && !this.tRex[index].ducking) {
+            // Duck.
+            console.log("Duck");
+            this.tRex[index].setDuck(true);
         }
     },
 
