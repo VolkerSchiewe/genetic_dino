@@ -781,7 +781,7 @@ Runner.prototype = {
         let dino = this.tRex[index];
 
         if (!dino.isHidden) {
-            if (dino.jumping) {
+            if (dino.jumping && !dino.speedDrop) {
                 // Speed drop, activated only when jump key is not pressed.
                 console.log(`Drop from jump ${index}`);
                 dino.setSpeedDrop();
@@ -827,8 +827,9 @@ Runner.prototype = {
     },
 
     onDuckEnd: function (index) {
-        this.tRex[index].speedDrop = false;
-        this.tRex[index].setDuck(false);
+        let dino = this.tRex[index];
+        dino.speedDrop = false;
+        dino.setDuck(false);
     },
 
     onRestart: function () {
