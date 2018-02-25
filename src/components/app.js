@@ -154,9 +154,9 @@ export default class App extends React.Component {
         }
         ))
             .then(fitnessOfAllMaps => {
-                console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
+                //console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
                 let fitness = this.mergeFitnessOfGames(fitnessOfAllMaps);
-                console.log(`Merged fitness: ${fitness}`);
+                //console.log(`Merged fitness: ${fitness}`);
                 return this.naturalSelection(population, fitness);
             })
             .catch(error => console.log(error));

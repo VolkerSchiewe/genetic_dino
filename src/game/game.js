@@ -771,7 +771,7 @@ Runner.prototype = {
 
         if (!dino.isHidden) {
             if (!dino.jumping && !dino.ducking) {
-                console.log(`Jump ${index}`);
+                //console.log(`Jump ${index}`);
                 dino.startJump(this.currentSpeed);
             }
         }
@@ -783,11 +783,11 @@ Runner.prototype = {
         if (!dino.isHidden) {
             if (dino.jumping && !dino.speedDrop) {
                 // Speed drop, activated only when jump key is not pressed.
-                console.log(`Drop from jump ${index}`);
+                //console.log(`Drop from jump ${index}`);
                 dino.setSpeedDrop();
             } else if (!dino.jumping && !dino.ducking) {
                 // Duck.
-                console.log(`Duck ${index}`);
+                //console.log(`Duck ${index}`);
                 dino.setDuck(true);
             }
         }
