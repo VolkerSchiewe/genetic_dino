@@ -1788,7 +1788,7 @@ Trex.prototype = {
 
         var sourceX = x;
         var sourceY = y;
-        var sourceWidth = this.ducking && this.status != Trex.status.CRASHED ?
+        var sourceWidth = this.ducking && this.status !== Trex.status.CRASHED ?
             this.config.WIDTH_DUCK : this.config.WIDTH;
         var sourceHeight = this.config.HEIGHT;
 
@@ -1804,14 +1804,14 @@ Trex.prototype = {
         sourceY += this.spritePos.y;
 
         // Ducking.
-        if (this.ducking && this.status != Trex.status.CRASHED) {
+        if (this.ducking && this.status !== Trex.status.CRASHED) {
             this.canvasCtx.drawImage(this.imageSprite, sourceX, sourceY,
                 sourceWidth, sourceHeight,
                 this.xPos, this.yPos,
                 this.config.WIDTH_DUCK, this.config.HEIGHT);
         } else {
             // Crashed whilst ducking. Trex is standing up so needs adjustment.
-            if (this.ducking && this.status == Trex.status.CRASHED) {
+            if (this.ducking && this.status === Trex.status.CRASHED) {
                 this.xPos++;
             }
             // Standing / running
@@ -1927,10 +1927,10 @@ Trex.prototype = {
      * @param {boolean} isDucking.
      */
     setDuck: function (isDucking) {
-        if (isDucking && this.status != Trex.status.DUCKING) {
+        if (isDucking && this.status !== Trex.status.DUCKING) {
             this.update(0, Trex.status.DUCKING);
             this.ducking = true;
-        } else if (this.status == Trex.status.DUCKING) {
+        } else if (this.status === Trex.status.DUCKING) {
             this.update(0, Trex.status.RUNNING);
             this.ducking = false;
         }
