@@ -1,5 +1,5 @@
 import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dino_brain';
-import synaptic from 'synaptic';
+import * as synaptic from 'synaptic';
 
 const DOMINANT_GENE_RATE = 0.65;
 const RECESSIVE_GENE_RATE = 0.35;
