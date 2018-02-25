@@ -767,21 +767,29 @@ Runner.prototype = {
     },
 
     onJump: function (index) {
-        if (!this.tRex[index].jumping && !this.tRex.ducking) {
-            console.log("Jump");
-            this.tRex[index].startJump(this.currentSpeed);
+        let dino = this.tRex[index];
+
+        if (!dino.isHidden) {
+            if (!dino.jumping && !dino.ducking) {
+                console.log(`Jump ${index}`);
+                dino.startJump(this.currentSpeed);
+            }
         }
     },
 
     onDuck: function (index) {
-        if (this.tRex[index].jumping) {
-            // Speed drop, activated only when jump key is not pressed.
-            console.log("Drop from jump");
-            this.tRex[index].setSpeedDrop();
-        } else if (!this.tRex.jumping && !this.tRex[index].ducking) {
-            // Duck.
-            console.log("Duck");
-            this.tRex[index].setDuck(true);
+        let dino = this.tRex[index];
+
+        if (!dino.isHidden) {
+            if (dino.jumping) {
+                // Speed drop, activated only when jump key is not pressed.
+                console.log(`Drop from jump ${index}`);
+                dino.setSpeedDrop();
+            } else if (!dino.jumping && !dino.ducking) {
+                // Duck.
+                console.log(`Duck ${index}`);
+                dino.setDuck(true);
+            }
         }
     },
 
