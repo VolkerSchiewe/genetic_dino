@@ -2,7 +2,7 @@ import {MAPS_COUNT} from './components/app';
 import {precisionRound} from './utils';
 import * as synaptic from "synaptic";
 
-export const INPUT_LAYERS = 4;
+export const INPUT_LAYERS = 5;
 export const HIDDEN_LAYERS = 6;
 export const OUTPUT_LAYERS = 2;
 
@@ -34,11 +34,12 @@ export class DinoBrain {
         return (value);
     }
 
-    activateDinoBrain(distance, width, height, dinoHeight) {
+    activateDinoBrain(distance, width, height, dinoHeight, isOverObstacle) {
         distance = DinoBrain.normalize(distance);
         width = DinoBrain.normalize(width);
         height = DinoBrain.normalize(height);
-        let inputs = [distance, width, height, dinoHeight];
+        isOverObstacle = DinoBrain.normalize(isOverObstacle);
+        let inputs = [distance, width, height, dinoHeight, isOverObstacle];
         return this.perceptron.activate(inputs);
     }
 
