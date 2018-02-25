@@ -44,13 +44,6 @@ export default class App extends React.Component {
                 this.outputs[i].push(0);
             }
         }
-        this.onSliderChange = this.onSliderChange.bind(this);
-        this.switchShowMetrics = this.switchShowMetrics.bind(this);
-        this.exportBestPopulation = this.exportBestPopulation.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.exportGenerationData = this.exportGenerationData.bind(this);
-        this.handleStartClick = this.handleStartClick.bind(this);
-        this.handleImportClick = this.handleImportClick.bind(this);
     }
 
     switchShowMetrics() {
@@ -225,10 +218,10 @@ export default class App extends React.Component {
         const btnText = showMetrics ? 'hide outputs' : 'show outputs';
         return (
             <div>
-                <NavBar showMetrics={this.switchShowMetrics}
+                <NavBar showMetrics={() => this.switchShowMetrics()}
                     showMetricsText={btnText}
-                    exportPopulation={this.exportBestPopulation}
-                    exportGeneration={this.exportGenerationData}/>
+                    exportPopulation={() => this.exportBestPopulation()}
+                    exportGeneration={() => this.exportGenerationData()}/>
                 <Grid container justify="center">
                     <Grid item xs={12} sm={10}>
                         <Grid container>
@@ -238,7 +231,7 @@ export default class App extends React.Component {
 
                                 <div style={{marginTop: 10}}>
                                     <label> Mutation Rate: {mutationRate}
-                                        <Slider onChange={this.onSliderChange} defaultValue={20}/>
+                                        <Slider onChange={() => this.onSliderChange()} defaultValue={20}/>
                                     </label>
                                 </div>
 
@@ -249,13 +242,14 @@ export default class App extends React.Component {
                             <Grid item xs={12}>
                                 {!isGameRunning &&
                                 <div>
-                                    <Button raised color="primary" onClick={this.handleStartClick} style={{margin: 5}}>Start
+                                    <Button raised color="primary" onClick={() => this.handleStartClick()}
+                                        style={{margin: 5}}>Start
                                         Simulation</Button>
                                     <input
                                         style={{display: 'None'}}
                                         id="raised-button-file"
                                         type="file"
-                                        onChange={this.handleImportClick}
+                                        onChange={() => this.handleImportClick()}
                                     />
                                     <label htmlFor="raised-button-file">
                                         <Button raised component="span" style={{margin: 5}}>
@@ -276,7 +270,7 @@ export default class App extends React.Component {
                     }}
                     open={this.state.snackbarOpen}
                     autoHideDuration={6000}
-                    onClose={this.handleClose}
+                    onClose={() => this.handleClose()}
                     SnackbarContentProps={{
                         'aria-describedby': 'message-id',
                     }}

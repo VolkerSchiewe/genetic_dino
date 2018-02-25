@@ -16,13 +16,13 @@ export default class GenerationRunner {
                         dinoHeight[i]);
                     outputCallback(i, output);
                     if (GenerationRunner.isDuck(output)) {
-                        //runner.onDuck(i);
+                        runner.onDuck(i);
                     } else {
-                        //runner.onDuckEnd(i);
+                        runner.onDuckEnd(i);
                     }
 
                     if (GenerationRunner.isJump(output)) {
-                        //runner.onJump(i);
+                        runner.onJump(i);
                     }
                 }
             });
@@ -34,7 +34,7 @@ export default class GenerationRunner {
             });
 
             runner.addGameEndListener(() => {
-                console.log(`All dinos in generation on Map ${mapId} finished!`);
+                //console.log(`All dinos in generation on Map ${mapId} finished!`);
                 runner.removeMetricsListener();
                 runner.removeDinoCrashedListener();
                 runner.removeGameEndListener();
