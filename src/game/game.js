@@ -380,7 +380,7 @@ Runner.prototype = {
         // Draw t-rex
         for (let i = 0; i < this.numberOfTrex; i++) {
             let dinoSpriteIndex = i % this.dinoSprites.length;
-            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX, xFactor*i);
+            this.tRex[i] = new Trex(this.canvas, this.dinoSprites[dinoSpriteIndex], this.spriteDef.TREX, xFactor * i);
         }
 
         const childContainer = this.outerContainerEl.getElementsByClassName(Runner.classes.CONTAINER);
@@ -554,17 +554,17 @@ Runner.prototype = {
             // Check for collisions.
             for (let i = 0; i < this.tRex.length; i++) {
                 for (var j = 0; j < 3; j++) {       //there won't be more than 2 obstacles behind the first dino
-                    if (this.horizon.obstacles[j] != null){
-                    var collision = hasObstacles && checkForCollision(this.horizon.obstacles[j], this.tRex[i]);
+                    if (this.horizon.obstacles[j] != null) {
+                        var collision = hasObstacles && checkForCollision(this.horizon.obstacles[j], this.tRex[i]);
 
-                    if (collision) {
-                        this.numberOfCrashedTrex++;
-                        this.notifyDinoCrashed(i);
-                        this.tRex[i].hide();
+                        if (collision) {
+                            this.numberOfCrashedTrex++;
+                            this.notifyDinoCrashed(i);
+                            this.tRex[i].hide();
+                        }
                     }
                 }
             }
-        }
 
             if (this.numberOfCrashedTrex < this.numberOfTrex) {
                 this.distanceRan += this.currentSpeed * deltaTime / this.msPerFrame;
@@ -629,13 +629,13 @@ Runner.prototype = {
         var heightOfNextObstacle = '';
         var distanceToSecondObstacle = '';
 
-        for (var i = 0; i < this.horizon.obstacles.length; i++){
-            distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width/2) - (dino.xPos + dino.config.WIDTH / 2);
-            if (distanceToObstacle > 0){
+        for (var i = 0; i < this.horizon.obstacles.length; i++) {
+            distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width / 2) - (dino.xPos + dino.config.WIDTH / 2);
+            if (distanceToObstacle > 0) {
                 widthOfNextObstacle = this.horizon.obstacles[i].typeConfig.width;
                 heightOfNextObstacle = this.horizon.obstacles[i].typeConfig.height;
                 if (this.horizon.obstacles[i + 1])
-                    distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width/2) - (dino.xPos + dino.config.WIDTH / 2);
+                    distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width / 2) - (dino.xPos + dino.config.WIDTH / 2);
                 break;
             }
         }
