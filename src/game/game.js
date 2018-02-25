@@ -781,8 +781,8 @@ Runner.prototype = {
 
         if (!dino.isHidden) {
             if (dino.jumping&& !dino.speedDrop) {
-            // Speed drop, activated only when jump key is not pressed.
-            //console.log(`Drop from jump${index}`);
+                // Speed drop, activated only when jump key is not pressed.
+                //console.log(`Drop from jump ${index}`);
                 dino.setSpeedDrop();
         } else if (!dino.jumping && !dino.ducking) {
             // Duck.
