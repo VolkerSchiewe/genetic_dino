@@ -264,17 +264,17 @@ Runner.prototype = {
             this.config[setting] = value;
 
             switch (setting) {
-                case 'GRAVITY':
-                case 'MIN_JUMP_HEIGHT':
-                case 'SPEED_DROP_COEFFICIENT':
-                    this.tRex.config[setting] = value;
-                    break;
-                case 'INITIAL_JUMP_VELOCITY':
-                    this.tRex.setJumpVelocity(value);
-                    break;
-                case 'SPEED':
-                    this.setSpeed(value);
-                    break;
+            case 'GRAVITY':
+            case 'MIN_JUMP_HEIGHT':
+            case 'SPEED_DROP_COEFFICIENT':
+                this.tRex.config[setting] = value;
+                break;
+            case 'INITIAL_JUMP_VELOCITY':
+                this.tRex.setJumpVelocity(value);
+                break;
+            case 'SPEED':
+                this.setSpeed(value);
+                break;
             }
         }
     },
@@ -771,7 +771,7 @@ Runner.prototype = {
 
         if (!dino.isHidden) {
             if (!dino.jumping && !dino.ducking) {
-                console.log(`Jump ${index}`);
+                //console.log(`Jump ${index}`);
                 dino.startJump(this.currentSpeed);
             }
         }
@@ -783,11 +783,11 @@ Runner.prototype = {
         if (!dino.isHidden) {
             if (dino.jumping && !dino.speedDrop) {
                 // Speed drop, activated only when jump key is not pressed.
-                console.log(`Drop from jump ${index}`);
+                //console.log(`Drop from jump ${index}`);
                 dino.setSpeedDrop();
             } else if (!dino.jumping && !dino.ducking) {
                 // Duck.
-                console.log(`Duck ${index}`);
+                //console.log(`Duck ${index}`);
                 dino.setDuck(true);
             }
         }
@@ -1112,7 +1112,7 @@ function GameOverPanel(canvas, textImgPos, restartImgPos, dimensions) {
     this.textImgPos = textImgPos;
     this.restartImgPos = restartImgPos;
     this.draw();
-};
+}
 
 
 /**
@@ -1258,7 +1258,7 @@ function checkForCollision(obstacle, tRex, opt_canvasCtx) {
         }
     }
     return false;
-};
+}
 
 
 /**
@@ -1273,7 +1273,7 @@ function createAdjustedCollisionBox(box, adjustment) {
         box.y + adjustment.y,
         box.width,
         box.height);
-};
+}
 
 
 /**
@@ -1288,7 +1288,7 @@ function drawCollisionBoxes(canvasCtx, tRexBox, obstacleBox) {
     canvasCtx.strokeRect(obstacleBox.x, obstacleBox.y,
         obstacleBox.width, obstacleBox.height);
     canvasCtx.restore();
-};
+}
 
 
 /**
@@ -1314,7 +1314,7 @@ function boxCompare(tRexBox, obstacleBox) {
     }
 
     return crashed;
-};
+}
 
 
 //******************************************************************************
@@ -1331,7 +1331,7 @@ function CollisionBox(x, y, w, h) {
     this.y = y;
     this.width = w;
     this.height = h;
-};
+}
 
 
 //******************************************************************************
@@ -1347,7 +1347,7 @@ function CollisionBox(x, y, w, h) {
  * @param {number} opt_xOffset
  */
 function Obstacle(canvasCtx, type, spriteImgPos, dimensions,
-                  gapCoefficient, speed, opt_xOffset) {
+    gapCoefficient, speed, opt_xOffset) {
 
     this.canvasCtx = canvasCtx;
     this.spritePos = spriteImgPos;
@@ -1368,7 +1368,7 @@ function Obstacle(canvasCtx, type, spriteImgPos, dimensions,
     this.timer = 0;
 
     this.init(speed);
-};
+}
 
 /**
  * Coefficient for calculating the maximum gap.
@@ -1383,149 +1383,149 @@ Obstacle.MAX_GAP_COEFFICIENT = 1.5;
 Obstacle.MAX_OBSTACLE_LENGTH = 3,
 
 
-    Obstacle.prototype = {
-        /**
+Obstacle.prototype = {
+    /**
          * Initialise the DOM for the obstacle.
          * @param {number} speed
          */
-        init: function (speed) {
-            this.cloneCollisionBoxes();
+    init: function (speed) {
+        this.cloneCollisionBoxes();
 
-            // Only allow sizing if we're at the right speed.
-            if (this.size > 1 && this.typeConfig.multipleSpeed > speed) {
-                this.size = 1;
-            }
+        // Only allow sizing if we're at the right speed.
+        if (this.size > 1 && this.typeConfig.multipleSpeed > speed) {
+            this.size = 1;
+        }
 
-            this.width = this.typeConfig.width * this.size;
+        this.width = this.typeConfig.width * this.size;
 
-            // Check if obstacle can be positioned at various heights.
-            if (Array.isArray(this.typeConfig.yPos)) {
-                var yPosConfig = IS_MOBILE ? this.typeConfig.yPosMobile :
-                    this.typeConfig.yPos;
-                this.yPos = yPosConfig[getRandomNum(0, yPosConfig.length - 1)];
-            } else {
-                this.yPos = this.typeConfig.yPos;
-            }
+        // Check if obstacle can be positioned at various heights.
+        if (Array.isArray(this.typeConfig.yPos)) {
+            var yPosConfig = IS_MOBILE ? this.typeConfig.yPosMobile :
+                this.typeConfig.yPos;
+            this.yPos = yPosConfig[getRandomNum(0, yPosConfig.length - 1)];
+        } else {
+            this.yPos = this.typeConfig.yPos;
+        }
 
-            this.draw();
+        this.draw();
 
-            // Make collision box adjustments,
-            // Central box is adjusted to the size as one box.
-            //      ____        ______        ________
-            //    _|   |-|    _|     |-|    _|       |-|
-            //   | |<->| |   | |<--->| |   | |<----->| |
-            //   | | 1 | |   | |  2  | |   | |   3   | |
-            //   |_|___|_|   |_|_____|_|   |_|_______|_|
-            //
-            if (this.size > 1) {
-                this.collisionBoxes[1].width = this.width - this.collisionBoxes[0].width -
+        // Make collision box adjustments,
+        // Central box is adjusted to the size as one box.
+        //      ____        ______        ________
+        //    _|   |-|    _|     |-|    _|       |-|
+        //   | |<->| |   | |<--->| |   | |<----->| |
+        //   | | 1 | |   | |  2  | |   | |   3   | |
+        //   |_|___|_|   |_|_____|_|   |_|_______|_|
+        //
+        if (this.size > 1) {
+            this.collisionBoxes[1].width = this.width - this.collisionBoxes[0].width -
                     this.collisionBoxes[2].width;
-                this.collisionBoxes[2].x = this.width - this.collisionBoxes[2].width;
-            }
+            this.collisionBoxes[2].x = this.width - this.collisionBoxes[2].width;
+        }
 
-            // For obstacles that go at a different speed from the horizon.
-            if (this.typeConfig.speedOffset) {
-                this.speedOffset = Math.random() > 0.5 ? this.typeConfig.speedOffset :
-                    -this.typeConfig.speedOffset;
-            }
+        // For obstacles that go at a different speed from the horizon.
+        if (this.typeConfig.speedOffset) {
+            this.speedOffset = Math.random() > 0.5 ? this.typeConfig.speedOffset :
+                -this.typeConfig.speedOffset;
+        }
 
-            this.gap = this.getGap(this.gapCoefficient, speed);
-        },
+        this.gap = this.getGap(this.gapCoefficient, speed);
+    },
 
-        /**
+    /**
          * Draw and crop based on size.
          */
-        draw: function () {
-            var sourceWidth = this.typeConfig.width;
-            var sourceHeight = this.typeConfig.height;
+    draw: function () {
+        var sourceWidth = this.typeConfig.width;
+        var sourceHeight = this.typeConfig.height;
 
-            if (IS_HIDPI) {
-                sourceWidth = sourceWidth * 2;
-                sourceHeight = sourceHeight * 2;
-            }
+        if (IS_HIDPI) {
+            sourceWidth = sourceWidth * 2;
+            sourceHeight = sourceHeight * 2;
+        }
 
-            // X position in sprite.
-            var sourceX = (sourceWidth * this.size) * (0.5 * (this.size - 1)) +
+        // X position in sprite.
+        var sourceX = (sourceWidth * this.size) * (0.5 * (this.size - 1)) +
                 this.spritePos.x;
 
             // Animation frames.
-            if (this.currentFrame > 0) {
-                sourceX += sourceWidth * this.currentFrame;
-            }
+        if (this.currentFrame > 0) {
+            sourceX += sourceWidth * this.currentFrame;
+        }
 
-            this.canvasCtx.drawImage(Runner.imageSprite,
-                sourceX, this.spritePos.y,
-                sourceWidth * this.size, sourceHeight,
-                this.xPos, this.yPos,
-                this.typeConfig.width * this.size, this.typeConfig.height);
-        },
+        this.canvasCtx.drawImage(Runner.imageSprite,
+            sourceX, this.spritePos.y,
+            sourceWidth * this.size, sourceHeight,
+            this.xPos, this.yPos,
+            this.typeConfig.width * this.size, this.typeConfig.height);
+    },
 
-        /**
+    /**
          * Obstacle frame update.
          * @param {number} deltaTime
          * @param {number} speed
          */
-        update: function (deltaTime, speed) {
-            if (!this.remove) {
-                if (this.typeConfig.speedOffset) {
-                    speed += this.speedOffset;
-                }
-                this.xPos -= Math.floor((speed * FPS / 1000) * deltaTime);
+    update: function (deltaTime, speed) {
+        if (!this.remove) {
+            if (this.typeConfig.speedOffset) {
+                speed += this.speedOffset;
+            }
+            this.xPos -= Math.floor((speed * FPS / 1000) * deltaTime);
 
-                // Update frame
-                if (this.typeConfig.numFrames) {
-                    this.timer += deltaTime;
-                    if (this.timer >= this.typeConfig.frameRate) {
-                        this.currentFrame =
+            // Update frame
+            if (this.typeConfig.numFrames) {
+                this.timer += deltaTime;
+                if (this.timer >= this.typeConfig.frameRate) {
+                    this.currentFrame =
                             this.currentFrame == this.typeConfig.numFrames - 1 ?
                                 0 : this.currentFrame + 1;
-                        this.timer = 0;
-                    }
-                }
-                this.draw();
-
-                if (!this.isVisible()) {
-                    this.remove = true;
+                    this.timer = 0;
                 }
             }
-        },
+            this.draw();
 
-        /**
+            if (!this.isVisible()) {
+                this.remove = true;
+            }
+        }
+    },
+
+    /**
          * Calculate a random gap size.
          * - Minimum gap gets wider as speed increses
          * @param {number} gapCoefficient
          * @param {number} speed
          * @return {number} The gap size.
          */
-        getGap: function (gapCoefficient, speed) {
-            var minGap = Math.round(this.width * speed +
+    getGap: function (gapCoefficient, speed) {
+        var minGap = Math.round(this.width * speed +
                 this.typeConfig.minGap * gapCoefficient);
-            var maxGap = Math.round(minGap * Obstacle.MAX_GAP_COEFFICIENT);
-            return getRandomNum(minGap, maxGap);
-        },
+        var maxGap = Math.round(minGap * Obstacle.MAX_GAP_COEFFICIENT);
+        return getRandomNum(minGap, maxGap);
+    },
 
-        /**
+    /**
          * Check if obstacle is visible.
          * @return {boolean} Whether the obstacle is in the game area.
          */
-        isVisible: function () {
-            return this.xPos + this.width > 0;
-        },
+    isVisible: function () {
+        return this.xPos + this.width > 0;
+    },
 
-        /**
+    /**
          * Make a copy of the collision boxes, since these will change based on
          * obstacle type and size.
          */
-        cloneCollisionBoxes: function () {
-            var collisionBoxes = this.typeConfig.collisionBoxes;
+    cloneCollisionBoxes: function () {
+        var collisionBoxes = this.typeConfig.collisionBoxes;
 
-            for (var i = collisionBoxes.length - 1; i >= 0; i--) {
-                this.collisionBoxes[i] = new CollisionBox(collisionBoxes[i].x,
-                    collisionBoxes[i].y, collisionBoxes[i].width,
-                    collisionBoxes[i].height);
-            }
+        for (var i = collisionBoxes.length - 1; i >= 0; i--) {
+            this.collisionBoxes[i] = new CollisionBox(collisionBoxes[i].x,
+                collisionBoxes[i].y, collisionBoxes[i].width,
+                collisionBoxes[i].height);
         }
-    };
+    }
+};
 
 
 /**
@@ -1623,7 +1623,7 @@ function Trex(canvas, imageSprite, spritePos, xShift) {
     this.jumpspotX = 0;
 
     this.init();
-};
+}
 
 
 /**
@@ -1992,7 +1992,7 @@ function DistanceMeter(canvas, spritePos, canvasWidth) {
     this.config = DistanceMeter.config;
     this.maxScoreUnits = this.config.MAX_DISTANCE_UNITS;
     this.init(canvasWidth);
-};
+}
 
 
 /**
@@ -2242,7 +2242,7 @@ function Cloud(canvas, spritePos, containerWidth) {
         Cloud.config.MAX_CLOUD_GAP);
 
     this.init();
-};
+}
 
 
 /**
@@ -2334,7 +2334,7 @@ function NightMode(canvas, spritePos, containerWidth) {
     this.stars = [];
     this.drawStars = false;
     this.placeStars();
-};
+}
 
 /**
  * @enum {number}
@@ -2495,7 +2495,7 @@ function HorizonLine(canvas, spritePos) {
 
     this.setSourceDimensions();
     this.draw();
-};
+}
 
 
 /**
@@ -2631,7 +2631,7 @@ function Horizon(canvas, spritePos, dimensions, gapCoefficient) {
     // Horizon
     this.horizonLine = null;
     this.init();
-};
+}
 
 
 /**

@@ -18,6 +18,10 @@ export default class GenerationMetrics extends React.Component {
         let data = this.props.scoreHistory;
         let datasets = [];
         let labels = [];
+
+        // no values for the 0. Generation
+        data = data.map((i)=> [null].concat(i));
+
         // generate datasets for y-axis
         for (let i = 0; i < data.length; i++) {
             datasets[i] = {
@@ -30,7 +34,6 @@ export default class GenerationMetrics extends React.Component {
                 labels[i] = i + '.';
             }
         }
-
         return (
             <div style={{margin: '20px'}}>
                 {datasets &&

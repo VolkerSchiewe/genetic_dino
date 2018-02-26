@@ -1,7 +1,7 @@
 var path = require('path');
 
 module.exports = {
-    entry: './src/index.jsx',
+    entry: './src/index.js',
     output: {
         path: path.resolve(__dirname, 'dist'),
         filename: 'bundle.js'
@@ -10,13 +10,13 @@ module.exports = {
         inline: true,
         port: 8080
     },
-    externals: {
-        'react': 'React'
-    },
+    // externals: {
+    //     'react': 'React'
+    // },
     module: {
         rules: [
             {
-                test: /\.jsx?$/,
+                test: /\.js?$/,
                 exclude: /node_modules/,
                 loader: 'babel-loader',
                 query: {

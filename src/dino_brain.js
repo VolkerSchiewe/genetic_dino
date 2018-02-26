@@ -1,6 +1,6 @@
 import {MAPS_COUNT} from './components/app';
 import {precisionRound} from './utils';
-import * as synaptic from "synaptic";
+import * as synaptic from 'synaptic';
 
 export const INPUT_LAYERS = 4;
 export const HIDDEN_LAYERS = 6;

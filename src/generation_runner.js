@@ -34,7 +34,7 @@ export default class GenerationRunner {
             });
 
             runner.addGameEndListener(() => {
-                console.log(`All dinos in generation on Map ${mapId} finished!`);
+                //console.log(`All dinos in generation on Map ${mapId} finished!`);
                 runner.removeMetricsListener();
                 runner.removeDinoCrashedListener();
                 runner.removeGameEndListener();
