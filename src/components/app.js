@@ -199,9 +199,10 @@ export default class App extends React.Component {
     getMaxFromLastGenerations(n) {
         let history = this.state.scoreHistory;
         let generations = [];
-        let numOfGenerations = Math.min(history[0].length, n);
+        let endGeneration = (history[0].length - 1);
+        let startGeneration = Math.max(endGeneration - n, 0);
 
-        for (let j = (numOfGenerations - 1); j >= 0; j--) {
+        for (let j = endGeneration; j >= startGeneration; j--) {
             let generation = [];
 
             for (let i = 0; i < history.length; i++) {
