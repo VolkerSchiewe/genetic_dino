@@ -78,7 +78,18 @@ export default class GeneticAlgorithm {
         let mediumGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[2]);
         let freshGenes = this.crossOverDinoBrains(dinoAiArray[0], newDinoBrain);
 
-        return this.bredDinoBrains(best, second, third, goodGenes, mediumGenes, freshGenes);
+        let new_population = [];
+        new_population.push(best);
+        new_population.push(second);
+        new_population.push(this.mutateDinoGenes(best));
+        new_population.push(this.mutateDinoGenes(second));
+        new_population.push(this.crossOverDinoBrains(best, second));
+        new_population.push(this.crossOverDinoBrains(best, third));
+        new_population.push(this.crossOverDinoBrains(best, new DinoBrain()));
+        new_population.push(this.crossOverDinoBrains(best, new DinoBrain()));
+        new_population.push(new DinoBrain());
+        new_population.push(new DinoBrain());
+        return new_population;
     }
 
     bredDinoBrains(best, second, third, goodGenes, mediumGenes, freshGenes) {
