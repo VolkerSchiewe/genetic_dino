@@ -55,19 +55,31 @@ export default class GeneticAlgorithm {
 
     // TODO: implement method to manipulate LSTM cells
     mutateDinoGenes(dinoGene) {
-        let i;
-        let dinoPerceptron = Object.create(dinoGene.perceptron.toJSON());
-        for (i = 0; i < NEURONS; i++) {
-            dinoPerceptron.neurons[INPUT_LAYERS + i].bias = this.mutateGene(dinoPerceptron.neurons[INPUT_LAYERS + 1].bias);
+        let oldDinoJson = Object.create(dinoGene.perceptron.toJSON());
+        let newDinoJson = Object.create(dinoGene.perceptron.toJSON());
+        let newDino = Object.create(dinoGene);
+
+        for (let i = 0; i < NEURONS; i++) {
+            newDinoJson.neurons[INPUT_LAYERS + i].bias = this.mutateGene(oldDinoJson.neurons[INPUT_LAYERS + i].bias);
         }
-        for (i = 0; i < CONNECTIONS; i++) {
-            dinoPerceptron.connections[i].weights = this.mutateGene(dinoPerceptron.connections[i].weights);
+
+        for (let i = 0; i < CONNECTIONS; i++) {
+            newDinoJson.connections[i].weights = this.mutateGene(oldDinoJson.connections[i].weights);
         }
-        dinoGene.perceptron = synaptic.Network.fromJSON(dinoPerceptron);
-        return dinoGene;
+
+        newDino.perceptron = synaptic.Network.fromJSON(newDinoJson);
+        return newDino;
     }
 
     // Returns new population, using bredDinoBrains
+    // TODO: Research about most efficient mutation rate and factor
+    mutateGene(gene) {
+        if (Math.random() < this.mutationRate) {
+            gene *= 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
+        }
+        return gene;
+    }
+
     // TODO: Research better evolution algorithms
     evolvePopulation(dinoAiArray) {
         let newDinoBrain = new DinoBrain(false);
@@ -80,15 +92,7 @@ export default class GeneticAlgorithm {
 
         let new_population = [];
         new_population.push(best);
-        new_population.push(second);
         new_population.push(this.mutateDinoGenes(best));
-        new_population.push(this.mutateDinoGenes(second));
-        new_population.push(this.crossOverDinoBrains(best, second));
-        new_population.push(this.crossOverDinoBrains(best, third));
-        new_population.push(this.crossOverDinoBrains(best, new DinoBrain()));
-        new_population.push(this.crossOverDinoBrains(best, new DinoBrain()));
-        new_population.push(new DinoBrain());
-        new_population.push(new DinoBrain());
         return new_population;
     }
 
@@ -112,13 +116,5 @@ export default class GeneticAlgorithm {
             }
         }
         return new_population;
-    }
-
-    // TODO: Research about most efficient mutation rate and factor
-    mutateGene(gene) {
-        if (Math.random() < this.mutationRate) {
-            gene *= 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
-        }
-        return gene;
     }
 }
