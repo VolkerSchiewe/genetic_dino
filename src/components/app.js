@@ -33,7 +33,8 @@ export default class App extends React.Component {
             mutationRate: 0.2,
             showMetrics: false,
             bestPopulation: [],
-            snackbarOpen: false,
+            snackBarOpen: false,
+            snackBarMessage: '',
             isGameRunning: false,
         };
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
@@ -57,7 +58,7 @@ export default class App extends React.Component {
     exportBestPopulation() {
         let bestPopulation = this.state.bestPopulation;
         if (bestPopulation.length === 0) {
-            this.setState({ snackbarOpen: true });
+            this.setState({ snackBarOpen: true, snackBarMessage:'Please wait until the first generation finished.' });
             return;
         }
         let text = JSON.stringify(bestPopulation.map((dino) => dino.toJson()));
@@ -68,7 +69,7 @@ export default class App extends React.Component {
     exportGenerationData() {
         let data = this.state.scoreHistory;
         if (data.length === 0) {
-            this.setState({ snackbarOpen: true });
+            this.setState({ snackBarOpen: true, snackBarMessage:'Please wait until the first generation finished.' });
             return;
         }
         //generate headers
@@ -88,7 +89,7 @@ export default class App extends React.Component {
     handleClose(event, reason) {
         if (reason === 'clickaway')
             return;
-        this.setState({ snackbarOpen: false });
+        this.setState({ snackBarOpen: false });
     }
 
     onSliderChange(value) {
@@ -185,7 +186,7 @@ export default class App extends React.Component {
 
         let mean = sum / maxOfLastGenerations.length;
         let isStagnating = (latestMaxScore - mean) < 0;
-        console.log(`Is stagnating ${isStagnating}, mean: ${mean}, score: ${latestMaxScore}`);
+        this.setState({snackBarOpen:true, snackBarMessage:'Population is stagnating, increasing mutation rate.'});
         return isStagnating;
     }
 
@@ -252,14 +253,16 @@ export default class App extends React.Component {
         if (this.state.generation < 4 && bestFitnessOfGeneration < REQUIRED_FITNESS) {
             newPopulation = this.geneticAlgorithm.generatePopulation();
             this.setState({
-                generation: 0
+                generation: 0,
+                snackBarOpen: true,
+                snackBarMessage: 'Required fitness not reached. A new random population has been created.'
             });
         }
         this.runGeneration(newPopulation);
     }
 
     render() {
-        const { generation, maxScore, population, scoreHistory, mutationRate, showMetrics, isGameRunning } = this.state;
+        const { generation, maxScore, population, scoreHistory, mutationRate, showMetrics, isGameRunning, snackBarOpen, snackBarMessage} = this.state;
         const btnText = showMetrics ? 'hide outputs' : 'show outputs';
         return (
             <div>
@@ -313,13 +316,13 @@ export default class App extends React.Component {
                         vertical: 'bottom',
                         horizontal: 'left',
                     }}
-                    open={this.state.snackbarOpen}
+                    open={snackBarOpen}
                     autoHideDuration={6000}
                     onClose={(event, reason) => this.handleClose(event, reason)}
                     SnackbarContentProps={{
                         'aria-describedby': 'message-id',
                     }}
-                    message={<span id="message-id">Please wait until the first generation finished.</span>}
+                    message={<span id="message-id">{snackBarMessage}</span>}
                 />
             </div>
         );

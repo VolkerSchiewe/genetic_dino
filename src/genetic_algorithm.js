@@ -1,4 +1,4 @@
-import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dino_brain';
+import { CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS } from './dino_brain';
 import * as synaptic from 'synaptic';
 
 const DOMINANT_GENE_RATE = 0.65;
@@ -58,7 +58,7 @@ export default class GeneticAlgorithm {
         let i;
         let dinoPerceptron = Object.create(dinoGene.perceptron.toJSON());
         for (i = 0; i < NEURONS; i++) {
-            dinoPerceptron.neurons[INPUT_LAYERS + i].bias = this.mutateGene(dinoPerceptron.neurons[INPUT_LAYERS + 1].bias);
+            dinoPerceptron.neurons[INPUT_LAYERS + i].bias = this.mutateGene(dinoPerceptron.neurons[INPUT_LAYERS + i].bias);
         }
         for (i = 0; i < CONNECTIONS; i++) {
             dinoPerceptron.connections[i].weights = this.mutateGene(dinoPerceptron.connections[i].weights);
