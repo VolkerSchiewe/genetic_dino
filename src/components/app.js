@@ -231,7 +231,7 @@ export default class App extends React.Component {
 
                                 <div style={{marginTop: 10}}>
                                     <label> Mutation Rate: {mutationRate}
-                                        <Slider onChange={() => this.onSliderChange()} defaultValue={20}/>
+                                        <Slider onChange={(value) => this.onSliderChange(value)} defaultValue={20}/>
                                     </label>
                                 </div>
 
@@ -249,7 +249,7 @@ export default class App extends React.Component {
                                         style={{display: 'None'}}
                                         id="raised-button-file"
                                         type="file"
-                                        onChange={() => this.handleImportClick()}
+                                        onChange={(event) => this.handleImportClick(event)}
                                     />
                                     <label htmlFor="raised-button-file">
                                         <Button raised component="span" style={{margin: 5}}>
@@ -270,7 +270,7 @@ export default class App extends React.Component {
                     }}
                     open={this.state.snackbarOpen}
                     autoHideDuration={6000}
-                    onClose={() => this.handleClose()}
+                    onClose={(event, reason) => this.handleClose(event, reason)}
                     SnackbarContentProps={{
                         'aria-describedby': 'message-id',
                     }}
