@@ -1,6 +1,6 @@
 import React from 'react';
-import {Line} from 'react-chartjs-2';
-import {colors} from '../app';
+import { Line } from 'react-chartjs-2';
+import { colors } from '../app';
 
 
 export default class GenerationMetrics extends React.Component {
@@ -20,7 +20,7 @@ export default class GenerationMetrics extends React.Component {
         let labels = [];
 
         // no values for the 0. Generation
-        data = data.map((i)=> [null].concat(i));
+        data = data.map((i) => [null].concat(i));
 
         // generate datasets for y-axis
         for (let i = 0; i < data.length; i++) {
@@ -45,9 +45,9 @@ export default class GenerationMetrics extends React.Component {
                         display: true,
                         text: 'Generations',
                     },
-                    legend:{
+                    legend: {
                         display: true,
-                        position:'right',
+                        position: 'right',
                     },
                     scales: {
                         yAxes: [{

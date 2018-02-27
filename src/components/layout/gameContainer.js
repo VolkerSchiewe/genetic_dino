@@ -1,10 +1,10 @@
 import React from 'react';
 import OutputMetrics from '../metrics/outputMetrics';
 import Grid from 'material-ui/Grid';
-import {Circle} from '../misc/circle';
-import {colors} from '../app';
-import {range} from '../../utils';
-import {MAPS_COUNT} from '../app';
+import { Circle } from '../misc/circle';
+import { colors } from '../app';
+import { range } from '../../utils';
+import { MAPS_COUNT } from '../app';
 
 export default class GameContainer extends React.Component {
 
@@ -25,7 +25,7 @@ export default class GameContainer extends React.Component {
                         {populationRange.map((index) => {
                             let isAliveText = 'Dinos alive: ' + population[index].countDinosAlive();
                             return (
-                                <div key={index} style={{margin:5}}>
+                                <div key={index} style={{margin: 5}}>
                                     <Circle color={colors[index]}/>
                                     <div>{isAliveText}</div>
                                 </div>
