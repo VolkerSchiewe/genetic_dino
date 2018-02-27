@@ -1,4 +1,4 @@
-import {Runner} from './game/game';
+import { Runner } from './game/game';
 
 export const ACTION_THRESHOLD = 0.11;
 

@@ -52,13 +52,13 @@ export default class App extends React.Component {
 
     switchShowMetrics() {
         let currentState = !this.state.showMetrics;
-        this.setState({ showMetrics: currentState });
+        this.setState({showMetrics: currentState});
     }
 
     exportBestPopulation() {
         let bestPopulation = this.state.bestPopulation;
         if (bestPopulation.length === 0) {
-            this.setState({ snackBarOpen: true, snackBarMessage:'Please wait until the first generation finished.' });
+            this.setState({snackBarOpen: true, snackBarMessage: 'Please wait until the first generation finished.'});
             return;
         }
         let text = JSON.stringify(bestPopulation.map((dino) => dino.toJson()));
@@ -69,7 +69,7 @@ export default class App extends React.Component {
     exportGenerationData() {
         let data = this.state.scoreHistory;
         if (data.length === 0) {
-            this.setState({ snackBarOpen: true, snackBarMessage:'Please wait until the first generation finished.' });
+            this.setState({snackBarOpen: true, snackBarMessage: 'Please wait until the first generation finished.'});
             return;
         }
         //generate headers
@@ -89,7 +89,7 @@ export default class App extends React.Component {
     handleClose(event, reason) {
         if (reason === 'clickaway')
             return;
-        this.setState({ snackBarOpen: false });
+        this.setState({snackBarOpen: false});
     }
 
     onSliderChange(value) {
@@ -133,22 +133,22 @@ export default class App extends React.Component {
             population: population,
         });
         Promise.all(range(MAPS_COUNT).map((mapIndex) => {
-            return GenerationRunner.runSingleGeneration(mapIndex + 1, population, (i, output) => {
-                if (this.state.showMetrics) {
-                    this.outputs[mapIndex][i] = output;
-                    this.forceUpdate();
-                }
-            }, (i) => {
-                if (population[i].isAlive[mapIndex] > 0) {
-                    population[i].isAlive[mapIndex] = 0;
-                } else {
-                    // debugger;
-                }
-                this.setState({
-                    population: population,
+                return GenerationRunner.runSingleGeneration(mapIndex + 1, population, (i, output) => {
+                    if (this.state.showMetrics) {
+                        this.outputs[mapIndex][i] = output;
+                        this.forceUpdate();
+                    }
+                }, (i) => {
+                    if (population[i].isAlive[mapIndex] > 0) {
+                        population[i].isAlive[mapIndex] = 0;
+                    } else {
+                        // debugger;
+                    }
+                    this.setState({
+                        population: population,
+                    });
                 });
-            });
-        }
+            }
         ))
             .then(fitnessOfAllMaps => {
                 //console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
@@ -186,7 +186,7 @@ export default class App extends React.Component {
 
         let mean = sum / maxOfLastGenerations.length;
         let isStagnating = (latestMaxScore - mean) < 0;
-        this.setState({snackBarOpen:true, snackBarMessage:'Population is stagnating, increasing mutation rate.'});
+        this.setState({snackBarOpen: true, snackBarMessage: 'Population is stagnating, increasing mutation rate.'});
         return isStagnating;
     }
 
@@ -262,14 +262,14 @@ export default class App extends React.Component {
     }
 
     render() {
-        const { generation, maxScore, population, scoreHistory, mutationRate, showMetrics, isGameRunning, snackBarOpen, snackBarMessage} = this.state;
+        const {generation, maxScore, population, scoreHistory, mutationRate, showMetrics, isGameRunning, snackBarOpen, snackBarMessage} = this.state;
         const btnText = showMetrics ? 'hide outputs' : 'show outputs';
         return (
             <div>
                 <NavBar showMetrics={() => this.switchShowMetrics()}
-                    showMetricsText={btnText}
-                    exportPopulation={() => this.exportBestPopulation()}
-                    exportGeneration={() => this.exportGenerationData()} />
+                        showMetricsText={btnText}
+                        exportPopulation={() => this.exportBestPopulation()}
+                        exportGeneration={() => this.exportGenerationData()}/>
                 <Grid container justify="center">
                     <Grid item xs={12} sm={10}>
                         <Grid container>
@@ -277,36 +277,36 @@ export default class App extends React.Component {
                                 <h1>Generation {generation}</h1>
                                 Highscore: {maxScore}
 
-                                <div style={{ marginTop: 10 }}>
+                                <div style={{marginTop: 10}}>
                                     <label> Mutation Rate: {mutationRate}
-                                        <Slider onChange={(value) => this.onSliderChange(value)} defaultValue={20} />
+                                        <Slider onChange={(value) => this.onSliderChange(value)} defaultValue={20}/>
                                     </label>
                                 </div>
 
                             </Grid>
                             <Grid item xs={6}>
-                                <GenerationMetrics scoreHistory={scoreHistory} />
+                                <GenerationMetrics scoreHistory={scoreHistory}/>
                             </Grid>
                             <Grid item xs={12}>
                                 {!isGameRunning &&
-                                    <div>
-                                        <Button raised color="primary" onClick={() => this.handleStartClick()}
-                                        style={{ margin: 5 }}>Start
+                                <div>
+                                    <Button raised color="primary" onClick={() => this.handleStartClick()}
+                                            style={{margin: 5}}>Start
                                         Simulation</Button>
-                                        <input
-                                            style={{ display: 'None' }}
-                                            id="raised-button-file"
-                                            type="file"
-                                            onChange={(event) => this.handleImportClick(event)}
-                                        />
-                                        <label htmlFor="raised-button-file">
-                                            <Button raised component="span" style={{ margin: 5 }}>
-                                                Import Population
+                                    <input
+                                        style={{display: 'None'}}
+                                        id="raised-button-file"
+                                        type="file"
+                                        onChange={(event) => this.handleImportClick(event)}
+                                    />
+                                    <label htmlFor="raised-button-file">
+                                        <Button raised component="span" style={{margin: 5}}>
+                                            Import Population
                                         </Button>
-                                        </label></div>
+                                    </label></div>
                                 }
                                 <GameContainer population={population} outputs={this.outputs}
-                                    showMetrics={showMetrics} />
+                                               showMetrics={showMetrics}/>
                             </Grid>
                         </Grid>
                     </Grid>

@@ -6,7 +6,7 @@ import Button from 'material-ui/Button';
 import Menu, { MenuItem } from 'material-ui/Menu';
 
 export default class NavBar extends React.Component {
-    constructor(){
+    constructor() {
         super();
         this.state = {
             anchorEl: null,
@@ -17,12 +17,12 @@ export default class NavBar extends React.Component {
         this.handleExportGeneration = this.handleExportGeneration.bind(this);
     }
 
-    handleExportPopulation(){
+    handleExportPopulation() {
         this.props.exportPopulation();
         this.handleClose();
     }
 
-    handleExportGeneration(){
+    handleExportGeneration() {
         this.props.exportGeneration();
         this.handleClose();
     }
@@ -50,9 +50,9 @@ export default class NavBar extends React.Component {
                         <Button color="contrast" onClick={showMetrics}>{showMetricsText}</Button>
                         <div>
                             <Button aria-owns={open ? 'menu-appbar' : null}
-                                aria-haspopup="true"
-                                onClick={this.handleMenu}
-                                color="contrast">Export
+                                    aria-haspopup="true"
+                                    onClick={this.handleMenu}
+                                    color="contrast">Export
                             </Button>
 
                             <Menu

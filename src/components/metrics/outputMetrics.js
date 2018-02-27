@@ -1,6 +1,6 @@
 import React from 'react';
-import {Bar} from 'react-chartjs-2';
-import {colors} from '../app';
+import { Bar } from 'react-chartjs-2';
+import { colors } from '../app';
 
 export default class OutputMetrics extends React.Component {
 
@@ -26,7 +26,7 @@ export default class OutputMetrics extends React.Component {
                         }
                     ]
                 }} options={{
-                    animation:{
+                    animation: {
                         duration: 0,
                     },
                     title: {
