@@ -10,7 +10,7 @@ export const NEURONS = HIDDEN_LAYERS + OUTPUT_LAYERS;
 export const CONNECTIONS = INPUT_LAYERS * HIDDEN_LAYERS + HIDDEN_LAYERS * OUTPUT_LAYERS;
 
 export class DinoBrain {
-    constructor(shouldUseLSTM=false) {
+    constructor(shouldUseLSTM = false) {
         if (!shouldUseLSTM) {
             this.perceptron = new synaptic.Architect.Perceptron(INPUT_LAYERS, HIDDEN_LAYERS, OUTPUT_LAYERS);
             this.perceptron.layers.input.set({squash: synaptic.Neuron.squash.TANH});
@@ -34,11 +34,9 @@ export class DinoBrain {
         return (value);
     }
 
-    activateDinoBrain(distance, width, height, dinoHeight) {
-        distance = DinoBrain.normalize(distance);
-        width = DinoBrain.normalize(width);
-        height = DinoBrain.normalize(height);
-        let inputs = [distance, width, height, dinoHeight];
+    activateDinoBrain(distance, width, height, dinoHeight, isOverObstacle) {
+        // console.log(`distance: ${distance}, obstacleHeight: ${height}, dinoHeight: ${dinoHeight}, isOverObstacle ${isOverObstacle}`);
+        let inputs = [distance, height, dinoHeight, isOverObstacle];
         return this.perceptron.activate(inputs);
     }
 
@@ -57,7 +55,7 @@ export class DinoBrain {
     }
 
     // for debugging
-    getNnValues(){
+    getNnValues() {
         return {
             neurons: this.perceptron.neurons().map((object) => {
                 return precisionRound(object.neuron.bias, 2);

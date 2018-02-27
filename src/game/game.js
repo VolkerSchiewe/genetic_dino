@@ -608,34 +608,37 @@ Runner.prototype = {
 
             this.scheduleNextUpdate();
 
-            var dinoHeights = [];
-            var nextObstacles = [];
+            let dinoHeights = [];
+            let isOverObstacle = [];
+            let nextObstacles = [];
 
-            for (var i = 0; i < this.tRex.length; i++) {
-                var dinoHeight = this.tRex[i].yPos;
-                dinoHeights.push(dinoHeight);
-                nextObstacles.push(this.returnNextObstacleData(this.tRex[i]));
+            for (let i = 0; i < this.tRex.length; i++) {
+                let dino = this.tRex[i];
+                dinoHeights.push(dino.getYPos());
+                isOverObstacle.push(this.isOverObstacle(dino));
+                nextObstacles.push(this.returnNextObstacleData(dino));
             }
 
             if (this.metricsListener != null) {
-                this.metricsListener(this.currentSpeed, nextObstacles, dinoHeights);
+                this.metricsListener(this.currentSpeed, nextObstacles, dinoHeights, isOverObstacle);
             }
         }
     },
 
     returnNextObstacleData: function (dino) {
-        var distanceToObstacle = '';
-        var widthOfNextObstacle = '';
-        var heightOfNextObstacle = '';
-        var distanceToSecondObstacle = '';
+        let distanceToObstacle = 0;
+        let widthOfNextObstacle = 0;
+        let heightOfNextObstacle = 0;
+        let distanceToSecondObstacle = 0;
 
-        for (var i = 0; i < this.horizon.obstacles.length; i++) {
+        for (let i = 0; i < this.horizon.obstacles.length; i++) {
             distanceToObstacle = (this.horizon.obstacles[i].xPos - this.horizon.obstacles[i].width / 2) - (dino.xPos + dino.config.WIDTH / 2);
             if (distanceToObstacle > 0) {
-                widthOfNextObstacle = this.horizon.obstacles[i].typeConfig.width;
-                heightOfNextObstacle = this.horizon.obstacles[i].typeConfig.height;
-                if (this.horizon.obstacles[i + 1])
+                widthOfNextObstacle = this.horizon.obstacles[i].width;
+                heightOfNextObstacle = this.dimensions.HEIGHT - this.horizon.obstacles[i].yPos;
+                if (this.horizon.obstacles[i + 1]) {
                     distanceToSecondObstacle = (this.horizon.obstacles[i + 1].xPos - this.horizon.obstacles[i + 1].width / 2) - (dino.xPos + dino.config.WIDTH / 2);
+                }
                 break;
             }
         }
@@ -646,6 +649,21 @@ Runner.prototype = {
             heightOfNextObstacle: heightOfNextObstacle,
             distanceToSecondObstacle: distanceToSecondObstacle,
         };
+    },
+
+    isOverObstacle: function (dino) {
+        let distanceToObstacle = 0;
+
+        for (let i = 0; i < this.horizon.obstacles.length; i++) {
+            distanceToObstacle = this.horizon.obstacles[i].xPos - (dino.xPos + dino.config.WIDTH / 2);
+
+            // Check if dino is currently above obstacle
+            if (distanceToObstacle <= 0 && distanceToObstacle >= -1 * this.horizon.obstacles[i].width) {
+                return 100;
+            }
+        }
+
+        return 0;
     },
 
     notifyDinoCrashed(index) {
@@ -767,7 +785,7 @@ Runner.prototype = {
     },
 
     onJump: function (index) {
-        let dino = this.tRex[index];
+        let dino =this.tRex[index];
 
         if (!dino.isHidden) {
             if (!dino.jumping && !dino.ducking) {
@@ -778,10 +796,10 @@ Runner.prototype = {
     },
 
     onDuck: function (index) {
-        let dino = this.tRex[index];
+        let dino =this.tRex[index];
 
         if (!dino.isHidden) {
-            if (dino.jumping && !dino.speedDrop) {
+            if (dino.jumping&& !dino.speedDrop) {
                 // Speed drop, activated only when jump key is not pressed.
                 //console.log(`Drop from jump ${index}`);
                 dino.setSpeedDrop();
@@ -1833,6 +1851,10 @@ Trex.prototype = {
 
     hide: function () {
         this.isHidden = true;
+    },
+
+    getYPos: function () {
+        return -1 * (this.yPos - this.groundYPos);
     },
 
     /**

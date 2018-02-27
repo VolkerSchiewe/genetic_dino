@@ -8,12 +8,13 @@ export default class GenerationRunner {
             let runner = new Runner('#game-' + mapId, population.length, null);
             let distances = [];
 
-            runner.addMetricsListener((speed, nextObstacle, dinoHeight) => {
+            runner.addMetricsListener((speed, nextObstacle, dinoHeight, isOverObstacle) => {
                 for (let i = 0; i < population.length; i++) {
                     let output = population[i].activateDinoBrain(nextObstacle[i].distanceToNextObstacle,
                         nextObstacle[i].widthOfNextObstacle,
                         nextObstacle[i].heightOfNextObstacle,
-                        dinoHeight[i]);
+                        dinoHeight[i],
+                        isOverObstacle[i]);
                     outputCallback(i, output);
                     if (GenerationRunner.isDuck(output)) {
                         runner.onDuck(i);
