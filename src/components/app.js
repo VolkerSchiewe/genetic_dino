@@ -15,10 +15,10 @@ import GameContainer from './layout/gameContainer';
 const REQUIRED_FITNESS = 100;
 export const POPULATION_SIZE = 10;
 export const MAPS_COUNT = 3;
-const SURVIVOR_COUNT = 3;
+const SURVIVOR_COUNT = 4;
 const MIN_MUTATION_RATE = 0.2;
-const MAX_MUTATION_RATE = 0.5;
-const MUTATION_RATE_INCREASE = 0.05;
+const MAX_MUTATION_RATE = 0.8;
+const MUTATION_RATE_INCREASE = 0.2;
 export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
 
 
@@ -30,7 +30,7 @@ export default class App extends React.Component {
             maxScore: 0,
             population: [],
             scoreHistory: [],
-            mutationRate: 0.2,
+            mutationRate: MIN_MUTATION_RATE,
             showMetrics: false,
             bestPopulation: [],
             snackbarOpen: false,
@@ -247,6 +247,9 @@ export default class App extends React.Component {
             });
         }
 
+        if (this.geneticAlgorithm)
+            this.geneticAlgorithm.setMutationRate(this.state.mutationRate);
+
         // sort population
         for (let i = 0; i < SURVIVOR_COUNT; i++) {
             survivorIndex = indexOfMaxValue(fitness);
@@ -254,7 +257,7 @@ export default class App extends React.Component {
             fitness[survivorIndex] = 0;
         }
 
-        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
+        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray, POPULATION_SIZE);
 
         if (this.state.generation < 4 && bestFitnessOfGeneration < REQUIRED_FITNESS) {
             newPopulation = this.geneticAlgorithm.generatePopulation();

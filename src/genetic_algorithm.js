@@ -1,8 +1,8 @@
 import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dino_brain';
 import * as synaptic from 'synaptic';
 
-const DOMINANT_GENE_RATE = 0.65;
-const RECESSIVE_GENE_RATE = 0.35;
+const DOMINANT_GENE_RATE = 0.80;
+const RECESSIVE_GENE_RATE = 0.20;
 
 export default class GeneticAlgorithm {
     constructor(populationSize) {
@@ -27,11 +27,40 @@ export default class GeneticAlgorithm {
         return population;
     }
 
+    // TODO: Research better evolution algorithms
+    evolvePopulation(survivors, populationSize) {
+        let new_population = [];
+        for (let i = 0; i < populationSize; i++) {
+            let dino = null;
+
+            if (i === 0) {
+                dino = survivors[0];
+            } else if (i === 1) {
+                dino = this.crossOverDinoBrains(survivors[0], survivors[1]);
+            } else if (i === 2) {
+                dino = this.crossOverDinoBrains(survivors[0], survivors[1]);
+            } else if (i % 3 === 0) {
+                dino = this.crossOverDinoBrains(survivors[0], this.getRandomDino(survivors));
+            } else if (i % 4 === 0) {
+                dino = this.crossOverDinoBrains(survivors[1], this.getRandomDino(survivors));
+            } else if (i % 5 === 0) {
+                dino = this.crossOverDinoBrains(survivors[0], new DinoBrain(false));
+            } else {
+                dino = this.crossOverDinoBrains(survivors[1], new DinoBrain(false));
+            }
+
+            new_population.push(this.mutateDinoGenes(dino));
+        }
+
+        return new_population;
+    }
+
+
     // nature inspired merging method, simulates cross over in genetic
     crossOverDinoBrains(dominantBrain, recessiveBrain) {
         // Converting the networks to JSON makes it much easier to manipulate parameters
-        let dominantPerceptron = dominantBrain.perceptron.toJSON();
-        let recessivePerceptron = recessiveBrain.perceptron.toJSON();
+        let dominantPerceptron = Object.create(dominantBrain.perceptron.toJSON());
+        let recessivePerceptron = Object.create(recessiveBrain.perceptron.toJSON());
         let offspring = new DinoBrain();
         let offspringPerceptron = Object.create(dominantBrain.perceptron.toJSON());
 
@@ -71,8 +100,6 @@ export default class GeneticAlgorithm {
         return newDino;
     }
 
-    // Returns new population, using bredDinoBrains
-    // TODO: Research about most efficient mutation rate and factor
     mutateGene(gene) {
         if (Math.random() < this.mutationRate) {
             gene *= 1 + ((Math.random() - 0.5) * 3 + (Math.random() - 0.5));
@@ -80,41 +107,11 @@ export default class GeneticAlgorithm {
         return gene;
     }
 
-    // TODO: Research better evolution algorithms
-    evolvePopulation(dinoAiArray) {
-        let newDinoBrain = new DinoBrain(false);
-        let best = dinoAiArray[0];
-        let second = dinoAiArray[1];
-        let third = dinoAiArray[2];
-        let goodGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[1]);
-        let mediumGenes = this.crossOverDinoBrains(dinoAiArray[0], dinoAiArray[2]);
-        let freshGenes = this.crossOverDinoBrains(dinoAiArray[0], newDinoBrain);
-
-        let new_population = [];
-        new_population.push(best);
-        new_population.push(this.mutateDinoGenes(best));
-        return new_population;
+    getRandomDino(population) {
+        return Object.create(population[this.random(0, population.length - 1)]);
     }
 
-    bredDinoBrains(best, second, third, goodGenes, mediumGenes, freshGenes) {
-        let new_population = [];
-        for (let i = 0; i < this.populationSize; i++) {
-            if (i === 0) {
-                new_population.push(Object.create(best));
-            } else if (i === 1) {
-                new_population.push(Object.create(second));
-            } else if (i === 2) {
-                new_population.push(Object.create(third));
-            } else if (i % 3 === 0) {
-                new_population.push(this.mutateDinoGenes(Object.create(goodGenes)));
-            } else if (i % 4 === 0) {
-                new_population.push(this.mutateDinoGenes(Object.create(freshGenes)));
-            } else if (i % 5 === 0) {
-                new_population.push(this.mutateDinoGenes(Object.create(best)));
-            } else {
-                new_population.push(this.mutateDinoGenes(Object.create(mediumGenes)));
-            }
-        }
-        return new_population;
+    random(min, max) {
+        return Math.floor(Math.random() * (max - min + 1) + min);
     }
 }
