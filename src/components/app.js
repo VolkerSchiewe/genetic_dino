@@ -1,6 +1,6 @@
 import React from 'react';
-import GeneticAlgorithm from '../genetic_algorithm';
-import GenerationRunner from '../generation_runner';
+import GeneticAlgorithm from '../geneticAlgorithm';
+import GenerationRunner from '../generationRunner';
 import {indexOfMaxValue, range} from '../utils';
 import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
@@ -238,7 +238,9 @@ export default class App extends React.Component {
                 snackBarMessage: `Population is stagnating, increasing mutation rate by ${MUTATION_RATE_INCREASE}.`
             });
             this.setState({
-                mutationRate: mutationRate
+                mutationRate: mutationRate,
+                snackBarOpen: true,
+                snackBarMessage: 'Population is stagnating, increasing mutation rate.'
             });
         } else {
             this.setState({

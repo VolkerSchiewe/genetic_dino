@@ -1,4 +1,4 @@
-import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dino_brain';
+import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dinoBrain';
 import * as synaptic from 'synaptic';
 
 export default class GeneticAlgorithm {
