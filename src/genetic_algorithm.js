@@ -1,9 +1,6 @@
 import {CONNECTIONS, DinoBrain, INPUT_LAYERS, NEURONS} from './dino_brain';
 import * as synaptic from 'synaptic';
 
-const DOMINANT_GENE_RATE = 0.80;
-const RECESSIVE_GENE_RATE = 0.20;
-
 export default class GeneticAlgorithm {
     constructor(populationSize) {
         this.populationSize = populationSize;
@@ -30,34 +27,35 @@ export default class GeneticAlgorithm {
     // TODO: Research better evolution algorithms
     evolvePopulation(survivors, populationSize) {
         let new_population = [];
+
         for (let i = 0; i < populationSize; i++) {
             let dino = null;
 
             if (i === 0) {
                 dino = survivors[0];
             } else if (i === 1) {
-                dino = this.crossOverDinoBrains(survivors[0], survivors[1]);
+                dino = this.crossOverDinoBrains(survivors[0], survivors[1], 0.65);
             } else if (i === 2) {
-                dino = this.crossOverDinoBrains(survivors[0], survivors[1]);
+                dino = this.crossOverDinoBrains(survivors[0], survivors[2], 0.65);
             } else if (i % 3 === 0) {
-                dino = this.crossOverDinoBrains(survivors[0], this.getRandomDino(survivors));
+                dino = this.crossOverDinoBrains(survivors[0], this.getRandomDino(survivors), 0.65);
             } else if (i % 4 === 0) {
-                dino = this.crossOverDinoBrains(survivors[1], this.getRandomDino(survivors));
+                dino = this.crossOverDinoBrains(survivors[1], this.getRandomDino(survivors), 0.65);
             } else if (i % 5 === 0) {
-                dino = this.crossOverDinoBrains(survivors[0], this.getRandomDino(survivors));
+                dino = this.crossOverDinoBrains(survivors[1], new DinoBrain(false), 0.9);
             } else {
-                dino = this.crossOverDinoBrains(survivors[1], new DinoBrain(false));
+                dino = this.crossOverDinoBrains(survivors[1], new DinoBrain(false), 0.9);
             }
-
             new_population.push(this.mutateDinoGenes(dino));
         }
-
         return new_population;
     }
 
 
     // nature inspired merging method, simulates cross over in genetic
-    crossOverDinoBrains(dominantBrain, recessiveBrain) {
+    crossOverDinoBrains(dominantBrain, recessiveBrain, dominantRate) {
+        const recessiveRate = 1 - dominantRate;
+
         // Converting the networks to JSON makes it much easier to manipulate parameters
         let dominantPerceptron = Object.create(dominantBrain.perceptron.toJSON());
         let recessivePerceptron = Object.create(recessiveBrain.perceptron.toJSON());
@@ -68,14 +66,14 @@ export default class GeneticAlgorithm {
             let dominant_bias = dominantPerceptron.neurons[INPUT_LAYERS + i].bias;
             let recessive_bias = recessivePerceptron.neurons[INPUT_LAYERS + i].bias;
 
-            offspringPerceptron.neurons[INPUT_LAYERS + i].bias = (dominant_bias * DOMINANT_GENE_RATE + recessive_bias * RECESSIVE_GENE_RATE);
+            offspringPerceptron.neurons[INPUT_LAYERS + i].bias = (dominant_bias * dominantRate + recessive_bias * recessiveRate);
         }
 
         for (let i = 0; i < CONNECTIONS; i++) {
             let dominant_weight = dominantPerceptron.connections[i].weight;
             let recessive_weight = recessivePerceptron.connections[i].weight;
 
-            offspringPerceptron.connections[i].weight = (dominant_weight * DOMINANT_GENE_RATE + recessive_weight * RECESSIVE_GENE_RATE);
+            offspringPerceptron.connections[i].weight = (dominant_weight * dominantRate + recessive_weight * recessiveRate);
         }
         // TODO: enable to merge to LSTM networks
         offspring.perceptron = synaptic.Network.fromJSON(offspringPerceptron);
