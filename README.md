@@ -1,6 +1,8 @@
 # Genetic Dino
 
 ## Installation
+**Requirements: [`node.js`](https://nodejs.org/en/) and [`npm`](https://www.npmjs.com/)** (Tested with node v6.10.2 and npm v5.0.3)
+
 Run `npm install` to load all requirements 
 
 Run `npm run build` to bundle JavaScript files or `npm run dev` to activate the webpack file watcher
