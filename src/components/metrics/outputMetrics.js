@@ -2,12 +2,8 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import { colors } from '../app';
 
+// draw output chart for jump and duck output
 export default class OutputMetrics extends React.Component {
-
-    constructor(props) {
-        super(props);
-    }
-
     render() {
         const {value, id} = this.props;
         let color = colors[id];

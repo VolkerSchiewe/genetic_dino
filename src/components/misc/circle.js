@@ -1,5 +1,6 @@
 import React from 'react';
 
+// dump component to draw a circle with a certain color
 export const Circle = ({color}) => (
     <div style={{
         width: 15,

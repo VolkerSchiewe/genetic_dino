@@ -22,9 +22,11 @@ const MUTATION_RATE_INCREASE = 0.05;
 export const colors = ['#535353', '#E53935', '#D81B60', '#8E24AA', '#1E88E5', '#039BE5', '#43A047', '#FDD835', '#FB8C00', '#6D4C41'];
 
 
+// Base Component that contains all other component and contains most of the logic
 export default class App extends React.Component {
     constructor(props) {
         super(props);
+        // set default state values
         this.state = {
             generation: 0,
             maxScore: 0,
@@ -37,7 +39,10 @@ export default class App extends React.Component {
             snackBarMessage: '',
             isGameRunning: false,
         };
+
         this.geneticAlgorithm = new GeneticAlgorithm(POPULATION_SIZE);
+
+        // create output array with MAPS as rows and POPULATION_SIZE as columns
         this.outputs = [];
         for (let i = 0; i < MAPS_COUNT; i++) {
             this.outputs.push([]);
@@ -50,11 +55,13 @@ export default class App extends React.Component {
         }
     }
 
+    // handler to display or hide dinosaur outputs
     switchShowMetrics() {
         let currentState = !this.state.showMetrics;
         this.setState({showMetrics: currentState});
     }
 
+    // initialize download of best population as json
     exportBestPopulation() {
         let bestPopulation = this.state.bestPopulation;
         if (bestPopulation.length === 0) {
@@ -66,6 +73,7 @@ export default class App extends React.Component {
         download('best_population.json', text, 'data:text/json;charset=utf-8,');
     }
 
+    // initialize download of the generation data as csv (score history over all generations)
     exportGenerationData() {
         let data = this.state.scoreHistory;
         if (data.length === 0) {
@@ -86,12 +94,14 @@ export default class App extends React.Component {
         download('generation_data.csv', csvFile, 'data:text/csv;charset=utf-8,');
     }
 
+    // snackBar close handler
     handleClose(event, reason) {
         if (reason === 'clickaway')
             return;
         this.setState({snackBarOpen: false});
     }
 
+    // handle slider changes and apply new mutation rate
     onSliderChange(value) {
         value = value / 100;
         this.setState({
@@ -109,7 +119,7 @@ export default class App extends React.Component {
         this.runGeneration(population);
     }
 
-
+    // handle imported file and recreate the containing population and start the simulation
     handleImportClick(event) {
         this.setState({
             isGameRunning: true
@@ -126,11 +136,13 @@ export default class App extends React.Component {
 
     }
 
+    // run a generation on different maps and initialize fitness merging and natural selection after all dinosaurs crashed
     runGeneration(population) {
         this.setState({
             generation: this.state.generation + 1,
             population: population,
         });
+        // resolves when all internal Promises are resolved
         Promise.all(range(MAPS_COUNT).map((mapIndex) => {
                 return GenerationRunner.runSingleGeneration(mapIndex + 1, population, (i, output) => {
                     if (this.state.showMetrics) {
@@ -150,15 +162,14 @@ export default class App extends React.Component {
             }
         ))
             .then(fitnessOfAllMaps => {
-                //console.log(`All games ended: Fitness: ${fitnessOfAllMaps}`);
                 let fitness = this.mergeFitnessOfGames(fitnessOfAllMaps);
-                //console.log(`Merged fitness: ${fitness}`);
                 return this.naturalSelection(population, fitness);
             })
             .catch(error => console.log(error));
 
     }
 
+    // merge the fitness of all dinos by calculation the mean for each dino on all maps
     mergeFitnessOfGames(fitnessOfMultipleMaps) {
         let numberOfGames = fitnessOfMultipleMaps.length;
         let numberOfDinosInGeneration = fitnessOfMultipleMaps[0].length;
@@ -175,6 +186,7 @@ export default class App extends React.Component {
         return fitness;
     }
 
+    // check if the population is not improving based on the last high scores
     gameIsStagnating(generations, latestMaxScore) {
         let maxOfLastGenerations = this.getMaxFromLastGenerations(generations);
         let sum = 0;
@@ -184,10 +196,10 @@ export default class App extends React.Component {
         }
 
         let mean = sum / maxOfLastGenerations.length;
-        let isStagnating = (latestMaxScore - mean) < 0;
-        return isStagnating;
+        return (latestMaxScore - mean) < 0;
     }
 
+    // return the maximum scores of the last n generations in an array
     getMaxFromLastGenerations(n) {
         let history = this.state.scoreHistory;
         let generations = [];
@@ -209,6 +221,8 @@ export default class App extends React.Component {
         let dinoAiArray = [];
         let bestFitnessOfGeneration = Math.max(...fitness);
         let survivorIndex = 0;
+
+        // saving the new high scores to the score history
         let scoreHistory = this.state.scoreHistory;
         for (let i = 0; i < fitness.length; i++) {
             let dinoFitness = scoreHistory[i];
@@ -225,22 +239,21 @@ export default class App extends React.Component {
                 bestPopulation: population
             });
         } else {
-            // population = this.state.bestPopulation;
+            this.setState({
+                scoreHistory: scoreHistory,
+            });
         }
 
+        // increase mutation rate if the game is stagnation
         if (this.gameIsStagnating(5, bestFitnessOfGeneration)
             && this.state.mutationRate
             <= MAX_MUTATION_RATE
             && this.state.generation > 4) {
             let mutationRate = this.state.mutationRate + MUTATION_RATE_INCREASE;
             this.setState({
-                snackBarOpen: true,
-                snackBarMessage: `Population is stagnating, increasing mutation rate by ${MUTATION_RATE_INCREASE}.`
-            });
-            this.setState({
                 mutationRate: mutationRate,
                 snackBarOpen: true,
-                snackBarMessage: 'Population is stagnating, increasing mutation rate.'
+                snackBarMessage: `Population is stagnating, increasing mutation rate by ${MUTATION_RATE_INCREASE}.`
             });
         } else {
             this.setState({
@@ -258,8 +271,10 @@ export default class App extends React.Component {
             fitness[survivorIndex] = 0;
         }
 
-        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray, POPULATION_SIZE);
+        // bred new population based on genetic algorithms (geneticAlgorithm.js)
+        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
 
+        // kill generation and generate new random one if required fitness is not reached
         if (this.state.generation < 4 && bestFitnessOfGeneration < REQUIRED_FITNESS) {
             newPopulation = this.geneticAlgorithm.generatePopulation();
             this.setState({

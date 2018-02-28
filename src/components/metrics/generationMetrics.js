@@ -3,10 +3,8 @@ import { Line } from 'react-chartjs-2';
 import { colors } from '../app';
 
 
+// display the generation chart
 export default class GenerationMetrics extends React.Component {
-    constructor(props) {
-        super(props);
-    }
 
     shouldComponentUpdate(nextProps, nextState) {
         if (nextProps.scoreHistory)
@@ -19,7 +17,7 @@ export default class GenerationMetrics extends React.Component {
         let datasets = [];
         let labels = [];
 
-        // no values for the 0. Generation
+        // no values for the 0. Generation --> align data correctly
         data = data.map((i) => [null].concat(i));
 
         // generate datasets for y-axis

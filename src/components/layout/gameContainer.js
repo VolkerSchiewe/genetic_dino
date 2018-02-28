@@ -6,6 +6,7 @@ import { colors } from '../app';
 import { range } from '../../utils';
 import { MAPS_COUNT } from '../app';
 
+// render game container divs and output charts if enabled
 export default class GameContainer extends React.Component {
 
     render() {
@@ -33,8 +34,8 @@ export default class GameContainer extends React.Component {
                         }
                         )}
                     </Grid>
-
-                    {range(MAPS_COUNT).map((mapIndex) => (
+                    {showMetrics &&
+                    range(MAPS_COUNT).map((mapIndex) => (
                         <Grid item xs={12} key={mapIndex}>
                             <Grid container>
                                 {populationRange.map((populationIndex) => {
@@ -42,15 +43,16 @@ export default class GameContainer extends React.Component {
                                     return (
                                         <Grid item xs={2} key={populationIndex}
                                             style={{margin: '10px', minHeight: 150}}>
-                                            {showMetrics &&
+
                                             <OutputMetrics value={output} id={populationIndex}/>
-                                            }
+
                                         </Grid>
                                     );
                                 })}
                             </Grid>
                         </Grid>
-                    ))}
+                    ))
+                    }
                 </Grid>
             </div>
         );
