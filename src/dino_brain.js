@@ -1,5 +1,5 @@
-import { MAPS_COUNT } from './components/app';
-import { precisionRound } from './utils';
+import {MAPS_COUNT} from './components/app';
+import {precisionRound} from './utils';
 import * as synaptic from 'synaptic';
 
 export const INPUT_LAYERS = 4;

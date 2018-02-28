@@ -1,13 +1,13 @@
 import React from 'react';
 import GeneticAlgorithm from '../genetic_algorithm';
 import GenerationRunner from '../generation_runner';
-import { indexOfMaxValue, range } from '../utils';
+import {indexOfMaxValue, range} from '../utils';
 import Grid from 'material-ui/Grid';
 import Slider from 'rc-slider';
 import GenerationMetrics from './metrics/generationMetrics';
 import 'rc-slider/assets/index.css';
 import Snackbar from 'material-ui/Snackbar';
-import { download } from '../utils';
+import {download} from '../utils';
 import NavBar from './layout/NavBar';
 import Button from 'material-ui/Button';
 import GameContainer from './layout/gameContainer';
@@ -15,7 +15,7 @@ import GameContainer from './layout/gameContainer';
 const REQUIRED_FITNESS = 100;
 export const POPULATION_SIZE = 10;
 export const MAPS_COUNT = 3;
-const SURVIVOR_COUNT = 3;
+const SURVIVOR_COUNT = 4;
 const MIN_MUTATION_RATE = 0.2;
 const MAX_MUTATION_RATE = 0.5;
 const MUTATION_RATE_INCREASE = 0.05;
@@ -30,7 +30,7 @@ export default class App extends React.Component {
             maxScore: 0,
             population: [],
             scoreHistory: [],
-            mutationRate: 0.2,
+            mutationRate: MIN_MUTATION_RATE,
             showMetrics: false,
             bestPopulation: [],
             snackBarOpen: false,
@@ -126,7 +126,6 @@ export default class App extends React.Component {
 
     }
 
-
     runGeneration(population) {
         this.setState({
             generation: this.state.generation + 1,
@@ -186,7 +185,6 @@ export default class App extends React.Component {
 
         let mean = sum / maxOfLastGenerations.length;
         let isStagnating = (latestMaxScore - mean) < 0;
-        this.setState({snackBarOpen: true, snackBarMessage: 'Population is stagnating, increasing mutation rate.'});
         return isStagnating;
     }
 
@@ -230,8 +228,15 @@ export default class App extends React.Component {
             // population = this.state.bestPopulation;
         }
 
-        if (this.gameIsStagnating(5, bestFitnessOfGeneration) && this.state.mutationRate <= MAX_MUTATION_RATE) {
+        if (this.gameIsStagnating(5, bestFitnessOfGeneration)
+            && this.state.mutationRate
+            <= MAX_MUTATION_RATE
+            && this.state.generation > 4) {
             let mutationRate = this.state.mutationRate + MUTATION_RATE_INCREASE;
+            this.setState({
+                snackBarOpen: true,
+                snackBarMessage: `Population is stagnating, increasing mutation rate by ${MUTATION_RATE_INCREASE}.`
+            });
             this.setState({
                 mutationRate: mutationRate
             });
@@ -241,6 +246,9 @@ export default class App extends React.Component {
             });
         }
 
+        if (this.geneticAlgorithm)
+            this.geneticAlgorithm.setMutationRate(this.state.mutationRate);
+
         // sort population
         for (let i = 0; i < SURVIVOR_COUNT; i++) {
             survivorIndex = indexOfMaxValue(fitness);
@@ -248,7 +256,7 @@ export default class App extends React.Component {
             fitness[survivorIndex] = 0;
         }
 
-        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray);
+        let newPopulation = this.geneticAlgorithm.evolvePopulation(dinoAiArray, POPULATION_SIZE);
 
         if (this.state.generation < 4 && bestFitnessOfGeneration < REQUIRED_FITNESS) {
             newPopulation = this.geneticAlgorithm.generatePopulation();
