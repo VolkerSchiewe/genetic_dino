@@ -42,7 +42,7 @@ export default class GeneticAlgorithm {
             } else if (i % 4 === 0) {
                 dino = this.crossOverDinoBrains(survivors[1], this.getRandomDino(survivors), 0.65);
             } else if (i % 5 === 0) {
-                dino = this.crossOverDinoBrains(survivors[1], new DinoBrain(false), 0.9);
+                dino = this.crossOverDinoBrains(survivors[0], new DinoBrain(false), 0.9);
             } else {
                 dino = this.crossOverDinoBrains(survivors[1], new DinoBrain(false), 0.9);
             }
