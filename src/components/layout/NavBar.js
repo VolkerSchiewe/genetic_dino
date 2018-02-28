@@ -11,10 +11,6 @@ export default class NavBar extends React.Component {
         this.state = {
             anchorEl: null,
         };
-        this.handleMenu = this.handleMenu.bind(this);
-        this.handleClose = this.handleClose.bind(this);
-        this.handleExportPopulation = this.handleExportPopulation.bind(this);
-        this.handleExportGeneration = this.handleExportGeneration.bind(this);
     }
 
     handleExportPopulation() {
@@ -51,7 +47,7 @@ export default class NavBar extends React.Component {
                         <div>
                             <Button aria-owns={open ? 'menu-appbar' : null}
                                     aria-haspopup="true"
-                                    onClick={this.handleMenu}
+                                    onClick={(event) => this.handleMenu(event)}
                                     color="contrast">Export
                             </Button>
 
@@ -67,10 +63,10 @@ export default class NavBar extends React.Component {
                                     horizontal: 'right',
                                 }}
                                 open={open}
-                                onClose={this.handleClose}>
+                                onClose={() => this.handleClose()}>
 
-                                <MenuItem onClick={this.handleExportPopulation}>Best Population</MenuItem>
-                                <MenuItem onClick={this.handleExportGeneration}>Generation Data</MenuItem>
+                                <MenuItem onClick={() => this.handleExportPopulation()}>Best Population</MenuItem>
+                                <MenuItem onClick={() => this.handleExportGeneration()}>Generation Data</MenuItem>
                             </Menu>
                         </div>
                     </Toolbar>

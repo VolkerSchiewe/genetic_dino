@@ -24,7 +24,6 @@ export default class GeneticAlgorithm {
         return population;
     }
 
-    // TODO: Research better evolution algorithms
     evolvePopulation(survivors, populationSize) {
         let new_population = [];
 
@@ -75,12 +74,10 @@ export default class GeneticAlgorithm {
 
             offspringPerceptron.connections[i].weight = (dominant_weight * dominantRate + recessive_weight * recessiveRate);
         }
-        // TODO: enable to merge to LSTM networks
         offspring.perceptron = synaptic.Network.fromJSON(offspringPerceptron);
         return offspring;
     }
 
-    // TODO: implement method to manipulate LSTM cells
     mutateDinoGenes(dinoGene) {
         let oldDinoJson = Object.create(dinoGene.perceptron.toJSON());
         let newDinoJson = Object.create(dinoGene.perceptron.toJSON());
